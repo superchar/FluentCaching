@@ -7,7 +7,7 @@ using FluentCaching.Parameters;
 
 namespace FluentCaching
 {
-    internal static class CachingHelper
+    internal static class StoringHelper
     {
         public static Task StoreAsync(CachingOptions cachingOptions)
         {
