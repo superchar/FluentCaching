@@ -3,3 +3,5 @@
 ################################################################################
 
 /.vs/FluentCaching/v16
+/FluentCaching/bin/Debug/netstandard2.0
+/FluentCaching/obj
