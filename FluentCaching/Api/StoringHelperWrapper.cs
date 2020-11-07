@@ -14,6 +14,6 @@ namespace FluentCaching.Api
             _cachingOptions = cachingOptions;
         }
 
-        public Task StoreAsync() => CachingHelper.StoreAsync(_cachingOptions);
+        public Task StoreAsync() => StoringHelper.StoreAsync(_cachingOptions);
     }
 }
