@@ -1,5 +1,8 @@
 ﻿
 using System;
+using System.Collections.Concurrent;
+using FluentCaching.Api;
+using FluentCaching.Api.Key;
 
 namespace FluentCaching.Configuration
 {
@@ -7,14 +10,16 @@ namespace FluentCaching.Configuration
     {
         public static CachingConfiguration Instance = new CachingConfiguration();
 
+        private readonly ConcurrentDictionary<Type, Delegate> _predefinedConfigurations = new ConcurrentDictionary<Type, Delegate>();
+
         private CachingConfiguration()
         {
 
         }
 
-        public ICacheImplementation Current { get; private set; }
+        internal ICacheImplementation Current { get; private set; }
 
-        public void SetImplementation(ICacheImplementation cacheImplementation)
+        internal void SetImplementation(ICacheImplementation cacheImplementation)
         {
             if (Current != null)
             {
@@ -22,6 +27,16 @@ namespace FluentCaching.Configuration
             }
 
             Current = cacheImplementation;
+        }
+
+        public void ForType<T>(Func<CachingKeyBuilder<T>, StoringHelperWrapper> factoryFunc)
+        {
+            _predefinedConfigurations[typeof(T)] = factoryFunc;
+        }
+
+        internal Func<CachingKeyBuilder<T>, StoringHelperWrapper> GetFactory<T>()
+        {
+            return _predefinedConfigurations[typeof(T)] as Func<CachingKeyBuilder<T>, StoringHelperWrapper>;
         }
     }
 }

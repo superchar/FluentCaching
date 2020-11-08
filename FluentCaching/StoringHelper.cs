@@ -2,6 +2,8 @@
 
 using System;
 using System.Threading.Tasks;
+using FluentCaching.Api;
+using FluentCaching.Api.Key;
 using FluentCaching.Configuration;
 using FluentCaching.Parameters;
 
@@ -19,6 +21,20 @@ namespace FluentCaching
             }
 
             return implementation.SetAsync(cachingOptions);
+        }
+
+        public static Task StoreAsync<T>(T targetObject)
+        {
+            var factory = CachingConfiguration.Instance.GetFactory<T>();
+
+            if (factory == null)
+            {
+                throw new Exception($"Missing configuration for type {typeof(T).FullName}");
+            }
+
+            var builder = new CachingKeyBuilder<T>(targetObject);
+
+           return factory(builder).CacheAsync();
         }
     }
 }
