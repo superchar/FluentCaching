@@ -36,5 +36,11 @@ namespace FluentCaching
 
             return factory(builder).CacheAsync();
         }
+
+        public static Task<TResult> RetrieveAsync<TResult>(object key)
+            where TResult : class
+        {
+            return Task.FromResult(default(TResult));
+        }
     }
 }

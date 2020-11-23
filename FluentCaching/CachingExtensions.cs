@@ -21,5 +21,8 @@ namespace FluentCaching
 
         public static Task CacheAsync<T>(this T targetObject) where T : class
             => StoringHelper.StoreAsync(targetObject);
+
+        public static Task<TEntity> RetrieveAsync<TEntity>(this object key) where TEntity : class
+            => StoringHelper.RetrieveAsync<TEntity>(key);
     }
 }
