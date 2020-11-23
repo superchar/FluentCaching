@@ -36,7 +36,7 @@ builder.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
 
 **And retrieve it with multi property key**
 ```csharp
-var userKey = new {FirstName = "John", LastName = "Dou"}; // may be any class with corresponding properties
+var userKey = new {FirstName = "John", LastName = "Doe"}; // may be any class with corresponding properties
 await userKey.RetrieveAsync<User>();
 ```
 
