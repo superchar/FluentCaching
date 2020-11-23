@@ -1,39 +1,47 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace FluentCaching.Api.Key
 {
-    public class CachingKeyBuilder<T>
+    public class CachingKeyBuilder<T> 
+        where T : class
     {
-        private readonly T _targetObject;
+        private readonly PropertyTracker _propertyTracker;
 
-        private readonly StringBuilder _key = new StringBuilder();
+        private readonly Key<T> _key;
 
-        public CachingKeyBuilder(T targetObject)
+        public CachingKeyBuilder(T targetObject = null, Dictionary<string, object> valueSource = null)
         {
-            _targetObject = targetObject;
+            _propertyTracker = PropertyTracker.Create(targetObject, valueSource);
+            _key = Key<T>.Create(targetObject, valueSource);
         }
 
         public CombinedCachingKeyBuilder<T> UseSelfAsKey()
         {
-            _key.Append(KeyBuildingHelper.GetStringValue(_targetObject));
+            _key.AppendSelf();
+            
+            _propertyTracker.TrackSelf();
 
-            return new CombinedCachingKeyBuilder<T>(_targetObject, _key);
+            return new CombinedCachingKeyBuilder<T>(_key, _propertyTracker);
         }
 
-        public CombinedCachingKeyBuilder<T> UseAsKey<TValue>(Func<T, TValue> valueGetter)
+        public CombinedCachingKeyBuilder<T> UseAsKey<TValue>(Expression<Func<T, TValue>> valueGetter)
         {
-            _key.Append(KeyBuildingHelper.GetStringValue(_targetObject, valueGetter));
+            _key.AppendProperty(valueGetter);
 
-            return new CombinedCachingKeyBuilder<T>(_targetObject, _key);
+            _propertyTracker.TrackProperty(valueGetter);
+            
+            return new CombinedCachingKeyBuilder<T>(_key, _propertyTracker);
         }
 
         public CombinedCachingKeyBuilder<T> UseAsKey<TValue>(TValue value)
         {
-            _key.Append(KeyBuildingHelper.GetStringValue(value));
+            _key.AppendValue(value);
 
-            return new CombinedCachingKeyBuilder<T>(_targetObject, _key);
+            return new CombinedCachingKeyBuilder<T>(_key, _propertyTracker);
         }
     }
 }

@@ -10,10 +10,9 @@ namespace FluentCaching.Api
     {
         private readonly CachingOptions _currentOptions = CachingOptions.Default;
 
-        public CachingOptionsBuilder(string key, object targetObject)
+        public CachingOptionsBuilder(string key)
         {
             _currentOptions.Key = key;
-            _currentOptions.TargetObject = targetObject;
         }
 
         public TtlBuilder WithTtlOf(short value)

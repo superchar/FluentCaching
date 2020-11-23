@@ -10,7 +10,6 @@ namespace FluentCaching.Parameters
             Ttl = TimeSpan.MaxValue,
             ExpirationType = ExpirationType.Absolute,
             Key = string.Empty,
-            TargetObject = null
         };
 
         public TimeSpan Ttl { get; set; }
@@ -18,7 +17,5 @@ namespace FluentCaching.Parameters
         public ExpirationType ExpirationType { get; set; }
 
         public string Key { get; set; }
-
-        public object TargetObject { get; set; }
     }
 }

@@ -10,7 +10,8 @@ namespace FluentCaching.Configuration
     {
         public static CachingConfiguration Instance = new CachingConfiguration();
 
-        private readonly ConcurrentDictionary<Type, Delegate> _predefinedConfigurations = new ConcurrentDictionary<Type, Delegate>();
+        private readonly ConcurrentDictionary<Type, Delegate> _predefinedConfigurations =
+            new ConcurrentDictionary<Type, Delegate>();
 
         private CachingConfiguration()
         {
@@ -30,11 +31,14 @@ namespace FluentCaching.Configuration
         }
 
         public void ForType<T>(Func<CachingKeyBuilder<T>, StoringHelperWrapper> factoryFunc)
+            where T : class
         {
             _predefinedConfigurations[typeof(T)] = factoryFunc;
         }
 
         internal Func<CachingKeyBuilder<T>, StoringHelperWrapper> GetFactory<T>()
+            where T : class
+
         {
             return _predefinedConfigurations[typeof(T)] as Func<CachingKeyBuilder<T>, StoringHelperWrapper>;
         }

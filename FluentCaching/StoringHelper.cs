@@ -1,5 +1,4 @@
 ﻿
-
 using System;
 using System.Threading.Tasks;
 using FluentCaching.Api;
@@ -24,6 +23,7 @@ namespace FluentCaching
         }
 
         public static Task StoreAsync<T>(T targetObject)
+            where T : class
         {
             var factory = CachingConfiguration.Instance.GetFactory<T>();
 
@@ -34,7 +34,7 @@ namespace FluentCaching
 
             var builder = new CachingKeyBuilder<T>(targetObject);
 
-           return factory(builder).CacheAsync();
+            return factory(builder).CacheAsync();
         }
     }
 }

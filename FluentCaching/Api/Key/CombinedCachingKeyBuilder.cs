@@ -1,43 +1,50 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace FluentCaching.Api.Key
 {
     public class CombinedCachingKeyBuilder<T>
+        where T : class
     {
-        private readonly T _targetObject;
+        private readonly Key<T> _key;
 
-        private readonly StringBuilder _key;
+        private readonly PropertyTracker _propertyTracker;
 
-        public CombinedCachingKeyBuilder(T targetObject, StringBuilder key)
+        internal CombinedCachingKeyBuilder(Key<T> key, PropertyTracker propertyTracker)
         {
-            _targetObject = targetObject;
             _key = key;
+            _propertyTracker = propertyTracker;
         }
 
         public CachingOptionsBuilder And()
         {
-            return new CachingOptionsBuilder(_key.ToString(), _targetObject);
+            return new CachingOptionsBuilder(_key.ToString());
         }
 
         public CombinedCachingKeyBuilder<T> CombinedWithSelf()
         {
-            _key.Append(KeyBuildingHelper.GetStringValue(_targetObject));
+            _key.AppendSelf();
 
+            _propertyTracker.TrackSelf();
+    
             return this;
         }
 
-        public CombinedCachingKeyBuilder<T> CombinedWith<TValue>(Func<T, TValue> valueGetter)
+        public CombinedCachingKeyBuilder<T> CombinedWith<TValue>(Expression<Func<T, TValue>> valueGetter)
         {
-            _key.Append(KeyBuildingHelper.GetStringValue(_targetObject, valueGetter));
+            _key.AppendProperty(valueGetter);
+
+            _propertyTracker.TrackProperty(valueGetter);
 
             return this;
         }
 
         public CombinedCachingKeyBuilder<T> CombinedWith<TValue>(TValue value)
         {
-            _key.Append(KeyBuildingHelper.GetStringValue(value));
+            _key.AppendValue(value);
 
             return this;
         }
