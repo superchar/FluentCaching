@@ -1,12 +1,25 @@
 # FluentCaching
 Fluent API for object caching 
 
-```csharp
-    var retrievedUser = new { Name = "My user", Id = 42 }; // Retrieve object from data store
+*Nothing works yet, currently designing an API*
 
-    await retrievedUser.Cache() // Cache it with Fluent API
-    .UseAsKey(user => user.Id)
-    .WithTtlOf(2).Minutes.And(5).Seconds
-    .And().SlidingExpiration()
-    .StoreAsync();
-    
+
+```csharp
+// Use fluent api for objects caching
+var user = await _userService.GetUserByIdAsync(42);
+
+await user.UseAsKey("user").CombinedWith(u => u.Id)
+.And().WithTtlOf(2).Minutes.And(10).Seconds
+.And().SlidingExpiration()
+.CacheAsync();
+
+// Or just define caching policies in configuration 
+CachingConfiguration.Instance.ForType<User>(builder =>
+builder.UseAsKey("user").CombinedWith(u => u.Id)
+.And().WithTtlOf(2).Minutes.And(10).Seconds
+.And().SlidingExpiration());
+
+// And just use it :)
+var user = _userService.GetUserById(42);
+
+await user.CacheAsync();
