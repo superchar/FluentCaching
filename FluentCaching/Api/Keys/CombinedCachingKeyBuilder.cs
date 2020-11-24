@@ -3,8 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using FluentCaching.Keys;
 
-namespace FluentCaching.Api.Key
+namespace FluentCaching.Api.Keys
 {
     public class CombinedCachingKeyBuilder<T>
         where T : class
@@ -21,7 +22,7 @@ namespace FluentCaching.Api.Key
 
         public CachingOptionsBuilder And()
         {
-            return new CachingOptionsBuilder(_key.ToString());
+            return new CachingOptionsBuilder(_key.ToString(), _propertyTracker);
         }
 
         public CombinedCachingKeyBuilder<T> CombinedWithSelf()

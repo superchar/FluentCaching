@@ -1,5 +1,6 @@
 ﻿
 using System;
+using FluentCaching.Keys;
 
 namespace FluentCaching.Parameters
 {
@@ -17,5 +18,7 @@ namespace FluentCaching.Parameters
         public ExpirationType ExpirationType { get; set; }
 
         public string Key { get; set; }
+
+        internal PropertyTracker PropertyTracker { get; set; }
     }
 }

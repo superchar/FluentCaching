@@ -1,44 +1,51 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
-namespace FluentCaching.Api.Key
+namespace FluentCaching.Keys
 {
     internal class PropertyTracker
     {
         private const string Self = nameof(Self);
 
-        private readonly HashSet<string> _keys = new HashSet<string>();
+        private readonly IDictionary<string, bool> _keys = new Dictionary<string, bool>(); // Guaranteed to be thread safe unlike hashset
 
         private PropertyTracker()
         {
 
         }
 
-        public IEnumerable<string> Keys => _keys;
-
         public static PropertyTracker Create(params object[] sources)
         {
-            if (sources.Any(_ => _ != null))
-            {
-                return new PropertyTracker();
-            }
+            return sources.Any(_ => _ != null) ? new PropertyTracker() : EmptyPropertyTracker.Instance;
+        }
 
-            return EmptyPropertyTracker.Instance;
+        public IDictionary<string, object> GetValueSourceDictionary(object targetObject)
+        {
+            return GetValidDescriptors(targetObject)
+                .ToDictionary(p => p.Name, p => p.GetValue(targetObject)); 
         }
 
         public virtual void TrackSelf()
         {
-            _keys.Add(Self);
+            _keys[Self] = true;
         }
 
         public virtual void TrackProperty<T, TValue>(Expression<Func<T, TValue>> valueGetter)
         {
             var name = ((MemberExpression)valueGetter.Body).Member.Name;
-            _keys.Add(name);
+            _keys[name] = true;
+        }
+
+        private IEnumerable<PropertyDescriptor> GetValidDescriptors(object targetObject) //TODO: caching and reflection optimization
+        {
+            return TypeDescriptor.GetProperties(targetObject)
+                .Cast<PropertyDescriptor>()
+                .Where(property => _keys.ContainsKey(property.Name));
         }
 
         private class EmptyPropertyTracker : PropertyTracker

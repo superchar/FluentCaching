@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using FluentCaching.Api;
-using FluentCaching.Api.Key;
+using FluentCaching.Api.Keys;
 using FluentCaching.Configuration;
 using FluentCaching.Parameters;
 
@@ -10,7 +10,7 @@ namespace FluentCaching
 {
     internal static class StoringHelper
     {
-        public static Task StoreAsync(CachingOptions cachingOptions)
+        public static Task StoreAsync<T>(T targetObject, CachingOptions cachingOptions) where T : class
         {
             var implementation = CachingConfiguration.Instance.Current;
 
@@ -19,7 +19,7 @@ namespace FluentCaching
                 throw new Exception("Cache implementation is not configured");
             }
 
-            return implementation.SetAsync(cachingOptions);
+            return implementation.SetAsync(targetObject, cachingOptions);
         }
 
         public static Task StoreAsync<T>(T targetObject)
@@ -34,13 +34,23 @@ namespace FluentCaching
 
             var builder = new CachingKeyBuilder<T>(targetObject);
 
-            return factory(builder).CacheAsync();
+            var options = factory(builder).CachingOptions;
+
+            return StoreAsync(targetObject, options);
         }
 
-        public static Task<TResult> RetrieveAsync<TResult>(object key)
-            where TResult : class
+        public static Task<T> RetrieveAsync<T>(object targetObject)
+            where T : class
         {
-            return Task.FromResult(default(TResult));
+            var configurationItem = CachingConfiguration.Instance.GetItem<T>();
+
+            var valueSource = configurationItem.Tracker.GetValueSourceDictionary(targetObject);
+
+            var builder = new CachingKeyBuilder<T>(valueSource: valueSource);
+
+            var key = configurationItem.Factory(builder).CachingOptions.Key;
+
+            return CachingConfiguration.Instance.Current.GetAsync<T>(key);
         }
     }
 }

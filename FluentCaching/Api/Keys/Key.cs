@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace FluentCaching.Api.Key
+namespace FluentCaching.Api.Keys
 {
     internal class Key<T>
     {
@@ -12,17 +12,17 @@ namespace FluentCaching.Api.Key
 
         private readonly T _targetObject;
 
-        private readonly Dictionary<string, object> _valueSource;
+        private readonly IDictionary<string, object> _valueSource;
 
         private readonly StringBuilder _key = new StringBuilder();
 
-        private Key(T targetObject, Dictionary<string, object> valueSource)
+        private Key(T targetObject, IDictionary<string, object> valueSource)
         {
             _targetObject = targetObject;
             _valueSource = valueSource;
         }
 
-        public static Key<T> Create(T targetObject, Dictionary<string, object> valueSource)
+        public static Key<T> Create(T targetObject, IDictionary<string, object> valueSource)
         {
             if (targetObject != null || valueSource != null)
             {

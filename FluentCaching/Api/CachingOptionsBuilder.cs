@@ -1,7 +1,7 @@
 ﻿
-
 using System;
 using FluentCaching.Api.Ttl;
+using FluentCaching.Keys;
 using FluentCaching.Parameters;
 
 namespace FluentCaching.Api
@@ -10,9 +10,10 @@ namespace FluentCaching.Api
     {
         private readonly CachingOptions _currentOptions = CachingOptions.Default;
 
-        public CachingOptionsBuilder(string key)
+        internal CachingOptionsBuilder(string key, PropertyTracker propertyTracker)
         {
             _currentOptions.Key = key;
+            _currentOptions.PropertyTracker = propertyTracker;
         }
 
         public TtlBuilder WithTtlOf(short value)

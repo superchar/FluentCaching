@@ -15,18 +15,21 @@ namespace FluentCaching.Api
             _currentOptions = currentOptions;
         }
 
-        public StoringHelperWrapper ExpirationType(ExpirationType expirationType)
+        public CachingOptions CachingOptions => _currentOptions;
+
+        public ExpirationBuilder ExpirationType(ExpirationType expirationType)
         {
             _currentOptions.ExpirationType = expirationType;
-            return new StoringHelperWrapper(_currentOptions);
+
+            return this;
         }
 
-        public StoringHelperWrapper AbsoluteExpiration()
+        public ExpirationBuilder AbsoluteExpiration()
         {
             return ExpirationType(Parameters.ExpirationType.Absolute);
         }
 
-        public StoringHelperWrapper SlidingExpiration()
+        public ExpirationBuilder SlidingExpiration()
         {
             return ExpirationType(Parameters.ExpirationType.Sliding);
         }
