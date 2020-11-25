@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace FluentCaching.Api.Keys
+namespace FluentCaching.Keys
 {
     internal class Key<T>
     {

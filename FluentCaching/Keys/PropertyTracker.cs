@@ -30,6 +30,19 @@ namespace FluentCaching.Keys
                 .ToDictionary(p => p.Name, p => p.GetValue(targetObject)); 
         }
 
+        public IDictionary<string, object> GetValueSourceDictionary(string targetString)
+        {
+            if (_keys.Count != 1)
+            {
+                throw new ArgumentException(nameof(targetString), "A single dynamic key must be defined in configuration");
+            }
+
+            return new Dictionary<string, object>
+            {
+                {_keys.Keys.Single(), targetString}
+            };
+        }
+
         public virtual void TrackSelf()
         {
             _keys[Self] = true;

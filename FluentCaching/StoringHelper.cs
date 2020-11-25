@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentCaching.Api;
 using FluentCaching.Api.Keys;
@@ -45,6 +46,23 @@ namespace FluentCaching
             var configurationItem = CachingConfiguration.Instance.GetItem<T>();
 
             var valueSource = configurationItem.Tracker.GetValueSourceDictionary(targetObject);
+
+            return RetrieveAsync(configurationItem, valueSource);
+        }
+
+        public static Task<T> RetrieveAsync<T>(string targetString)
+            where T : class
+        {
+            var configurationItem = CachingConfiguration.Instance.GetItem<T>();
+
+            var valueSource = configurationItem.Tracker.GetValueSourceDictionary(targetString);
+
+            return RetrieveAsync(configurationItem, valueSource);
+        }
+
+        private static Task<T> RetrieveAsync<T>(CachingConfigurationItem<T> configurationItem, IDictionary<string, object> valueSource)
+            where T : class
+        {
 
             var builder = new CachingKeyBuilder<T>(valueSource: valueSource);
 
