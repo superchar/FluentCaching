@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentCaching.Api;
 using FluentCaching.Api.Keys;
 using FluentCaching.Configuration;
+using FluentCaching.Exceptions;
 using FluentCaching.Parameters;
 
 namespace FluentCaching
@@ -17,7 +18,7 @@ namespace FluentCaching
 
             if (implementation == null)
             {
-                throw new Exception("Cache implementation is not configured");
+                throw new ConfigurationNotFoundException(typeof(T));
             }
 
             return implementation.SetAsync(targetObject, cachingOptions);
@@ -30,7 +31,7 @@ namespace FluentCaching
 
             if (factory == null)
             {
-                throw new Exception($"Missing configuration for type {typeof(T).FullName}");
+                throw new ConfigurationNotFoundException(typeof(T));
             }
 
             var builder = new CachingKeyBuilder<T>(targetObject);

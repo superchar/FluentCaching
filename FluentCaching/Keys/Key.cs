@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using FluentCaching.Exceptions;
 
 namespace FluentCaching.Keys
 {
@@ -60,7 +61,7 @@ namespace FluentCaching.Keys
 
             if (value == null)
             {
-                ThrowKeyNullException();
+                ThrowKeyPartNullException();
             }
 
             _key.Append(value);
@@ -72,14 +73,14 @@ namespace FluentCaching.Keys
         {
             if (targetObject == null)
             {
-                ThrowKeyNullException();
+                ThrowKeyPartNullException();
             }
 
             // ReSharper disable once PossibleNullReferenceException
             return targetObject.ToString();
         }
 
-        private static void ThrowKeyNullException() => throw new ArgumentNullException("key", "Caching key cannot be null");
+        private static void ThrowKeyPartNullException() => throw new KeyPartNullException();
 
         private class EmptyKey : Key<T>
         {

@@ -43,16 +43,20 @@ namespace FluentCaching.Configuration
 
         internal Func<CachingKeyBuilder<T>, ExpirationBuilder> GetFactory<T>()
             where T : class
-
         {
-            return ((CachingConfigurationItem<T>) _predefinedConfigurations[typeof(T)]).Factory;
+            return GetItem<T>()?.Factory;
         }
 
         internal CachingConfigurationItem<T> GetItem<T>()
             where T : class
 
         {
-            return ((CachingConfigurationItem<T>)_predefinedConfigurations[typeof(T)]);
+            if (_predefinedConfigurations.TryGetValue(typeof(T), out var configurationItem))
+            {
+                return configurationItem as CachingConfigurationItem<T>;
+            }
+
+            return null;
         }
 
         internal void Reset()
