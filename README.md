@@ -5,8 +5,8 @@ Fluent API for object caching
 
 **Configure caching policy by entity**
 ```csharp
-CachingConfiguration.Instance.ForType<User>(builder =>
-builder.UseAsKey("user").CombinedWith(u => u.Id)
+CachingConfiguration.Instance
+.For<User>(u => u.UseAsKey("user").CombinedWith(u => u.Id)
 .And().WithTtlOf(2).Minutes.And(10).Seconds
 .And().SlidingExpiration());
 ```
@@ -27,8 +27,8 @@ await userId.RetrieveAsync<User>();
 
 **Or use multi property configuration**
 ```csharp
-CachingConfiguration.Instance.ForType<User>(builder =>
-builder.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
+CachingConfiguration.Instance
+.For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
 .And().WithTtlOf(2).Minutes.And(10).Seconds
 .And().SlidingExpiration());
 
