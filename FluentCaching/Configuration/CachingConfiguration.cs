@@ -9,7 +9,7 @@ namespace FluentCaching.Configuration
 {
     public class CachingConfiguration
     {
-        public static CachingConfiguration Instance = new CachingConfiguration();
+        public static readonly  CachingConfiguration Instance = new CachingConfiguration();
 
         private readonly Dictionary<Type, CachingConfigurationItem> _predefinedConfigurations = //Should be thread safe when readonly (mutations present only at configuration phase)
             new Dictionary<Type, CachingConfigurationItem>();
@@ -31,7 +31,7 @@ namespace FluentCaching.Configuration
             Current = cacheImplementation;
         }
 
-        public void ForType<T>(Func<CachingKeyBuilder<T>, ExpirationBuilder> factoryFunc)
+        public void For<T>(Func<CachingKeyBuilder<T>, ExpirationBuilder> factoryFunc)
             where T : class
         {
             var tracker = factoryFunc(CachingKeyBuilder<T>.Empty)
@@ -53,6 +53,12 @@ namespace FluentCaching.Configuration
 
         {
             return ((CachingConfigurationItem<T>)_predefinedConfigurations[typeof(T)]);
+        }
+
+        internal void Reset()
+        {
+            _predefinedConfigurations.Clear();
+            Current = null;
         }
     }
 }

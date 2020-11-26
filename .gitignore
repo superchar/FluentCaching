@@ -8,3 +8,6 @@
 /FluentCaching.Memory/bin/Debug/netstandard2.0
 /FluentCaching.Memory/obj
 /.vs/FluentCaching/DesignTimeBuild
+/FluentCaching.Tests/bin/Debug/netcoreapp3.1
+/FluentCaching.Tests/obj
+/FluentCaching.sln.DotSettings.user
