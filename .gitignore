@@ -11,3 +11,6 @@
 /FluentCaching.Tests/bin/Debug/netcoreapp3.1
 /FluentCaching.Tests/obj
 /FluentCaching.sln.DotSettings.user
+/FluentCaching/bin/Release/netstandard2.0
+/FluentCaching.Benchmarks/bin
+/FluentCaching.Benchmarks/obj

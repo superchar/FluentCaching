@@ -28,7 +28,7 @@ namespace FluentCaching.Configuration
 
         internal override ICacheImplementation Current => _cacheImplementation;
 
-        internal void SetImplementation(ICacheImplementation cacheImplementation)
+        internal CachingConfiguration SetImplementation(ICacheImplementation cacheImplementation)
         {
             if (_cacheImplementation != null)
             {
@@ -36,9 +36,11 @@ namespace FluentCaching.Configuration
             }
 
             _cacheImplementation = cacheImplementation;
+
+            return this;
         }
 
-        public void For<T>(Func<CachingKeyBuilder<T>, ExpirationBuilder> factoryFunc)
+        public CachingConfiguration For<T>(Func<CachingKeyBuilder<T>, ExpirationBuilder> factoryFunc)
             where T : class
         {
             var tracker = factoryFunc(new CachingKeyBuilder<T>())
@@ -46,6 +48,8 @@ namespace FluentCaching.Configuration
                 .PropertyTracker;
 
             _predefinedConfigurations[typeof(T)] = new CachingConfigurationItem<T>(tracker, factoryFunc);
+
+            return this;
         }
 
         internal override CachingConfigurationItem<T> GetItem<T>()

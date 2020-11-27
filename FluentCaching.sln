@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentCaching.Memory", "Flu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentCaching.Tests", "FluentCaching.Tests\FluentCaching.Tests.csproj", "{CD683134-90F7-4C0D-9053-1D08B9E3729E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.Benchmarks", "FluentCaching.Benchmarks\FluentCaching.Benchmarks.csproj", "{A5087C71-8AB1-4876-9C46-EB5849FAB4F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{CD683134-90F7-4C0D-9053-1D08B9E3729E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD683134-90F7-4C0D-9053-1D08B9E3729E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD683134-90F7-4C0D-9053-1D08B9E3729E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5087C71-8AB1-4876-9C46-EB5849FAB4F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5087C71-8AB1-4876-9C46-EB5849FAB4F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5087C71-8AB1-4876-9C46-EB5849FAB4F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5087C71-8AB1-4876-9C46-EB5849FAB4F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
