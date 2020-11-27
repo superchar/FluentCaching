@@ -8,19 +8,19 @@ using FluentCaching.Tests.Extensions;
 using FluentCaching.Tests.Models;
 using Xunit;
 
-namespace FluentCaching.Tests.Cache.Keys.Primitive
+namespace FluentCaching.Tests.Cache
 {
     public class StoreTest : BaseTest
     {
         [Fact]
-        public async Task CacheAsync_StaticKey_KeyIsSetAsStatic()
+        public async Task CacheAsync_StaticKey_CachesValue()
         {
             const string key = "user";
 
-            CachingConfiguration.Instance
+            Configuration
                 .For<User>(u => u.UseAsKey(key).Complete());
 
-            await User.Test.CacheAsync();
+            await User.Test.CacheAsync(Configuration);
 
             Dictionary.Keys.Should().HaveCount(1).And.Contain(key);
 
@@ -28,12 +28,12 @@ namespace FluentCaching.Tests.Cache.Keys.Primitive
         }
 
         [Fact]
-        public async Task CacheAsync_PropertyKey_KeyIsToProperty()
+        public async Task CacheAsync_PropertyKey_CachesValue()
         {
-            CachingConfiguration.Instance
+            Configuration
                 .For<User>(u => u.UseAsKey(u => u.LastName).Complete());
 
-            await User.Test.CacheAsync();
+            await User.Test.CacheAsync(Configuration);
 
             var key = User.Test.LastName;
 
@@ -43,12 +43,12 @@ namespace FluentCaching.Tests.Cache.Keys.Primitive
         }
 
         [Fact]
-        public async Task CacheAsync_SelfKey_KeyIsTakenFromToString()
+        public async Task CacheAsync_SelfKey_CachesValue()
         {
-            CachingConfiguration.Instance
+            Configuration
                 .For<User>(u => u.UseSelfAsKey().Complete());
 
-            await User.Test.CacheAsync();
+            await User.Test.CacheAsync(Configuration);
 
             var key = User.Test.ToString();
 
@@ -58,17 +58,17 @@ namespace FluentCaching.Tests.Cache.Keys.Primitive
         }
 
         [Fact]
-        public async Task CacheAsync_AllPossibleKeyTypes_GeneratesValidKey()
+        public async Task CacheAsync_AllPossibleKeyTypes_CachesValue()
         {
             const string staticKeyPart = "user";
 
-            CachingConfiguration.Instance
+            Configuration
                 .For<User>(u => u.UseAsKey(staticKeyPart).CombinedWithSelf().CombinedWith(u => u.Id)
                     .Complete());
 
             var key = $"{staticKeyPart}{User.Test}{User.Test.Id}";
 
-            await User.Test.CacheAsync();
+            await User.Test.CacheAsync(Configuration);
 
             Dictionary.Keys.Should().HaveCount(1).And.Contain(key);
 
@@ -78,7 +78,11 @@ namespace FluentCaching.Tests.Cache.Keys.Primitive
         [Fact]
         public void CacheAsync_MissingConfiguration_ThrowsException()
         {
-            Func<Task> cacheAsync = async () => await User.Test.CacheAsync();
+            Configuration
+                .For<User>(u => u.UseSelfAsKey().CombinedWith(u => u.Id)
+                    .Complete());
+
+            Func<Task> cacheAsync = async () => await Order.Test.CacheAsync(Configuration);
 
             cacheAsync.Should().Throw<ConfigurationNotFoundException>();
 
@@ -92,10 +96,10 @@ namespace FluentCaching.Tests.Cache.Keys.Primitive
 
             user.FirstName = null;
 
-            CachingConfiguration.Instance
+            Configuration
                 .For<User>(u => u.UseAsKey(u => u.FirstName).Complete());
 
-            Func<Task> cacheAsync = async () => await user.CacheAsync();
+            Func<Task> cacheAsync = async () => await user.CacheAsync(Configuration);
 
             cacheAsync.Should().Throw<KeyPartNullException>();
 

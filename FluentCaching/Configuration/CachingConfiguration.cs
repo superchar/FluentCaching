@@ -7,48 +7,48 @@ using FluentCaching.Api.Keys;
 
 namespace FluentCaching.Configuration
 {
-    public class CachingConfiguration
+    public class CachingConfiguration : CachingConfigurationBase
     {
-        public static readonly  CachingConfiguration Instance = new CachingConfiguration();
+        public static readonly CachingConfiguration Instance = new CachingConfiguration();
 
         private readonly Dictionary<Type, CachingConfigurationItem> _predefinedConfigurations = //Should be thread safe when readonly (mutations present only at configuration phase)
             new Dictionary<Type, CachingConfigurationItem>();
+
+        private ICacheImplementation _cacheImplementation;
 
         private CachingConfiguration()
         {
 
         }
 
-        internal ICacheImplementation Current { get; private set; }
+        internal static CachingConfiguration Create()
+        {
+            return new CachingConfiguration();
+        }
+
+        internal override ICacheImplementation Current => _cacheImplementation;
 
         internal void SetImplementation(ICacheImplementation cacheImplementation)
         {
-            if (Current != null)
+            if (_cacheImplementation != null)
             {
                 throw new ArgumentException("Cache implementation is already set", nameof(cacheImplementation));
             }
 
-            Current = cacheImplementation;
+            _cacheImplementation = cacheImplementation;
         }
 
         public void For<T>(Func<CachingKeyBuilder<T>, ExpirationBuilder> factoryFunc)
             where T : class
         {
-            var tracker = factoryFunc(CachingKeyBuilder<T>.Empty)
+            var tracker = factoryFunc(new CachingKeyBuilder<T>())
                 .CachingOptions
                 .PropertyTracker;
 
             _predefinedConfigurations[typeof(T)] = new CachingConfigurationItem<T>(tracker, factoryFunc);
         }
 
-        internal Func<CachingKeyBuilder<T>, ExpirationBuilder> GetFactory<T>()
-            where T : class
-        {
-            return GetItem<T>()?.Factory;
-        }
-
-        internal CachingConfigurationItem<T> GetItem<T>()
-            where T : class
+        internal override CachingConfigurationItem<T> GetItem<T>()
 
         {
             if (_predefinedConfigurations.TryGetValue(typeof(T), out var configurationItem))
@@ -62,7 +62,7 @@ namespace FluentCaching.Configuration
         internal void Reset()
         {
             _predefinedConfigurations.Clear();
-            Current = null;
+            _cacheImplementation = null;
         }
     }
 }

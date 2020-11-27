@@ -12,6 +12,8 @@ namespace FluentCaching.Keys
     {
         private const string Self = nameof(Self);
 
+        private static readonly Dictionary<string, object> EmptyValueSource = new Dictionary<string, object>(0);
+
         private readonly IDictionary<string, bool> _keys = new Dictionary<string, bool>(); // Guaranteed to be thread safe unlike hashset
 
         private PropertyTracker()
@@ -21,20 +23,32 @@ namespace FluentCaching.Keys
 
         public static PropertyTracker Create(params object[] sources)
         {
-            return sources.Any(_ => _ != null) ? new PropertyTracker() : EmptyPropertyTracker.Instance;
+            return sources.Any(_ => _ != null) ? EmptyPropertyTracker.Instance : new PropertyTracker();
         }
 
         public IDictionary<string, object> GetValueSourceDictionary(object targetObject)
         {
-            return GetValidDescriptors(targetObject)
+            var descriptors = GetValidDescriptors(targetObject);
+
+            if (descriptors.Count != _keys.Count)
+            {
+                throw new KeyNotFoundException("Key schema is not correct");
+            }
+
+            return descriptors
                 .ToDictionary(p => p.Name, p => p.GetValue(targetObject)); 
         }
 
         public IDictionary<string, object> GetValueSourceDictionary(string targetString)
         {
-            if (_keys.Count != 1)
+            if (_keys.Count > 1)
             {
                 throw new ArgumentException(nameof(targetString), "A single dynamic key must be defined in configuration");
+            }
+
+            if (!_keys.Any())
+            {
+                return EmptyValueSource;
             }
 
             return new Dictionary<string, object>
@@ -54,11 +68,12 @@ namespace FluentCaching.Keys
             _keys[name] = true;
         }
 
-        private IEnumerable<PropertyDescriptor> GetValidDescriptors(object targetObject) //TODO: caching and reflection optimization
+        private List<PropertyDescriptor> GetValidDescriptors(object targetObject) //TODO: caching and reflection optimization
         {
             return TypeDescriptor.GetProperties(targetObject)
                 .Cast<PropertyDescriptor>()
-                .Where(property => _keys.ContainsKey(property.Name));
+                .Where(property => _keys.ContainsKey(property.Name))
+                .ToList();
         }
 
         private class EmptyPropertyTracker : PropertyTracker

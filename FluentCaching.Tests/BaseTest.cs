@@ -11,16 +11,18 @@ namespace FluentCaching.Tests
     {
         protected DictionaryCacheImplementation Cache { get; set; } = new DictionaryCacheImplementation();
 
+        protected CachingConfiguration Configuration { get; set; } = CachingConfiguration.Create();
+
         protected Dictionary<string, object> Dictionary => Cache.Dictionary;
 
         public BaseTest()
         {
-            CachingConfiguration.Instance.SetImplementation(Cache);
+            Configuration.SetImplementation(Cache);
         }
 
         public void Dispose()
         {
-            CachingConfiguration.Instance.Reset();
+            Configuration.Reset();
         }
     }
 }

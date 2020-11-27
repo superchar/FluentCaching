@@ -10,8 +10,6 @@ namespace FluentCaching.Api.Keys
     public class CachingKeyBuilder<T> 
         where T : class
     {
-        public static CachingKeyBuilder<T> Empty { get; } = new CachingKeyBuilder<T>();
-
         private readonly PropertyTracker _propertyTracker;
 
         private readonly Key<T> _key;

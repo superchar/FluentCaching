@@ -10,11 +10,19 @@ using FluentCaching.Parameters;
 
 namespace FluentCaching
 {
-    internal static class StoringHelper
+    internal class StoringService<T>
+        where T : class
     {
-        public static Task StoreAsync<T>(T targetObject, CachingOptions cachingOptions) where T : class
+        private readonly CachingConfigurationBase _configuration;
+
+        public StoringService(CachingConfigurationBase configuration)
         {
-            var implementation = CachingConfiguration.Instance.Current;
+            _configuration = configuration;
+        }
+
+        public Task StoreAsync(T targetObject, CachingOptions cachingOptions) 
+        {
+            var implementation = _configuration.Current;
 
             if (implementation == null)
             {
@@ -24,15 +32,9 @@ namespace FluentCaching
             return implementation.SetAsync(targetObject, cachingOptions);
         }
 
-        public static Task StoreAsync<T>(T targetObject)
-            where T : class
+        public Task StoreAsync(T targetObject)
         {
-            var factory = CachingConfiguration.Instance.GetFactory<T>();
-
-            if (factory == null)
-            {
-                throw new ConfigurationNotFoundException(typeof(T));
-            }
+            var factory = GetConfigurationItem().Factory;
 
             var builder = new CachingKeyBuilder<T>(targetObject);
 
@@ -41,35 +43,43 @@ namespace FluentCaching
             return StoreAsync(targetObject, options);
         }
 
-        public static Task<T> RetrieveAsync<T>(object targetObject)
-            where T : class
+        public Task<T> RetrieveAsync(object targetObject)
         {
-            var configurationItem = CachingConfiguration.Instance.GetItem<T>();
+            var configurationItem = GetConfigurationItem();
 
             var valueSource = configurationItem.Tracker.GetValueSourceDictionary(targetObject);
 
             return RetrieveAsync(configurationItem, valueSource);
         }
 
-        public static Task<T> RetrieveAsync<T>(string targetString)
-            where T : class
+        public Task<T> RetrieveAsync(string targetString)
         {
-            var configurationItem = CachingConfiguration.Instance.GetItem<T>();
+            var configurationItem = GetConfigurationItem();
 
             var valueSource = configurationItem.Tracker.GetValueSourceDictionary(targetString);
 
             return RetrieveAsync(configurationItem, valueSource);
         }
 
-        private static Task<T> RetrieveAsync<T>(CachingConfigurationItem<T> configurationItem, IDictionary<string, object> valueSource)
-            where T : class
+        private Task<T> RetrieveAsync(CachingConfigurationItem<T> configurationItem, IDictionary<string, object> valueSource)
         {
-
             var builder = new CachingKeyBuilder<T>(valueSource: valueSource);
 
             var key = configurationItem.Factory(builder).CachingOptions.Key;
 
-            return CachingConfiguration.Instance.Current.GetAsync<T>(key);
+            return _configuration.Current.GetAsync<T>(key);
+        }
+
+        private CachingConfigurationItem<T> GetConfigurationItem()
+        {
+            var item = _configuration.GetItem<T>();
+
+            if (item == null)
+            {
+                throw new ConfigurationNotFoundException(typeof(T));
+            }
+
+            return item;
         }
     }
 }
