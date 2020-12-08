@@ -14,7 +14,7 @@ namespace FluentCaching.Keys
 
         private static readonly Dictionary<string, object> EmptyValueSource = new Dictionary<string, object>(0);
 
-        private readonly IDictionary<string, bool> _keys = new Dictionary<string, bool>(); // Guaranteed to be thread safe unlike hashset
+        private readonly IDictionary<string, bool> _keys = new Dictionary<string, bool>(); // Guaranteed to be thread safe when readonly (unlike hashset)
 
         private PropertyTracker()
         {
@@ -62,7 +62,7 @@ namespace FluentCaching.Keys
             _keys[Self] = true;
         }
 
-        public virtual void TrackProperty<T, TValue>(Expression<Func<T, TValue>> valueGetter)
+        public virtual void TrackExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter)
         {
             var name = ((MemberExpression)valueGetter.Body).Member.Name;
             _keys[name] = true;
@@ -80,12 +80,10 @@ namespace FluentCaching.Keys
         {
             public static readonly EmptyPropertyTracker Instance = new EmptyPropertyTracker();
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)] // TODO: Possibly will always be inlined without attrs
-            public override void TrackProperty<T, TValue>(Expression<Func<T, TValue>> valueGetter)
+            public override void TrackExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter)
             {
             }
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override void TrackSelf()
             {
             }

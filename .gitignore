@@ -14,3 +14,5 @@
 /FluentCaching/bin/Release/netstandard2.0
 /FluentCaching.Benchmarks/bin
 /FluentCaching.Benchmarks/obj
+/FluentCaching.Tests/bin/Release/netcoreapp3.1
+/FluentCaching.Memory/bin/Release/netstandard2.0

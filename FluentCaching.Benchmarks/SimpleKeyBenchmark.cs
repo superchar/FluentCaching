@@ -1,5 +1,6 @@
 ﻿
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
@@ -15,7 +16,7 @@ namespace FluentCaching.Benchmarks
 
         private Dictionary<string, object> _dictionary;
 
-        [Params(100, 1000, 10_000)]
+        [Params(1, 10, 100)]
         public int CacheItemsCount { get; set; }
 
         [GlobalSetup]

@@ -50,7 +50,7 @@ namespace FluentCaching.Keys
 
             if (_targetObject != null)
             {
-                var compiled = valueGetter.Compile();
+                var compiled = ExpressionsCompiler.Compile(valueGetter);
                 value = compiled(_targetObject)?.ToString();
             }
             else

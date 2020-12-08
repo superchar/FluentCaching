@@ -33,7 +33,7 @@ namespace FluentCaching.Api.Keys
         {
             _key.AppendProperty(valueGetter);
 
-            _propertyTracker.TrackProperty(valueGetter);
+            _propertyTracker.TrackExpression(valueGetter);
             
             return new CombinedCachingKeyBuilder<T>(_key, _propertyTracker);
         }
