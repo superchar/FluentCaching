@@ -64,7 +64,7 @@ namespace FluentCaching.Keys
 
         public virtual void TrackExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter)
         {
-            var name = ((MemberExpression)valueGetter.Body).Member.Name;
+            var name = ExpressionsHelper.GetProperty(valueGetter).Name;
             _keys[name] = true;
         }
 

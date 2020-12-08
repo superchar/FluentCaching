@@ -8,7 +8,6 @@ namespace FluentCaching.Tests.Extensions
 {
     public static class BuilderExtensions
     {
-
         public static ExpirationBuilder Complete<T>(this CombinedCachingKeyBuilder<T> builder)
             where T : class
         {

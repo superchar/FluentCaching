@@ -12,7 +12,7 @@ using Xunit;
 
 namespace FluentCaching.Tests.Cache
 {
-    public class RetrieveTest : BaseTest
+    public class RetrieveTests : BaseTest
     {
         [Fact]
         public async Task RetrieveAsync_StaticKey_RetrievesValue()

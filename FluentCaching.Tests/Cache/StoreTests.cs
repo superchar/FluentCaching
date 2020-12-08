@@ -10,7 +10,7 @@ using Xunit;
 
 namespace FluentCaching.Tests.Cache
 {
-    public class StoreTest : BaseTest
+    public class StoreTests : BaseTest
     {
         [Fact]
         public async Task CacheAsync_StaticKey_CachesValue()
