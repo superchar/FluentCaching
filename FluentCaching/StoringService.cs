@@ -20,8 +20,12 @@ namespace FluentCaching
             _configuration = configuration;
         }
 
-        public Task StoreAsync(string key, T targetObject, CachingOptions cachingOptions) 
+        public Task StoreAsync(T targetObject)
         {
+            var item = GetConfigurationItem();
+
+            var key = item.Tracker.GetStoreKey(targetObject);
+
             var implementation = _configuration.Current;
 
             if (implementation == null)
@@ -29,16 +33,7 @@ namespace FluentCaching
                 throw new ConfigurationNotFoundException(typeof(T));
             }
 
-            return implementation.SetAsync(key, targetObject, cachingOptions);
-        }
-
-        public Task StoreAsync(T targetObject)
-        {
-            var item = GetConfigurationItem();
-
-            var key = item.Tracker.GetStoreKey(targetObject);
-
-            return StoreAsync(key, targetObject, item.Options);
+            return implementation.SetAsync(key, targetObject, item.Options);
         }
 
         public Task<T> RetrieveAsync(object targetObject)
