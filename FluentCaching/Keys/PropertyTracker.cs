@@ -5,28 +5,87 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using FluentCaching.Exceptions;
 
 namespace FluentCaching.Keys
 {
-    internal class PropertyTracker
+    internal class PropertyTracker<T> : ITracksProperties
+        where T : class
     {
         private const string Self = nameof(Self);
 
+        private static readonly Func<T, IDictionary<string, object>, string> DefaultFactory =
+            (obj, valueDict) => string.Empty;
+
         private static readonly Dictionary<string, object> EmptyValueSource = new Dictionary<string, object>(0);
 
-        private readonly IDictionary<string, bool> _keys = new Dictionary<string, bool>(); // Guaranteed to be thread safe when readonly (unlike hashset)
+        private readonly IDictionary<string, bool>
+            _keys = new Dictionary<string, bool>(); // Guaranteed to be thread safe when readonly (unlike hashset)
 
-        private PropertyTracker()
+        private Func<T, IDictionary<string, object>, string> _factory = DefaultFactory;
+
+        public PropertyTracker()
         {
 
         }
 
-        public static PropertyTracker Create(params object[] sources)
+        public string GetStoreKey(T obj)
         {
-            return sources.Any(_ => _ != null) ? EmptyPropertyTracker.Instance : new PropertyTracker();
+            return _factory(obj, null);
         }
 
-        public IDictionary<string, object> GetValueSourceDictionary(object targetObject)
+        public string GetRetrieveKeySimple(string stringKey)
+        {
+            var valueSource = GetValueSourceDictionary(stringKey);
+
+            return _factory(null, valueSource);
+        }
+
+        public string GetRetrieveKeyComplex(object obj)
+        {
+            var valueSource = GetValueSourceDictionary(obj);
+
+            return _factory(null, valueSource);
+        }
+
+        public void TrackSelf()
+        {
+            _keys[Self] = true;
+
+            var factory = _factory;
+
+            _factory = (obj, valueDict) => factory(obj, valueDict) + (obj?.ToString() ?? valueDict[Self].ToString());
+        }
+
+        public void TrackStatic<TValue>(TValue value)
+        {
+            var staticPart = value?.ToString();
+
+            ThrowIfKeyPartIsNull(staticPart);
+
+            var factory = _factory;
+
+            _factory = (obj, valueDict) => factory(obj, valueDict) + staticPart;
+        }
+
+        public void TrackExpression<TValue>(Expression<Func<T, TValue>> valueGetter)
+        {
+            var property = ExpressionsHelper.GetProperty(valueGetter).Name;
+
+            var compiledExpression = valueGetter.Compile();
+
+            _keys[property] = true;
+
+            var factory = _factory;
+
+            _factory = (obj, valueDict) =>
+                factory(obj, valueDict) +
+                (obj != null
+                    ? ThrowIfKeyPartIsNull(compiledExpression(obj)?.ToString())
+                    : valueDict[property].ToString());
+        }
+
+        private IDictionary<string, object> GetValueSourceDictionary(object targetObject)
         {
             var descriptors = GetValidDescriptors(targetObject);
 
@@ -36,14 +95,15 @@ namespace FluentCaching.Keys
             }
 
             return descriptors
-                .ToDictionary(p => p.Name, p => p.GetValue(targetObject)); 
+                .ToDictionary(p => p.Name, p => p.GetValue(targetObject));
         }
 
-        public IDictionary<string, object> GetValueSourceDictionary(string targetString)
+        private IDictionary<string, object> GetValueSourceDictionary(string targetString)
         {
             if (_keys.Count > 1)
             {
-                throw new ArgumentException(nameof(targetString), "A single dynamic key must be defined in configuration");
+                throw new ArgumentException(nameof(targetString),
+                    "A single dynamic key must be defined in configuration");
             }
 
             if (!_keys.Any())
@@ -53,22 +113,14 @@ namespace FluentCaching.Keys
 
             return new Dictionary<string, object>
             {
-                {_keys.Keys.Single(), targetString}
+                {
+                    _keys.Keys.First(), targetString
+                } // First will work faster as _keys is guaranteed to have a single item
             };
         }
 
-        public virtual void TrackSelf()
-        {
-            _keys[Self] = true;
-        }
-
-        public virtual void TrackExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter)
-        {
-            var name = ExpressionsHelper.GetProperty(valueGetter).Name;
-            _keys[name] = true;
-        }
-
-        private List<PropertyDescriptor> GetValidDescriptors(object targetObject) //TODO: caching and reflection optimization
+        private List<PropertyDescriptor>
+            GetValidDescriptors(object targetObject) //TODO: caching and reflection optimization
         {
             return TypeDescriptor.GetProperties(targetObject)
                 .Cast<PropertyDescriptor>()
@@ -76,17 +128,14 @@ namespace FluentCaching.Keys
                 .ToList();
         }
 
-        private class EmptyPropertyTracker : PropertyTracker
+        private static string ThrowIfKeyPartIsNull(string part)
         {
-            public static readonly EmptyPropertyTracker Instance = new EmptyPropertyTracker();
-
-            public override void TrackExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter)
+            if (part == null)
             {
+                throw new KeyPartNullException();
             }
 
-            public override void TrackSelf()
-            {
-            }
+            return part;
         }
     }
 }

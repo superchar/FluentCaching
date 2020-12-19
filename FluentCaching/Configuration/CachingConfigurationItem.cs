@@ -7,11 +7,8 @@ namespace FluentCaching.Configuration
 {
     internal abstract class CachingConfigurationItem
     {
-        public PropertyTracker Tracker { get; }
-
-        protected CachingConfigurationItem(PropertyTracker tracker)
+        protected CachingConfigurationItem()
         {
-            Tracker = tracker;
         }
     }
 }

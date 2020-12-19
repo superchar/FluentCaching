@@ -10,39 +10,27 @@ namespace FluentCaching.Api.Keys
     public class CachingKeyBuilder<T> 
         where T : class
     {
-        private readonly PropertyTracker _propertyTracker;
-
-        private readonly Key<T> _key;
-
-        public CachingKeyBuilder(T targetObject = null, IDictionary<string, object> valueSource = null)
-        {
-            _propertyTracker = PropertyTracker.Create(targetObject, valueSource);
-            _key = Key<T>.Create(targetObject, valueSource);
-        }
+        private readonly PropertyTracker<T> _propertyTracker = new PropertyTracker<T>();
 
         public CombinedCachingKeyBuilder<T> UseSelfAsKey()
         {
-            _key.AppendSelf();
-            
             _propertyTracker.TrackSelf();
 
-            return new CombinedCachingKeyBuilder<T>(_key, _propertyTracker);
+            return new CombinedCachingKeyBuilder<T>(_propertyTracker);
         }
 
         public CombinedCachingKeyBuilder<T> UseAsKey<TValue>(Expression<Func<T, TValue>> valueGetter)
         {
-            _key.AppendProperty(valueGetter);
-
             _propertyTracker.TrackExpression(valueGetter);
             
-            return new CombinedCachingKeyBuilder<T>(_key, _propertyTracker);
+            return new CombinedCachingKeyBuilder<T>(_propertyTracker);
         }
 
         public CombinedCachingKeyBuilder<T> UseAsKey<TValue>(TValue value)
         {
-            _key.AppendValue(value);
+            _propertyTracker.TrackStatic(value);
 
-            return new CombinedCachingKeyBuilder<T>(_key, _propertyTracker);
+            return new CombinedCachingKeyBuilder<T>(_propertyTracker);
         }
     }
 }

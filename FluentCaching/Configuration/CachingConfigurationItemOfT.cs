@@ -4,17 +4,20 @@ using System.Text;
 using FluentCaching.Api;
 using FluentCaching.Api.Keys;
 using FluentCaching.Keys;
+using FluentCaching.Parameters;
 
 namespace FluentCaching.Configuration
 {
-    internal class CachingConfigurationItem<T> : CachingConfigurationItem where T: class
+    internal class CachingConfigurationItem<T> : CachingConfigurationItem where T : class
     {
-        public CachingConfigurationItem(PropertyTracker tracker, 
-            Func<CachingKeyBuilder<T>, ExpirationBuilder> factory) : base(tracker)
+        public CachingConfigurationItem(CachingOptions options)
         {
-            Factory = factory;
+            Tracker = options.PropertyTracker as PropertyTracker<T>;
+            Options = options;
         }
 
-        public Func<CachingKeyBuilder<T>, ExpirationBuilder> Factory { get; }
+        public PropertyTracker<T> Tracker { get; }
+
+        public CachingOptions Options { get; }
     }
 }

@@ -15,9 +15,9 @@ namespace FluentCaching.Tests.Mocks
             return Task.FromResult((T)Dictionary[key]);
         }
 
-        public Task SetAsync<T>(T targetObject, CachingOptions options)
+        public Task SetAsync<T>(string key, T targetObject, CachingOptions options)
         {
-            Dictionary[options.Key] = targetObject;
+            Dictionary[key] = targetObject;
             return Task.CompletedTask;
         }
     }

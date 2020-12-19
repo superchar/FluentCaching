@@ -43,11 +43,10 @@ namespace FluentCaching.Configuration
         public CachingConfiguration For<T>(Func<CachingKeyBuilder<T>, ExpirationBuilder> factoryFunc)
             where T : class
         {
-            var tracker = factoryFunc(new CachingKeyBuilder<T>())
-                .CachingOptions
-                .PropertyTracker;
+            var options = factoryFunc(new CachingKeyBuilder<T>())
+                .CachingOptions;
 
-            _predefinedConfigurations[typeof(T)] = new CachingConfigurationItem<T>(tracker, factoryFunc);
+            _predefinedConfigurations[typeof(T)] = new CachingConfigurationItem<T>(options);
 
             return this;
         }

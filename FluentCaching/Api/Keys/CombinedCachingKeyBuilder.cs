@@ -10,25 +10,20 @@ namespace FluentCaching.Api.Keys
     public class CombinedCachingKeyBuilder<T>
         where T : class
     {
-        private readonly Key<T> _key;
+        private readonly PropertyTracker<T> _propertyTracker;
 
-        private readonly PropertyTracker _propertyTracker;
-
-        internal CombinedCachingKeyBuilder(Key<T> key, PropertyTracker propertyTracker)
+        internal CombinedCachingKeyBuilder(PropertyTracker<T> propertyTracker)
         {
-            _key = key;
             _propertyTracker = propertyTracker;
         }
 
         public CachingOptionsBuilder And()
         {
-            return new CachingOptionsBuilder(_key.ToString(), _propertyTracker);
+            return new CachingOptionsBuilder(_propertyTracker);
         }
 
         public CombinedCachingKeyBuilder<T> CombinedWithSelf()
         {
-            _key.AppendSelf();
-
             _propertyTracker.TrackSelf();
     
             return this;
@@ -36,8 +31,6 @@ namespace FluentCaching.Api.Keys
 
         public CombinedCachingKeyBuilder<T> CombinedWith<TValue>(Expression<Func<T, TValue>> valueGetter)
         {
-            _key.AppendProperty(valueGetter);
-
             _propertyTracker.TrackExpression(valueGetter);
 
             return this;
@@ -45,7 +38,7 @@ namespace FluentCaching.Api.Keys
 
         public CombinedCachingKeyBuilder<T> CombinedWith<TValue>(TValue value)
         {
-            _key.AppendValue(value);
+            _propertyTracker.TrackStatic(value);
 
             return this;
         }

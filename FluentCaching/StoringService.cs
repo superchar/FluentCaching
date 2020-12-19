@@ -20,7 +20,7 @@ namespace FluentCaching
             _configuration = configuration;
         }
 
-        public Task StoreAsync(T targetObject, CachingOptions cachingOptions) 
+        public Task StoreAsync(string key, T targetObject, CachingOptions cachingOptions) 
         {
             var implementation = _configuration.Current;
 
@@ -29,43 +29,32 @@ namespace FluentCaching
                 throw new ConfigurationNotFoundException(typeof(T));
             }
 
-            return implementation.SetAsync(targetObject, cachingOptions);
+            return implementation.SetAsync(key, targetObject, cachingOptions);
         }
 
         public Task StoreAsync(T targetObject)
         {
-            var factory = GetConfigurationItem().Factory;
+            var item = GetConfigurationItem();
 
-            var builder = new CachingKeyBuilder<T>(targetObject);
+            var key = item.Tracker.GetStoreKey(targetObject);
 
-            var options = factory(builder).CachingOptions;
-
-            return StoreAsync(targetObject, options);
+            return StoreAsync(key, targetObject, item.Options);
         }
 
         public Task<T> RetrieveAsync(object targetObject)
         {
             var configurationItem = GetConfigurationItem();
 
-            var valueSource = configurationItem.Tracker.GetValueSourceDictionary(targetObject);
+            var key = configurationItem.Tracker.GetRetrieveKeyComplex(targetObject);
 
-            return RetrieveAsync(configurationItem, valueSource);
+            return _configuration.Current.GetAsync<T>(key);
         }
 
         public Task<T> RetrieveAsync(string targetString)
         {
             var configurationItem = GetConfigurationItem();
 
-            var valueSource = configurationItem.Tracker.GetValueSourceDictionary(targetString);
-
-            return RetrieveAsync(configurationItem, valueSource);
-        }
-
-        private Task<T> RetrieveAsync(CachingConfigurationItem<T> configurationItem, IDictionary<string, object> valueSource)
-        {
-            var builder = new CachingKeyBuilder<T>(valueSource: valueSource);
-
-            var key = configurationItem.Factory(builder).CachingOptions.Key;
+            var key = configurationItem.Tracker.GetRetrieveKeySimple(targetString);
 
             return _configuration.Current.GetAsync<T>(key);
         }

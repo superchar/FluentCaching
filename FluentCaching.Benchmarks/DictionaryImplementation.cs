@@ -15,9 +15,9 @@ namespace FluentCaching.Benchmarks
             return Task.FromResult((T)_dictionary[key]);
         }
 
-        public Task SetAsync<T>(T targetObject, CachingOptions options)
+        public Task SetAsync<T>(string key, T targetObject, CachingOptions options)
         {
-            _dictionary[options.Key] = targetObject;
+            _dictionary[key] = targetObject;
             return Task.CompletedTask;
         }
     }
