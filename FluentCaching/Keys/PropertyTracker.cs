@@ -24,11 +24,6 @@ namespace FluentCaching.Keys
 
         private Func<T, IDictionary<string, object>, string> _factory = DefaultFactory;
 
-        public PropertyTracker()
-        {
-
-        }
-
         public string GetStoreKey(T obj)
         {
             return _factory(obj, null);

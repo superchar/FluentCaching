@@ -33,5 +33,10 @@ namespace FluentCaching.Api
         {
             return ExpirationType(Parameters.ExpirationType.Sliding);
         }
+
+        public CacheImplementationBuilder And()
+        {
+            return new CacheImplementationBuilder(_currentOptions);
+        }
     }
 }

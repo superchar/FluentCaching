@@ -26,32 +26,31 @@ namespace FluentCaching
 
             var key = item.Tracker.GetStoreKey(targetObject);
 
-            var implementation = _configuration.Current;
-
-            if (implementation == null)
-            {
-                throw new ConfigurationNotFoundException(typeof(T));
-            }
+            var implementation = GetCacheImplementation(item);
 
             return implementation.SetAsync(key, targetObject, item.Options);
         }
 
         public Task<T> RetrieveAsync(object targetObject)
         {
-            var configurationItem = GetConfigurationItem();
+            var item = GetConfigurationItem();
 
-            var key = configurationItem.Tracker.GetRetrieveKeyComplex(targetObject);
+            var key = item.Tracker.GetRetrieveKeyComplex(targetObject);
 
-            return _configuration.Current.GetAsync<T>(key);
+            var implementation = GetCacheImplementation(item);
+
+            return implementation.GetAsync<T>(key);
         }
 
         public Task<T> RetrieveAsync(string targetString)
         {
-            var configurationItem = GetConfigurationItem();
+            var item = GetConfigurationItem();
 
-            var key = configurationItem.Tracker.GetRetrieveKeySimple(targetString);
+            var key = item.Tracker.GetRetrieveKeySimple(targetString);
 
-            return _configuration.Current.GetAsync<T>(key);
+            var implementation = GetCacheImplementation(item);
+
+            return implementation.GetAsync<T>(key);
         }
 
         private CachingConfigurationItem<T> GetConfigurationItem()
@@ -64,6 +63,18 @@ namespace FluentCaching
             }
 
             return item;
+        }
+
+        private ICacheImplementation GetCacheImplementation(CachingConfigurationItem<T> item)
+        {
+            var implementation = item.Options.CacheImplementation ?? _configuration.Current;
+
+            if (implementation == null)
+            {
+                throw new ConfigurationNotFoundException(typeof(T));
+            }
+
+            return implementation;
         }
     }
 }

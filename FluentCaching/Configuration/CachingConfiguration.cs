@@ -4,10 +4,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using FluentCaching.Api;
 using FluentCaching.Api.Keys;
+using FluentCaching.Parameters;
 
 namespace FluentCaching.Configuration
 {
-    public class CachingConfiguration : CachingConfigurationBase
+    public sealed class CachingConfiguration : CachingConfigurationBase
     {
         public static readonly CachingConfiguration Instance = new CachingConfiguration();
 
@@ -28,7 +29,7 @@ namespace FluentCaching.Configuration
 
         internal override ICacheImplementation Current => _cacheImplementation;
 
-        internal CachingConfiguration SetImplementation(ICacheImplementation cacheImplementation)
+        public CachingConfiguration SetImplementation(ICacheImplementation cacheImplementation)
         {
             if (_cacheImplementation != null)
             {
@@ -46,13 +47,19 @@ namespace FluentCaching.Configuration
             var options = factoryFunc(new CachingKeyBuilder<T>())
                 .CachingOptions;
 
-            _predefinedConfigurations[typeof(T)] = new CachingConfigurationItem<T>(options);
+            return For<T>(options);
+        }
 
-            return this;
+        public CachingConfiguration For<T>(Func<CachingKeyBuilder<T>, CacheImplementationBuilder> factoryFunc)
+            where T : class
+        {
+            var options = factoryFunc(new CachingKeyBuilder<T>())
+                .CachingOptions;
+
+            return For<T>(options);
         }
 
         internal override CachingConfigurationItem<T> GetItem<T>()
-
         {
             if (_predefinedConfigurations.TryGetValue(typeof(T), out var configurationItem))
             {
@@ -66,6 +73,14 @@ namespace FluentCaching.Configuration
         {
             _predefinedConfigurations.Clear();
             _cacheImplementation = null;
+        }
+
+        private CachingConfiguration For<T>(CachingOptions options)
+            where T : class
+        {
+            _predefinedConfigurations[typeof(T)] = new CachingConfigurationItem<T>(options);
+
+            return this;
         }
     }
 }

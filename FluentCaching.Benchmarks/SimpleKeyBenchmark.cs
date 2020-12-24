@@ -26,7 +26,7 @@ namespace FluentCaching.Benchmarks
 
             for (var i = 0; i < _users.Length; i++)
             {
-                _users[i] = new User {FirstName = $"FirstName{i}", LastName = $"LastName{i}", Id = 1};
+                _users[i] = new User {FirstName = $"FirstName{i}", LastName = $"LastName{i}", Id = i};
             }
 
             _configuration = CachingConfiguration.Create()

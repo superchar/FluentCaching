@@ -13,5 +13,13 @@ namespace FluentCaching.Tests.Extensions
         {
             return builder.And().WithTtlOf(5).Seconds.And().SlidingExpiration();
         }
+
+        public static CacheImplementationBuilder Complete<T>(this CombinedCachingKeyBuilder<T> builder, ICacheImplementation cacheImplementation)
+            where T : class
+        {
+            return Complete<T>(builder)
+                .And()
+                .WithCacheImplementation(cacheImplementation);
+        }
     }
 }
