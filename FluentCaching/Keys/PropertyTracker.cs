@@ -82,7 +82,9 @@ namespace FluentCaching.Keys
 
         private IDictionary<string, object> GetValueSourceDictionary(object targetObject)
         {
-            var descriptors = GetValidDescriptors(targetObject);
+            var descriptors = ComplexKeysHelper.GetProperties(targetObject)
+                .Where(_ => _keys.ContainsKey(_.Name))
+                .ToList();
 
             if (descriptors.Count != _keys.Count)
             {
@@ -97,8 +99,8 @@ namespace FluentCaching.Keys
         {
             if (_keys.Count > 1)
             {
-                throw new ArgumentException(nameof(targetString),
-                    "A single dynamic key must be defined in configuration");
+                throw new ArgumentException(
+                    "A single dynamic key must be defined in configuration", nameof(targetString));
             }
 
             if (!_keys.Any())
@@ -114,14 +116,6 @@ namespace FluentCaching.Keys
             };
         }
 
-        private List<PropertyDescriptor>
-            GetValidDescriptors(object targetObject) //TODO: caching and reflection optimization
-        {
-            return TypeDescriptor.GetProperties(targetObject)
-                .Cast<PropertyDescriptor>()
-                .Where(property => _keys.ContainsKey(property.Name))
-                .ToList();
-        }
 
         private static string ThrowIfKeyPartIsNull(string part)
         {
