@@ -33,7 +33,7 @@ namespace FluentCaching.Benchmarks
                 .SetImplementation(new DictionaryImplementation())
                 .For<User>(Configure);
 
-            _dictionary = new Dictionary<string, object>();
+            _dictionary = new Dictionary<string, object>(CacheItemsCount);
         }
 
         [Benchmark(Baseline = true)]
