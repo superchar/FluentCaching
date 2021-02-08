@@ -7,7 +7,7 @@ namespace FluentCaching.Benchmarks
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<SimpleKeyBenchmark>();
+            BenchmarkRunner.Run<ComplexKeyBenchmark>();
 
             Console.ReadKey();
         }
