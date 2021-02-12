@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using FluentCaching.Exceptions;
+using FluentCaching.Keys.Complex;
 
 namespace FluentCaching.Keys
 {
@@ -82,17 +83,17 @@ namespace FluentCaching.Keys
 
         private IDictionary<string, object> GetValueSourceDictionary(object targetObject)
         {
-            var descriptors = ComplexKeysHelper.GetProperties(targetObject)
+            var properties = ComplexKeysHelper.GetProperties(targetObject.GetType())
                 .Where(_ => _keys.ContainsKey(_.Name))
                 .ToList();
 
-            if (descriptors.Count != _keys.Count)
+            if (properties.Count != _keys.Count)
             {
                 throw new KeyNotFoundException("Key schema is not correct");
             }
 
-            return descriptors
-                .ToDictionary(p => p.Name, p => p.GetValue(targetObject));
+            return properties
+                .ToDictionary(p => p.Name, p => p.Get(targetObject));
         }
 
         private IDictionary<string, object> GetValueSourceDictionary(string targetString)
