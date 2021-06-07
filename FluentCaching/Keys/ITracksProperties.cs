@@ -1,5 +1,4 @@
-﻿
-namespace FluentCaching.Keys
+﻿namespace FluentCaching.Keys
 {
     internal interface ITracksProperties
     {

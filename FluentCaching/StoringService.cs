@@ -1,12 +1,6 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using FluentCaching.Api;
-using FluentCaching.Api.Keys;
+﻿using System.Threading.Tasks;
 using FluentCaching.Configuration;
 using FluentCaching.Exceptions;
-using FluentCaching.Parameters;
 
 namespace FluentCaching
 {
@@ -65,16 +59,9 @@ namespace FluentCaching
             return item;
         }
 
-        private ICacheImplementation GetCacheImplementation(CachingConfigurationItem<T> item)
-        {
-            var implementation = item.Options.CacheImplementation ?? _configuration.Current;
-
-            if (implementation == null)
-            {
-                throw new ConfigurationNotFoundException(typeof(T));
-            }
-
-            return implementation;
-        }
+        private ICacheImplementation GetCacheImplementation(CachingConfigurationItem<T> item) =>
+            item.Options.CacheImplementation ??
+            _configuration.Current ?? 
+            throw new ConfigurationNotFoundException(typeof(T));
     }
 }

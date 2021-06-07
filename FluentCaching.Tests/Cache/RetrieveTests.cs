@@ -1,10 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentCaching.Configuration;
 using FluentCaching.Exceptions;
 using FluentCaching.Tests.Extensions;
 using FluentCaching.Tests.Models;
@@ -41,7 +39,6 @@ namespace FluentCaching.Tests.Cache
 
             result.Should().Be(User.Test);
         }
-
 
         [Fact]
         public async Task RetrieveAsync_SinglePropertyKey_RetrievesValue()
@@ -115,7 +112,6 @@ namespace FluentCaching.Tests.Cache
             Dictionary.Keys.Single().Should().Be(expectedStringKey);
         }
 
-
         [Fact]
         public void RetrieveAsync_MissingConfiguration_ThrowsException()
         {
@@ -130,7 +126,6 @@ namespace FluentCaching.Tests.Cache
 
             Dictionary.Keys.Should().BeEmpty();
         }
-
 
         [Fact]
         public void RetrieveAsync_WrongKeySchema_ThrowsException()

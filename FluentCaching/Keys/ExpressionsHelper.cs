@@ -1,9 +1,6 @@
-﻿
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace FluentCaching.Keys
 {

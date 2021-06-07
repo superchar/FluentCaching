@@ -1,12 +1,7 @@
-﻿
-
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using FluentCaching.Api;
 using FluentCaching.Api.Keys;
-using FluentCaching.Configuration;
 
 namespace FluentCaching.Benchmarks
 {

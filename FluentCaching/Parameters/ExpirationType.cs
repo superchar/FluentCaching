@@ -1,6 +1,4 @@
-﻿
-
-namespace FluentCaching.Parameters
+﻿namespace FluentCaching.Parameters
 {
     public enum ExpirationType
     {

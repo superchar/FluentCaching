@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Net.Http.Headers;
+﻿using System;
 using FluentCaching.Parameters;
 
 namespace FluentCaching.Api.Ttl
@@ -11,13 +9,13 @@ namespace FluentCaching.Api.Ttl
 
         private short _currentValue;
 
-        private short _seconds = 0;
+        private short _seconds;
 
-        private short _minutes = 0;
+        private short _minutes;
 
-        private short _hours = 0;
+        private short _hours;
 
-        private short _days = 0;
+        private short _days;
 
         public TtlBuilder(CachingOptions currentOptions, short currentValue)
         {

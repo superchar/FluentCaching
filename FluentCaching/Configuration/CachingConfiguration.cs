@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
 using FluentCaching.Api;
 using FluentCaching.Api.Keys;
@@ -19,13 +17,9 @@ namespace FluentCaching.Configuration
 
         private CachingConfiguration()
         {
-
         }
 
-        internal static CachingConfiguration Create()
-        {
-            return new CachingConfiguration();
-        }
+        internal static CachingConfiguration Create() => new CachingConfiguration();
 
         internal override ICacheImplementation Current => _cacheImplementation;
 
@@ -43,21 +37,12 @@ namespace FluentCaching.Configuration
 
         public CachingConfiguration For<T>(Func<CachingKeyBuilder<T>, ExpirationBuilder> factoryFunc)
             where T : class
-        {
-            var options = factoryFunc(new CachingKeyBuilder<T>())
-                .CachingOptions;
-
-            return For<T>(options);
-        }
+            => For<T>(factoryFunc(new CachingKeyBuilder<T>()).CachingOptions);
 
         public CachingConfiguration For<T>(Func<CachingKeyBuilder<T>, CacheImplementationBuilder> factoryFunc)
             where T : class
-        {
-            var options = factoryFunc(new CachingKeyBuilder<T>())
-                .CachingOptions;
+            => For<T>(factoryFunc(new CachingKeyBuilder<T>()).CachingOptions);
 
-            return For<T>(options);
-        }
 
         internal override CachingConfigurationItem<T> GetItem<T>()
         {

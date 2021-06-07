@@ -1,8 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentCaching.Configuration;
 using FluentCaching.Exceptions;
 using FluentCaching.Tests.Extensions;
 using FluentCaching.Tests.Models;

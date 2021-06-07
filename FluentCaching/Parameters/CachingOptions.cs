@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using FluentCaching.Keys;
 
 namespace FluentCaching.Parameters

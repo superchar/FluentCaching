@@ -1,8 +1,4 @@
-﻿using System;
-using FluentCaching.Api;
-using FluentCaching.Api.Keys;
-
-namespace FluentCaching.Configuration
+﻿namespace FluentCaching.Configuration
 {
     public abstract class CachingConfigurationBase
     {

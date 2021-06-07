@@ -1,10 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Text;
-using FluentCaching.Api;
-using FluentCaching.Api.Keys;
-using FluentCaching.Keys;
+﻿using FluentCaching.Keys;
 using FluentCaching.Parameters;
 
 namespace FluentCaching.Configuration

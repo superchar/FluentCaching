@@ -1,8 +1,4 @@
-﻿
-using System;
-using System.Threading.Tasks;
-using FluentCaching.Configuration;
-using FluentCaching.Parameters;
+﻿using FluentCaching.Parameters;
 
 namespace FluentCaching.Api
 {
@@ -17,26 +13,16 @@ namespace FluentCaching.Api
 
         public CachingOptions CachingOptions => _currentOptions;
 
-        public ExpirationBuilder ExpirationType(ExpirationType expirationType)
+        public ExpirationBuilder AbsoluteExpiration() => ExpirationType(Parameters.ExpirationType.Absolute);
+
+        public ExpirationBuilder SlidingExpiration() => ExpirationType(Parameters.ExpirationType.Sliding);
+
+        private ExpirationBuilder ExpirationType(ExpirationType expirationType)
         {
             _currentOptions.ExpirationType = expirationType;
-
             return this;
         }
 
-        public ExpirationBuilder AbsoluteExpiration()
-        {
-            return ExpirationType(Parameters.ExpirationType.Absolute);
-        }
-
-        public ExpirationBuilder SlidingExpiration()
-        {
-            return ExpirationType(Parameters.ExpirationType.Sliding);
-        }
-
-        public CacheImplementationBuilder And()
-        {
-            return new CacheImplementationBuilder(_currentOptions);
-        }
+        public CacheImplementationBuilder And() => new CacheImplementationBuilder(_currentOptions);
     }
 }

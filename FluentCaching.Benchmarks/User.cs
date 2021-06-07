@@ -1,5 +1,4 @@
-﻿
-namespace FluentCaching.Benchmarks
+﻿namespace FluentCaching.Benchmarks
 {
     public class User
     {

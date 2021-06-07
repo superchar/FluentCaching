@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using FluentCaching.Configuration;
 using FluentCaching.Tests.Mocks;
@@ -15,7 +13,7 @@ namespace FluentCaching.Tests
 
         protected Dictionary<string, object> Dictionary => Cache.Dictionary;
 
-        public BaseTest()
+        protected BaseTest()
         {
             Configuration.SetImplementation(Cache);
         }

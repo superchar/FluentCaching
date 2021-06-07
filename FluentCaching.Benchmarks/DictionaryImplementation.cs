@@ -1,8 +1,6 @@
-﻿using FluentCaching.Parameters;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentCaching.Parameters;
 
 namespace FluentCaching.Benchmarks
 {

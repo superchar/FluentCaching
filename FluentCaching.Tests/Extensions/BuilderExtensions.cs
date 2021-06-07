@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FluentCaching.Api;
+﻿using FluentCaching.Api;
 using FluentCaching.Api.Keys;
 
 namespace FluentCaching.Tests.Extensions

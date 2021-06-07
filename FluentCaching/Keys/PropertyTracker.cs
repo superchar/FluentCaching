@@ -1,10 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 using FluentCaching.Exceptions;
 using FluentCaching.Keys.Complex;
 
@@ -30,50 +27,35 @@ namespace FluentCaching.Keys
             return _factory(obj, null);
         }
 
-        public string GetRetrieveKeySimple(string stringKey)
-        {
-            var valueSource = GetValueSourceDictionary(stringKey);
+        public string GetRetrieveKeySimple(string stringKey) => _factory(null, GetValueSourceDictionary(stringKey));
 
-            return _factory(null, valueSource);
-        }
-
-        public string GetRetrieveKeyComplex(object obj)
-        {
-            var valueSource = GetValueSourceDictionary(obj);
-
-            return _factory(null, valueSource);
-        }
+        public string GetRetrieveKeyComplex(object obj) => _factory(null, GetValueSourceDictionary(obj));
 
         public void TrackSelf()
         {
             _keys[Self] = true;
 
             var factory = _factory;
-
             _factory = (obj, valueDict) => factory(obj, valueDict) + (obj?.ToString() ?? valueDict[Self].ToString());
         }
 
         public void TrackStatic<TValue>(TValue value)
         {
             var staticPart = value?.ToString();
-
             ThrowIfKeyPartIsNull(staticPart);
 
             var factory = _factory;
-
             _factory = (obj, valueDict) => factory(obj, valueDict) + staticPart;
         }
 
         public void TrackExpression<TValue>(Expression<Func<T, TValue>> valueGetter)
         {
             var property = ExpressionsHelper.GetProperty(valueGetter).Name;
+            _keys[property] = true;
 
             var compiledExpression = valueGetter.Compile();
 
-            _keys[property] = true;
-
             var factory = _factory;
-
             _factory = (obj, valueDict) =>
                 factory(obj, valueDict) +
                 (obj != null
@@ -117,15 +99,6 @@ namespace FluentCaching.Keys
             };
         }
 
-
-        private static string ThrowIfKeyPartIsNull(string part)
-        {
-            if (part == null)
-            {
-                throw new KeyPartNullException();
-            }
-
-            return part;
-        }
+        private static string ThrowIfKeyPartIsNull(string part) => part ?? throw new KeyPartNullException();
     }
 }

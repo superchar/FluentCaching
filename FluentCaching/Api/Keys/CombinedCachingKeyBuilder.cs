@@ -1,8 +1,5 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq.Expressions;
-using System.Text;
 using FluentCaching.Keys;
 
 namespace FluentCaching.Api.Keys
@@ -17,29 +14,23 @@ namespace FluentCaching.Api.Keys
             _propertyTracker = propertyTracker;
         }
 
-        public CachingOptionsBuilder And()
-        {
-            return new CachingOptionsBuilder(_propertyTracker);
-        }
+        public CachingOptionsBuilder And() => new CachingOptionsBuilder(_propertyTracker);
 
         public CombinedCachingKeyBuilder<T> CombinedWithSelf()
         {
             _propertyTracker.TrackSelf();
-    
             return this;
         }
 
         public CombinedCachingKeyBuilder<T> CombinedWith<TValue>(Expression<Func<T, TValue>> valueGetter)
         {
             _propertyTracker.TrackExpression(valueGetter);
-
             return this;
         }
 
         public CombinedCachingKeyBuilder<T> CombinedWith<TValue>(TValue value)
         {
             _propertyTracker.TrackStatic(value);
-
             return this;
         }
     }

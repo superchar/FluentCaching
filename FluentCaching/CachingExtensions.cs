@@ -1,9 +1,4 @@
-﻿
-using System;
-using System.Net.NetworkInformation;
-using System.Threading.Tasks;
-using FluentCaching.Api;
-using FluentCaching.Api.Keys;
+﻿using System.Threading.Tasks;
 using FluentCaching.Configuration;
 
 namespace FluentCaching

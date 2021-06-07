@@ -1,9 +1,4 @@
-﻿
-
-using FluentCaching.Api.Keys;
-using FluentCaching.Keys;
-
-namespace FluentCaching.Configuration
+﻿namespace FluentCaching.Configuration
 {
     internal abstract class CachingConfigurationItem
     {

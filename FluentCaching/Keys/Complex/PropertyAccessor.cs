@@ -1,10 +1,8 @@
-﻿
-
-using System;
+﻿using System;
 
 namespace FluentCaching.Keys.Complex
 {
-    internal struct PropertyAccessor
+    internal readonly struct PropertyAccessor
     {
         public PropertyAccessor(string name, Func<object, object> get)
         {

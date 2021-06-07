@@ -1,5 +1,4 @@
-﻿
-using FluentCaching.Parameters;
+﻿using FluentCaching.Parameters;
 
 namespace FluentCaching.Api
 {
@@ -17,7 +16,6 @@ namespace FluentCaching.Api
         public CacheImplementationBuilder WithCacheImplementation(ICacheImplementation cacheImplementation)
         {
             _currentOptions.CacheImplementation = cacheImplementation;
-
             return this;
         }
     }

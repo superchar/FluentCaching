@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Runtime.CompilerServices;
+﻿using System;
 using FluentAssertions;
 using FluentCaching.Tests.Extensions;
 using FluentCaching.Tests.Models;

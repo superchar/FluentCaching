@@ -1,7 +1,4 @@
-﻿
-
-using System;
-using System.Reflection.Metadata;
+﻿using System;
 
 namespace FluentCaching.Tests.Models
 {

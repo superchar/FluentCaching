@@ -1,6 +1,4 @@
-﻿
-
-namespace FluentCaching.Api.Ttl
+﻿namespace FluentCaching.Api.Ttl
 {
     public class TtlCurrentValueBuilder
     {
@@ -17,9 +15,6 @@ namespace FluentCaching.Api.Ttl
             return _ttlBuilder;
         }
 
-        public ExpirationBuilder And()
-        {
-            return _ttlBuilder.Build();
-        }
+        public ExpirationBuilder And() => _ttlBuilder.Build();
     }
 }
