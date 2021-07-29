@@ -18,5 +18,12 @@ namespace FluentCaching.Benchmarks
             _dictionary[key] = targetObject;
             return Task.CompletedTask;
         }
+
+        public Task RemoveAsync(string key)
+        {
+            _dictionary.Remove(key);
+            return Task.CompletedTask;
+        }
+
     }
 }

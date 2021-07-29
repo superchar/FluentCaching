@@ -10,7 +10,13 @@ namespace FluentCaching.Tests.Mocks
 
         public Task<T> GetAsync<T>(string key)
         {
-            return Task.FromResult((T)Dictionary[key]);
+            return Task.FromResult((T)Dictionary.GetValueOrDefault(key));
+        }
+
+        public Task RemoveAsync(string key)
+        {
+            Dictionary.Remove(key);
+            return Task.CompletedTask;
         }
 
         public Task SetAsync<T>(string key, T targetObject, CachingOptions options)

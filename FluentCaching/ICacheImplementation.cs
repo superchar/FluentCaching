@@ -8,5 +8,7 @@ namespace FluentCaching
         Task<T> GetAsync<T>(string key);
         
         Task SetAsync<T>(string key, T targetObject, CachingOptions options);
+
+        Task RemoveAsync(string key);
     }
 }

@@ -47,6 +47,28 @@ namespace FluentCaching
             return implementation.GetAsync<T>(key);
         }
 
+        public Task RemoveAsync(object targetObject)
+        {
+            var item = GetConfigurationItem();
+
+            var key = item.Tracker.GetRetrieveKeyComplex(targetObject);
+
+            var implementation = GetCacheImplementation(item);
+
+            return implementation.RemoveAsync(key);
+        }
+
+        public Task RemoveAsync(string targetString)
+        {
+            var item = GetConfigurationItem();
+
+            var key = item.Tracker.GetRetrieveKeySimple(targetString);
+
+            var implementation = GetCacheImplementation(item);
+
+            return implementation.RemoveAsync(key);
+        }
+
         private CachingConfigurationItem<T> GetConfigurationItem()
         {
             var item = _configuration.GetItem<T>();

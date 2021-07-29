@@ -27,5 +27,11 @@ namespace FluentCaching.Memory
                 new CacheItemPolicy {SlidingExpiration = options.Ttl} : 
                 new CacheItemPolicy {AbsoluteExpiration = DateTimeOffset.UtcNow.Add(options.Ttl)};
         }
+
+        public Task RemoveAsync(string key)
+        {
+            Cache.Remove(key);
+            return Task.CompletedTask;
+        }
     }
 }

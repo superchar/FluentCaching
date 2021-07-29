@@ -5,23 +5,22 @@ namespace FluentCaching
 {
     public static class CachingExtensions
     {
+        #region CacheAsync
+
         public static Task CacheAsync<TEntity>(this TEntity targetObject) where TEntity : class
             => new StoringService<TEntity>(CachingConfiguration.Instance).StoreAsync(targetObject);
 
         internal static Task CacheAsync<TEntity>(this TEntity targetObject, CachingConfigurationBase configuration) where TEntity : class
             => new StoringService<TEntity>(configuration).StoreAsync(targetObject);
 
-        public static Task<TEntity> RetrieveAsync<TEntity>(this object key) where TEntity : class
-            => new StoringService<TEntity>(CachingConfiguration.Instance).RetrieveAsync(key);
+        #endregion
 
-        public static Task<TEntity> RetrieveAsync<TEntity>(this object key, CachingConfigurationBase configuration) where TEntity : class
-            => new StoringService<TEntity>(configuration).RetrieveAsync(key);
+        #region RetrieveAsync
+        public static Task<TEntity> RetrieveAsync<TEntity>(this object key) where TEntity : class
+          => new StoringService<TEntity>(CachingConfiguration.Instance).RetrieveAsync(key);
 
         public static Task<TEntity> RetrieveAsync<TEntity>(this int key) where TEntity : class
             => new StoringService<TEntity>(CachingConfiguration.Instance).RetrieveAsync(key.ToString());
-
-        public static Task<TEntity> RetrieveAsync<TEntity>(this int key, CachingConfigurationBase configuration) where TEntity : class
-            => new StoringService<TEntity>(configuration).RetrieveAsync(key.ToString());
 
         public static Task<TEntity> RetrieveAsync<TEntity>(this bool key) where TEntity : class
             => new StoringService<TEntity>(CachingConfiguration.Instance).RetrieveAsync(key.ToString());
@@ -64,5 +63,71 @@ namespace FluentCaching
 
         internal static Task<TEntity> RetrieveAsync<TEntity>(this string key, CachingConfigurationBase configuration) where TEntity : class
             => new StoringService<TEntity>(configuration).RetrieveAsync(key);
+
+        internal static Task<TEntity> RetrieveAsync<TEntity>(this object key, CachingConfigurationBase configuration) where TEntity : class
+            => new StoringService<TEntity>(configuration).RetrieveAsync(key);
+
+        internal static Task<TEntity> RetrieveAsync<TEntity>(this int key, CachingConfigurationBase configuration) where TEntity : class
+            => new StoringService<TEntity>(configuration).RetrieveAsync(key.ToString());
+
+        #endregion
+
+        #region RemoveAsync
+
+        public static Task RemoveAsync<TEntity>(this object key) where TEntity : class
+        => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key);
+
+        public static Task RemoveAsync<TEntity>(this int key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this bool key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this byte key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this sbyte key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this char key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this decimal key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this double key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this float key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this uint key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this long key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this ulong key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this short key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this ushort key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
+
+        public static Task RemoveAsync<TEntity>(this string key) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key);
+
+        internal static Task RemoveAsync<TEntity>(this string key, CachingConfigurationBase configuration) where TEntity : class
+            => new StoringService<TEntity>(configuration).RemoveAsync(key);
+
+        internal static Task RemoveAsync<TEntity>(this object key, CachingConfigurationBase configuration) where TEntity : class
+            => new StoringService<TEntity>(configuration).RemoveAsync(key);
+
+        internal static Task RemoveAsync<TEntity>(this int key, CachingConfigurationBase configuration) where TEntity : class
+            => new StoringService<TEntity>(configuration).RemoveAsync(key.ToString());
+
+        #endregion
     }
 }
