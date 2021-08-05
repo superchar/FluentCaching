@@ -1,7 +1,7 @@
 # FluentCaching
 Fluent API for object caching 
 
-*Nothing works yet, currently designing an API*
+*Next goals are to prepare examples and first fully working version (memory cache)*
 
 **Configure caching policy by entity**
 ```csharp
@@ -25,17 +25,30 @@ await userId.RetrieveAsync<User>();
 
 ```
 
-**Or use multi property configuration**
+**Remove object from cache**
+```csharp
+var userId = 42;
+
+await userId.RemoveAsync<User>();
+
+```
+
+**Use get or add cache operation**
+```csharp
+var userId = 42;
+
+var result = await key.RetrieveAsync<User>()
+                .Or()
+                .CacheAsync(() => _userService.GetUserById(userId))
+```
+
+**Multi property configuration is supported with the same set of features**
 ```csharp
 CachingConfiguration.Instance
 .For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
 .And().WithTtlOf(2).Minutes.And(10).Seconds
 .And().SlidingExpiration());
 
-```
-
-**And retrieve it with multi property key**
-```csharp
 var userKey = new {FirstName = "John", LastName = "Doe"}; // may be any class with corresponding properties
 await userKey.RetrieveAsync<User>();
 ```
