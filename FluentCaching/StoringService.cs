@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using FluentCaching.Configuration;
 using FluentCaching.Exceptions;
 
@@ -23,6 +24,25 @@ namespace FluentCaching
             var implementation = GetCacheImplementation(item);
 
             return implementation.SetAsync(key, targetObject, item.Options);
+        }
+
+        public async Task<T> StoreAsync(Task<T> retrieveFromCacheTask, Func<Task<T>> entityFetcher)
+        {
+            var result = await retrieveFromCacheTask;
+
+            if (result != null)
+            {
+                return result;
+            }
+
+            result = await entityFetcher();
+
+            if (result != null)
+            {
+                await StoreAsync(result);
+            }
+
+            return result;
         }
 
         public Task<T> RetrieveAsync(object targetObject)

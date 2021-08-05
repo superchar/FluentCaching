@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using FluentCaching.Configuration;
 
 namespace FluentCaching
@@ -10,8 +11,14 @@ namespace FluentCaching
         public static Task CacheAsync<TEntity>(this TEntity targetObject) where TEntity : class
             => new StoringService<TEntity>(CachingConfiguration.Instance).StoreAsync(targetObject);
 
+        public static Task<TEntity> CacheAsync<TEntity>(this Task<TEntity> retrieveFromCacheTask, Func<Task<TEntity>> entityFetcher) where TEntity : class
+            => new StoringService<TEntity>(CachingConfiguration.Instance).StoreAsync(retrieveFromCacheTask, entityFetcher);
+
         internal static Task CacheAsync<TEntity>(this TEntity targetObject, CachingConfigurationBase configuration) where TEntity : class
             => new StoringService<TEntity>(configuration).StoreAsync(targetObject);
+
+        internal static Task<TEntity> CacheAsync<TEntity>(this Task<TEntity> retrieveFromCacheTask, Func<Task<TEntity>> entityFetcher, CachingConfigurationBase configuration) where TEntity : class
+            => new StoringService<TEntity>(configuration).StoreAsync(retrieveFromCacheTask, entityFetcher);
 
         #endregion
 
@@ -129,5 +136,7 @@ namespace FluentCaching
             => new StoringService<TEntity>(configuration).RemoveAsync(key.ToString());
 
         #endregion
+
+        public static T Or<T>(this T value) => value;
     }
 }
