@@ -54,7 +54,7 @@ var userKey = new {FirstName = "John", LastName = "Doe"}; // may be any class wi
 await userKey.RetrieveAsync<User>();
 ```
 
-**Different cache implementations for different entities are be supported**
+**Different cache implementations for different entities are supported**
 ```csharp
 CachingConfiguration.Instance
 .For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
