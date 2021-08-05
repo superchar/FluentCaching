@@ -1,6 +1,6 @@
 # FluentCaching
-FluentCaching library provides abstraction layer over caching implementation (memory, Redis, etc.) with really small overhead (check benchamrks).
-Instead of writing boilerplate code to support caching, just configure caching policy for object using fluent api and use convinient extensions methods to manipulate caching abstraction.  
+FluentCaching library provides abstraction layer over caching implementation (memory, Redis, etc.) with really small overhead (check benchmarks).
+Instead of writing boilerplate code to support caching, just configure caching policy for object using fluent api and use convinient extension methods to manipulate caching abstraction.  
 
 *Next goals are to prepare examples and first fully working version (memory cache)*
 
@@ -54,7 +54,7 @@ var userKey = new {FirstName = "John", LastName = "Doe"}; // may be any class wi
 await userKey.RetrieveAsync<User>();
 ```
 
-**Different cache implementations for different entities may be supported**
+**Different cache implementations for different entities are be supported**
 ```csharp
 CachingConfiguration.Instance
 .For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
