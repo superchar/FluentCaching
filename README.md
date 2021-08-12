@@ -2,7 +2,11 @@
 FluentCaching library provides abstraction layer over caching implementation (memory, Redis, etc.) with really small overhead (check benchmarks).
 Instead of writing boilerplate code to support caching, just configure caching policy for object using fluent api and use convinient extension methods to manipulate caching abstraction.  
 
-*Next goals are to prepare examples and first fully working version (memory cache)*
+*Plans*
+- Add api for non expiring items
+- Add api UseClassNameAsKey and CombinedWithClassName
+- Add dynamic selection of cache implementation (based on entity content)
+
 
 **Configure caching policy by entity**
 ```csharp
