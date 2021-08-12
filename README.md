@@ -5,7 +5,7 @@ Instead of writing boilerplate code to support caching, just configure caching p
 *Plans*
 - Add api for non expiring items
 - Add api UseClassNameAsKey and CombinedWithClassName
-- Add dynamic selection of cache implementation (based on entity content)
+- Add dynamic selection of cache implementation (based on predicates)
 
 
 **Configure caching policy by entity**
