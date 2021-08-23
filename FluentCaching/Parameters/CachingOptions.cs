@@ -9,7 +9,7 @@ namespace FluentCaching.Parameters
 
         public ExpirationType ExpirationType { get; set; }
 
-        internal ITracksProperties PropertyTracker { get; set; }
+        internal IPropertyTracker PropertyTracker { get; set; }
 
         internal ICacheImplementation CacheImplementation { get; set; }
     }

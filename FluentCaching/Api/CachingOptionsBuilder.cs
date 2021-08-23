@@ -8,7 +8,7 @@ namespace FluentCaching.Api
     {
         private readonly CachingOptions _currentOptions;
 
-        internal CachingOptionsBuilder(ITracksProperties propertyTracker)
+        internal CachingOptionsBuilder(IPropertyTracker propertyTracker)
         {
             _currentOptions.PropertyTracker = propertyTracker;
         }

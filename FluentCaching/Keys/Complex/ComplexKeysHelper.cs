@@ -20,21 +20,13 @@ namespace FluentCaching.Keys.Complex
 
         private static PropertyAccessor CreatePropertyAccessor(PropertyInfo property)
         {
-            var getMethod = property.GetMethod;
-
-            var declaringClass = property.DeclaringType;
-
             var typeOfResult = property.PropertyType;
-
-            var getMethodDelegateType = typeof(Func<,>).MakeGenericType(declaringClass, typeOfResult);
-
-            var getMethodDelegate = getMethod.CreateDelegate(getMethodDelegateType);
-
+            var getMethodDelegateType = typeof(Func<,>).MakeGenericType(property.DeclaringType, typeOfResult);
+            var getMethodDelegate = property.GetMethod.CreateDelegate(getMethodDelegateType);
             var callInnerGenericMethodWithTypes = CallInnerDelegateMethod
-                .MakeGenericMethod(declaringClass, typeOfResult);
-
-            var result = (Func<object, object>) callInnerGenericMethodWithTypes.Invoke(null, new[] {getMethodDelegate});
-
+                .MakeGenericMethod(property.DeclaringType, typeOfResult);
+            var result = (Func<object, object>) callInnerGenericMethodWithTypes
+                .Invoke(null, new object[] {getMethodDelegate});
             return new PropertyAccessor(property.Name, result);
         }
 

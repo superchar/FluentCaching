@@ -7,7 +7,7 @@ using FluentCaching.Keys.Complex;
 
 namespace FluentCaching.Keys
 {
-    internal class PropertyTracker<T> : ITracksProperties
+    internal class PropertyTracker<T> : IPropertyTracker
         where T : class
     {
         private const string Self = nameof(Self);
@@ -34,7 +34,6 @@ namespace FluentCaching.Keys
         public void TrackSelf()
         {
             _keys[Self] = true;
-
             var factory = _factory;
             _factory = (obj, valueDict) => factory(obj, valueDict) + (obj?.ToString() ?? valueDict[Self].ToString());
         }
@@ -43,7 +42,6 @@ namespace FluentCaching.Keys
         {
             var staticPart = value?.ToString();
             ThrowIfKeyPartIsNull(staticPart);
-
             var factory = _factory;
             _factory = (obj, valueDict) => factory(obj, valueDict) + staticPart;
         }
@@ -52,15 +50,13 @@ namespace FluentCaching.Keys
         {
             var property = ExpressionsHelper.GetProperty(valueGetter).Name;
             _keys[property] = true;
-
             var compiledExpression = valueGetter.Compile();
-
             var factory = _factory;
             _factory = (obj, valueDict) =>
                 factory(obj, valueDict) +
-                (obj != null
-                    ? ThrowIfKeyPartIsNull(compiledExpression(obj)?.ToString())
-                    : valueDict[property].ToString());
+                (ThrowIfKeyPartIsNull((obj != null
+                    ? compiledExpression(obj)
+                    : valueDict[property])?.ToString()));
         }
 
         private IDictionary<string, object> GetValueSourceDictionary(object targetObject)

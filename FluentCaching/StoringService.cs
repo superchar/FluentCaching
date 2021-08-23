@@ -18,12 +18,9 @@ namespace FluentCaching
         public Task StoreAsync(T targetObject)
         {
             var item = GetConfigurationItem();
-
             var key = item.Tracker.GetStoreKey(targetObject);
-
-            var implementation = GetCacheImplementation(item);
-
-            return implementation.SetAsync(key, targetObject, item.Options);
+            return GetCacheImplementation(item)
+                .SetAsync(key, targetObject, item.Options);
         }
 
         public async Task<T> StoreAsync(Task<T> retrieveFromCacheTask, Func<Task<T>> entityFetcher)
@@ -48,62 +45,40 @@ namespace FluentCaching
         public Task<T> RetrieveAsync(object targetObject)
         {
             var item = GetConfigurationItem();
-
             var key = item.Tracker.GetRetrieveKeyComplex(targetObject);
-
-            var implementation = GetCacheImplementation(item);
-
-            return implementation.GetAsync<T>(key);
+            return GetCacheImplementation(item)
+                .GetAsync<T>(key);
         }
 
         public Task<T> RetrieveAsync(string targetString)
         {
             var item = GetConfigurationItem();
-
             var key = item.Tracker.GetRetrieveKeySimple(targetString);
-
-            var implementation = GetCacheImplementation(item);
-
-            return implementation.GetAsync<T>(key);
+            return GetCacheImplementation(item)
+                .GetAsync<T>(key);
         }
 
         public Task RemoveAsync(object targetObject)
         {
             var item = GetConfigurationItem();
-
             var key = item.Tracker.GetRetrieveKeyComplex(targetObject);
-
-            var implementation = GetCacheImplementation(item);
-
-            return implementation.RemoveAsync(key);
+            return GetCacheImplementation(item).RemoveAsync(key);
         }
 
         public Task RemoveAsync(string targetString)
         {
             var item = GetConfigurationItem();
-
             var key = item.Tracker.GetRetrieveKeySimple(targetString);
-
-            var implementation = GetCacheImplementation(item);
-
-            return implementation.RemoveAsync(key);
+            return GetCacheImplementation(item)
+                .RemoveAsync(key);
         }
 
-        private CachingConfigurationItem<T> GetConfigurationItem()
-        {
-            var item = _configuration.GetItem<T>();
-
-            if (item == null)
-            {
-                throw new ConfigurationNotFoundException(typeof(T));
-            }
-
-            return item;
-        }
+        private CachingConfigurationItem<T> GetConfigurationItem() =>
+            _configuration.GetItem<T>() ?? throw new ConfigurationNotFoundException(typeof(T));
 
         private ICacheImplementation GetCacheImplementation(CachingConfigurationItem<T> item) =>
             item.Options.CacheImplementation ??
-            _configuration.Current ?? 
+            _configuration.Current ??
             throw new ConfigurationNotFoundException(typeof(T));
     }
 }

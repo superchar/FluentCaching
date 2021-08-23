@@ -3,7 +3,7 @@ using FluentCaching.Parameters;
 
 namespace FluentCaching.Configuration
 {
-    internal class CachingConfigurationItem<T> : CachingConfigurationItem where T : class
+    internal class CachingConfigurationItem<T> : ICachingConfigurationItem where T : class
     {
         public CachingConfigurationItem(CachingOptions options)
         {
