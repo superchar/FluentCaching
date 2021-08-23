@@ -1,7 +1,12 @@
 # FluentCaching
-Fluent API for object caching 
+FluentCaching library provides abstraction layer over caching implementation (memory, Redis, etc.) with really small overhead (check benchmarks).
+Instead of writing boilerplate code to support caching, just configure caching policy for object using fluent api and use convinient extension methods to manipulate caching abstraction.  
 
-*Nothing works yet, currently designing an API*
+*Plans*
+- Add api for non expiring items
+- Add api UseClassNameAsKey and CombinedWithClassName
+- Add dynamic selection of cache implementation (based on predicates)
+
 
 **Configure caching policy by entity**
 ```csharp
@@ -25,18 +30,44 @@ await userId.RetrieveAsync<User>();
 
 ```
 
-**Or use multi property configuration**
+**Remove object from cache**
+```csharp
+var userId = 42;
+
+await userId.RemoveAsync<User>();
+
+```
+
+**Use get or add cache operation**
+```csharp
+var userId = 42;
+
+var result = await key.RetrieveAsync<User>()
+                .Or()
+                .CacheAsync(() => _userService.GetUserById(userId))
+```
+
+**Multi property configuration is supported with the same set of features**
 ```csharp
 CachingConfiguration.Instance
 .For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
 .And().WithTtlOf(2).Minutes.And(10).Seconds
 .And().SlidingExpiration());
 
-```
-
-**And retrieve it with multi property key**
-```csharp
 var userKey = new {FirstName = "John", LastName = "Doe"}; // may be any class with corresponding properties
 await userKey.RetrieveAsync<User>();
+```
+
+**Different cache implementations for different entities are supported**
+```csharp
+CachingConfiguration.Instance
+.For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
+.And().WithTtlOf(2).Minutes.And(10).Seconds
+.And().SlidingExpiration().WithInMemoryCache());
+
+CachingConfiguration.Instance
+.For<Order>(o => o.UseAsKey(o => o.Date).CombinedWith("order")
+.And().WithTtlOf(5).Minutes.And().SlidingExpiration().WithRedisCache());
+
 ```
 
