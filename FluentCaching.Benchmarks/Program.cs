@@ -3,12 +3,11 @@ using BenchmarkDotNet.Running;
 
 namespace FluentCaching.Benchmarks
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        internal static void Main(string[] args)
         {
-            BenchmarkRunner.Run<ComplexKeyBenchmark>();
-
+            BenchmarkRunner.Run(typeof(Program).Assembly);
             Console.ReadKey();
         }
     }
