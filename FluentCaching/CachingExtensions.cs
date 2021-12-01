@@ -81,9 +81,6 @@ namespace FluentCaching
 
         #region RemoveAsync
 
-        public static Task RemoveAsync<TEntity>(this object key) where TEntity : class
-        => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key);
-
         public static Task RemoveAsync<TEntity>(this int key) where TEntity : class
             => new StoringService<TEntity>(CachingConfiguration.Instance).RemoveAsync(key.ToString());
 

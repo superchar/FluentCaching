@@ -1,8 +1,8 @@
-﻿namespace FluentCaching.Tests.Models
+﻿namespace FluentCaching.Tests.Integration.Models
 {
     public class User
     {
-        public static User Test { get; } = new User {FirstName = "John", Id = 1, LastName = "Doe"};
+        public static User Test { get; } = new User { FirstName = "John", Id = 1, LastName = "Doe" };
 
         public int Id { get; set; }
 
@@ -14,7 +14,7 @@
 
         public User Clone()
         {
-            return (User) MemberwiseClone();
+            return (User)MemberwiseClone();
         }
     }
 }

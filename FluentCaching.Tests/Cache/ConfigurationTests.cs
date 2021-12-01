@@ -1,10 +1,10 @@
 ﻿using System;
 using FluentAssertions;
-using FluentCaching.Tests.Extensions;
-using FluentCaching.Tests.Models;
 using Xunit;
+using FluentCaching.Tests.Integration.Extensions;
+using FluentCaching.Tests.Integration.Models;
 
-namespace FluentCaching.Tests.Cache
+namespace FluentCaching.Tests.Integration.Cache
 {
     public class ConfigurationTests : BaseTest
     {

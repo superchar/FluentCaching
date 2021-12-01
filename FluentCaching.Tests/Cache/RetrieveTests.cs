@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentCaching.Exceptions;
-using FluentCaching.Tests.Extensions;
-using FluentCaching.Tests.Models;
 using Xunit;
+using FluentCaching.Exceptions;
+using FluentCaching.Tests.Integration.Models;
+using FluentCaching.Tests.Integration.Extensions;
 
-namespace FluentCaching.Tests.Cache
+namespace FluentCaching.Tests.Integration.Cache
 {
     public class RetrieveTests : BaseTest
     {

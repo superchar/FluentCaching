@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentCaching.Exceptions;
-using FluentCaching.Tests.Extensions;
-using FluentCaching.Tests.Models;
 using Xunit;
+using FluentCaching.Exceptions;
+using FluentCaching.Tests.Integration.Extensions;
+using FluentCaching.Tests.Integration.Models;
 
-namespace FluentCaching.Tests.Cache
+namespace FluentCaching.Tests.Integration.Cache
 {
     public class RemoveTests : BaseTest
     {

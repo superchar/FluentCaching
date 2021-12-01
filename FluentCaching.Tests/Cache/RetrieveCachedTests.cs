@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentAssertions;
-using FluentCaching.Tests.Extensions;
-using FluentCaching.Tests.Models;
 using Moq;
 using Xunit;
+using FluentCaching.Tests.Integration.Extensions;
+using FluentCaching.Tests.Integration.Models;
 
-namespace FluentCaching.Tests.Cache
+namespace FluentCaching.Tests.Integration.Cache
 {
     public class RetrieveCachedTests : BaseTest
     {

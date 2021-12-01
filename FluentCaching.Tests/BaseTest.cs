@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentCaching.Configuration;
-using FluentCaching.Tests.Mocks;
+using FluentCaching.Tests.Integration.Fakes;
 
-namespace FluentCaching.Tests
+namespace FluentCaching.Tests.Integration
 {
     public class BaseTest : IDisposable
     {

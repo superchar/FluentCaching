@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
-using FluentCaching.Tests.Extensions;
-using FluentCaching.Tests.Mocks;
-using FluentCaching.Tests.Models;
 using Xunit;
+using FluentCaching.Tests.Integration.Models;
+using FluentCaching.Tests.Integration.Extensions;
+using FluentCaching.Tests.Integration.Fakes;
 
-namespace FluentCaching.Tests.Cache
+namespace FluentCaching.Tests.Integration.Cache
 {
     public class StoreMultipleImplementationsTests : BaseTest
     {

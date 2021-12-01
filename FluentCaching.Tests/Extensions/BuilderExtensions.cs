@@ -1,7 +1,7 @@
 ﻿using FluentCaching.Api;
 using FluentCaching.Api.Keys;
 
-namespace FluentCaching.Tests.Extensions
+namespace FluentCaching.Tests.Integration.Extensions
 {
     public static class BuilderExtensions
     {
