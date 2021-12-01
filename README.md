@@ -3,7 +3,7 @@ FluentCaching library provides abstraction layer over caching implementation (me
 Instead of writing boilerplate code to support caching, just configure caching policy for object using fluent api and use convinient extension methods to manipulate caching abstraction.  
 
 *Plans*
-- Add api for non expiring items
+- Add api for non expiring items + 
 - Add api UseClassNameAsKey and CombinedWithClassName
 - Add dynamic selection of cache implementation (based on predicates)
 

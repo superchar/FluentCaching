@@ -17,16 +17,19 @@ namespace FluentCaching.Memory
         public Task SetAsync<T>(string key, T targetObject, CachingOptions options)
         {
             Cache.Set(key, targetObject, CreatePolicy(options));
-
             return Task.CompletedTask;
         }
 
-        private static CacheItemPolicy CreatePolicy(CachingOptions options)
-        {
-            return options.ExpirationType == ExpirationType.Sliding ? 
-                new CacheItemPolicy {SlidingExpiration = options.Ttl} : 
-                new CacheItemPolicy {AbsoluteExpiration = DateTimeOffset.UtcNow.Add(options.Ttl)};
-        }
+        private static CacheItemPolicy CreatePolicy(CachingOptions options) =>
+            options.ExpirationType == ExpirationType.Sliding ?
+                new CacheItemPolicy
+                {
+                    SlidingExpiration = options.Ttl
+                } :
+                new CacheItemPolicy
+                {
+                    AbsoluteExpiration = options.Ttl != TimeSpan.MaxValue ? DateTimeOffset.UtcNow.Add(options.Ttl) : ObjectCache.InfiniteAbsoluteExpiration
+                };
 
         public Task RemoveAsync(string key)
         {

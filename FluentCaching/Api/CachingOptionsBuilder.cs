@@ -14,5 +14,7 @@ namespace FluentCaching.Api
         }
 
         public TtlBuilder WithTtlOf(short value) => new TtlBuilder(_currentOptions, value);
+
+        public InfiniteTtlBuilder WithInfiniteTtl() => new InfiniteTtlBuilder(_currentOptions);
     }
 }
