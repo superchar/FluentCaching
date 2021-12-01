@@ -16,12 +16,6 @@ namespace FluentCaching.Api.Keys
 
         public CachingOptionsBuilder And() => new CachingOptionsBuilder(_propertyTracker);
 
-        public CombinedCachingKeyBuilder<T> CombinedWithSelf()
-        {
-            _propertyTracker.TrackSelf();
-            return this;
-        }
-
         public CombinedCachingKeyBuilder<T> CombinedWith<TValue>(Expression<Func<T, TValue>> valueGetter)
         {
             _propertyTracker.TrackExpression(valueGetter);

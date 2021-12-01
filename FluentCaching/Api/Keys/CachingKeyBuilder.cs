@@ -9,12 +9,6 @@ namespace FluentCaching.Api.Keys
     {
         private readonly PropertyTracker<T> _propertyTracker = new PropertyTracker<T>();
 
-        public CombinedCachingKeyBuilder<T> UseSelfAsKey()
-        {
-            _propertyTracker.TrackSelf();
-            return new CombinedCachingKeyBuilder<T>(_propertyTracker);
-        }
-
         public CombinedCachingKeyBuilder<T> UseAsKey<TValue>(Expression<Func<T, TValue>> valueGetter)
         {
             _propertyTracker.TrackExpression(valueGetter);

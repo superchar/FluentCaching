@@ -41,30 +41,15 @@ namespace FluentCaching.Tests.Integration.Cache
         }
 
         [Fact]
-        public async Task CacheAsync_SelfKey_CachesValue()
-        {
-            Configuration
-                .For<User>(u => u.UseSelfAsKey().Complete());
-
-            await User.Test.CacheAsync(Configuration);
-
-            var key = User.Test.ToString();
-
-            Dictionary.Keys.Should().HaveCount(1).And.Contain(key);
-
-            Dictionary[key].Should().Be(User.Test);
-        }
-
-        [Fact]
         public async Task CacheAsync_AllPossibleKeyTypes_CachesValue()
         {
             const string staticKeyPart = "user";
 
             Configuration
-                .For<User>(u => u.UseAsKey(staticKeyPart).CombinedWithSelf().CombinedWith(u => u.Id)
+                .For<User>(u => u.UseAsKey(staticKeyPart).CombinedWith(u => u.Id)
                     .Complete());
 
-            var key = $"{staticKeyPart}{User.Test}{User.Test.Id}";
+            var key = $"{staticKeyPart}{User.Test.Id}";
 
             await User.Test.CacheAsync(Configuration);
 
@@ -77,7 +62,7 @@ namespace FluentCaching.Tests.Integration.Cache
         public void CacheAsync_MissingConfiguration_ThrowsException()
         {
             Configuration
-                .For<User>(u => u.UseSelfAsKey().CombinedWith(u => u.Id)
+                .For<User>(u => u.UseAsKey("test").CombinedWith(u => u.Id)
                     .Complete());
 
             Func<Task> cacheAsync = async () => await Order.Test.CacheAsync(Configuration);

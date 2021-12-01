@@ -27,22 +27,6 @@ namespace FluentCaching.Tests.Integration.Cache
             result.Should().BeNull();
         }
 
-        [Fact]
-        public async Task RemoveAsync_SelfKey_RemovesValue()
-        {
-            Configuration
-                .For<User>(u => u.UseSelfAsKey().Complete());
-
-            await User.Test.CacheAsync(Configuration);
-
-            var selfKey = User.Test.ToString();
-
-            await selfKey.RemoveAsync<User>(Configuration);
-
-            var result = await selfKey.RetrieveAsync<User>(Configuration);
-
-            result.Should().BeNull();
-        }
 
         [Fact]
         public async Task RemoveAsync_SinglePropertyKey_RemovesValue()
@@ -80,7 +64,7 @@ namespace FluentCaching.Tests.Integration.Cache
         public void RemoveAsync_MissingConfiguration_ThrowsException()
         {
             Configuration
-                .For<User>(u => u.UseSelfAsKey()
+                .For<User>(u => u.UseAsKey("test")
                     .CombinedWith(_ => _.LastName)
                     .CombinedWith(_ => _.Id).Complete());
 

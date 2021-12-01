@@ -10,8 +10,6 @@ namespace FluentCaching.Keys
     internal class PropertyTracker<T> : IPropertyTracker
         where T : class
     {
-        private const string Self = nameof(Self);
-
         private static readonly Func<T, IDictionary<string, object>, string> DefaultFactory =
             (obj, valueDict) => string.Empty;
 
@@ -30,13 +28,6 @@ namespace FluentCaching.Keys
         public string GetRetrieveKeySimple(string stringKey) => _factory(null, GetValueSourceDictionary(stringKey));
 
         public string GetRetrieveKeyComplex(object obj) => _factory(null, GetValueSourceDictionary(obj));
-
-        public void TrackSelf()
-        {
-            _keys[Self] = true;
-            var factory = _factory;
-            _factory = (obj, valueDict) => factory(obj, valueDict) + (obj?.ToString() ?? valueDict[Self].ToString());
-        }
 
         public void TrackStatic<TValue>(TValue value)
         {

@@ -28,19 +28,6 @@ namespace FluentCaching.Tests.Integration.Cache
         }
 
         [Fact]
-        public async Task RetrieveAsync_SelfKey_RetrievesValue()
-        {
-            Configuration
-                .For<User>(u => u.UseSelfAsKey().Complete());
-
-            await User.Test.CacheAsync(Configuration);
-
-            var result = await User.Test.ToString().RetrieveAsync<User>(Configuration);
-
-            result.Should().Be(User.Test);
-        }
-
-        [Fact]
         public async Task RetrieveAsync_SinglePropertyKey_RetrievesValue()
         {
             Configuration
@@ -92,31 +79,10 @@ namespace FluentCaching.Tests.Integration.Cache
         }
 
         [Fact]
-        public async Task RetrieveAsync_MultiPropertyKeyWithSelf_GeneratesCombinedKeyAndRetrievesValue()
-        {
-            Configuration
-                .For<User>(u => u.UseSelfAsKey()
-                    .CombinedWith(u => u.LastName)
-                    .CombinedWith(u => u.Id).Complete());
-
-            await User.Test.CacheAsync(Configuration);
-
-            var key = new {Self = User.Test.ToString(), User.Test.Id, User.Test.LastName};
-
-            var result = await key.RetrieveAsync<User>(Configuration);
-
-            result.Should().Be(User.Test);
-
-            var expectedStringKey = $"{User.Test.ToString()}{User.Test.LastName}{User.Test.Id}";
-
-            Dictionary.Keys.Single().Should().Be(expectedStringKey);
-        }
-
-        [Fact]
         public void RetrieveAsync_MissingConfiguration_ThrowsException()
         {
             Configuration
-                .For<User>(u => u.UseSelfAsKey()
+                .For<User>(u => u.UseAsKey("test")
                     .CombinedWith(_ => _.LastName)
                     .CombinedWith(_ => _.Id).Complete());
 
