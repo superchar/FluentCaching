@@ -16,13 +16,12 @@ namespace FluentCaching.Tests.Integration.Cache
         public async Task RetrieveAsync_StaticKey_RetrievesValue()
         {
             const string key = "user";
+            var cache = CacheBuilder
+                .For<User>(u => u.UseAsKey(key).Complete())
+                .Build();
 
-            Configuration
-                .For<User>(u => u.UseAsKey(key).Complete());
-
-            await User.Test.CacheAsync(Configuration);
-
-            var result = await key.RetrieveAsync<User>(Configuration);
+            await cache.CacheAsync(User.Test);
+            var result = await cache.RetrieveAsync<User>(key);
 
             result.Should().Be(User.Test);
         }
@@ -30,12 +29,11 @@ namespace FluentCaching.Tests.Integration.Cache
         [Fact]
         public async Task RetrieveAsync_SinglePropertyKey_RetrievesValue()
         {
-            Configuration
-                .For<User>(u => u.UseAsKey(u => u.Id).Complete());
+            var cache = CacheBuilder
+                .For<User>(u => u.UseAsKey(u => u.Id).Complete()).Build();
 
-            await User.Test.CacheAsync(Configuration);
-
-            var result = await User.Test.Id.RetrieveAsync<User>(Configuration);
+            await cache.CacheAsync(User.Test);
+            var result = await cache.RetrieveAsync<User>(User.Test.Id);
 
             result.Should().Be(User.Test);
         }
@@ -43,14 +41,13 @@ namespace FluentCaching.Tests.Integration.Cache
         [Fact]
         public async Task RetrieveAsync_MultiPropertyAnonymousKey_RetrievesValue()
         {
-            Configuration
-                .For<User>(u => u.UseAsKey(u => u.Id).CombinedWith(u => u.LastName).Complete());
+            var cache = CacheBuilder
+                .For<User>(u => u.UseAsKey(u => u.Id).CombinedWith(u => u.LastName).Complete())
+                .Build();
 
-            await User.Test.CacheAsync(Configuration);
-
+            await cache.CacheAsync(User.Test);
             var key = new {User.Test.Id, User.Test.LastName};
-
-            var result = await key.RetrieveAsync<User>(Configuration);
+            var result = await cache.RetrieveAsync<User>(key);
 
             result.Should().Be(User.Test);
         }
@@ -59,51 +56,48 @@ namespace FluentCaching.Tests.Integration.Cache
         public async Task RetrieveAsync_MultiPropertyKeyWithStaticPart_GeneratesCombinedKeyAndRetrievesValue()
         {
             const string keyPrefix = "userprefix";
-
-            Configuration
+            var cache = CacheBuilder
                 .For<User>(u => u.UseAsKey(keyPrefix)
                     .CombinedWith(u => u.LastName)
-                    .CombinedWith(u => u.Id).Complete());
+                    .CombinedWith(u => u.Id).Complete())
+                .Build();
 
-            await User.Test.CacheAsync(Configuration);
 
+            await cache.CacheAsync(User.Test);
             var key = new {User.Test.Id, User.Test.LastName};
-
-            var result = await key.RetrieveAsync<User>(Configuration);
+            var result = await cache.RetrieveAsync<User>(key);
 
             result.Should().Be(User.Test);
-
             var expectedStringKey = $"{keyPrefix}{User.Test.LastName}{User.Test.Id}";
-
             Dictionary.Keys.Single().Should().Be(expectedStringKey);
         }
 
         [Fact]
         public void RetrieveAsync_MissingConfiguration_ThrowsException()
         {
-            Configuration
+            var cache = CacheBuilder
                 .For<User>(u => u.UseAsKey("test")
                     .CombinedWith(_ => _.LastName)
-                    .CombinedWith(_ => _.Id).Complete());
+                    .CombinedWith(_ => _.Id).Complete())
+                .Build();
 
-            Func<Task<Order>> retrieveAsync = async () => await new {Id = 1, LastName = "Test"}.RetrieveAsync<Order>(Configuration);
-
+            Func<Task<Order>> retrieveAsync = async () => await cache.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" });
+            
             retrieveAsync.Should().Throw<ConfigurationNotFoundException>();
-
             Dictionary.Keys.Should().BeEmpty();
         }
 
         [Fact]
         public void RetrieveAsync_WrongKeySchema_ThrowsException()
         {
-            Configuration
-                .For<User>(u => u.UseAsKey(_ => _.FirstName).CombinedWith(_ => _.LastName).Complete());
+            var cache = CacheBuilder
+                .For<User>(u => u.UseAsKey(_ => _.FirstName).CombinedWith(_ => _.LastName).Complete())
+                .Build();
 
-            Func<Task<User>> retrieveAsync = async () => await Order.Test.RetrieveAsync<User>(Configuration);
+            Func<Task<User>> retrieveAsync = async () => await cache.RetrieveAsync<User>(Order.Test);
 
             retrieveAsync.Should().Throw<KeyNotFoundException>()
                 .WithMessage("Key schema is not correct");
-
             Dictionary.Keys.Should().BeEmpty();
         }
     }

@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
-using FluentCaching.Api;
-using FluentCaching.Api.Keys;
+using FluentCaching.Cache;
+using FluentCaching.Cache.Builders;
 using FluentCaching.Configuration;
+using FluentCaching.PolicyBuilders.Keys;
+using FluentCaching.PolicyBuilders.Ttl;
 
 namespace FluentCaching.Benchmarks
 {
@@ -15,7 +17,7 @@ namespace FluentCaching.Benchmarks
 
         protected User[] Users { get; private set; }
 
-        protected CachingConfiguration Configuration { get; private set; }
+        internal ICache Cache { get; private set; }
 
         [GlobalSetup]
         public void GenerateUsersAndConfiguration()
@@ -27,9 +29,10 @@ namespace FluentCaching.Benchmarks
                 Users[i] = new User { FirstName = $"FirstName{i}", LastName = $"LastName{i}", Id = i };
             }
 
-            Configuration = CachingConfiguration.Create()
-                .SetImplementation(new DictionaryImplementation())
-                .For<User>(Configure);
+            Cache = new CacheBuilder()
+                .SetGenericCache(new DictionaryImplementation())
+                .For<User>(Configure)
+                .Build();
 
             _dictionary = new Dictionary<string, object>(CacheItemsCount);
         }
@@ -47,7 +50,7 @@ namespace FluentCaching.Benchmarks
             }
         }
 
-        protected abstract ExpirationBuilder Configure(CachingKeyBuilder<User> builder);
+        protected abstract ExpirationTypeBuilder Configure(CachingKeyBuilder<User> builder);
 
         protected abstract string GetDictionaryKey(User user);
     }

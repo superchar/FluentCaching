@@ -1,13 +1,13 @@
 using System;
-using FluentCaching.Parameters;
+using FluentCaching.Cache.Models;
 
-namespace FluentCaching.Api.Ttl
+namespace FluentCaching.PolicyBuilders.Ttl
 {
     public class InfiniteTtlBuilder
     {
-        private CachingOptions _currentOptions;
+        private CacheOptions _currentOptions;
 
-        public InfiniteTtlBuilder(CachingOptions currentOptions)
+        public InfiniteTtlBuilder(CacheOptions currentOptions)
         {
             _currentOptions = currentOptions;
         }

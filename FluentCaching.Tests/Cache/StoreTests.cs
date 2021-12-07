@@ -14,29 +14,27 @@ namespace FluentCaching.Tests.Integration.Cache
         public async Task CacheAsync_StaticKey_CachesValue()
         {
             const string key = "user";
+            var cache = CacheBuilder
+                .For<User>(u => u.UseAsKey(key).Complete())
+                .Build();
 
-            Configuration
-                .For<User>(u => u.UseAsKey(key).Complete());
-
-            await User.Test.CacheAsync(Configuration);
+            await cache.CacheAsync(User.Test);
 
             Dictionary.Keys.Should().HaveCount(1).And.Contain(key);
-
             Dictionary[key].Should().Be(User.Test);
         }
 
         [Fact]
         public async Task CacheAsync_PropertyKey_CachesValue()
         {
-            Configuration
-                .For<User>(u => u.UseAsKey(u => u.LastName).Complete());
+            var cache = CacheBuilder
+                .For<User>(u => u.UseAsKey(u => u.LastName).Complete())
+                .Build();
 
-            await User.Test.CacheAsync(Configuration);
+            await cache.CacheAsync(User.Test);
 
             var key = User.Test.LastName;
-
             Dictionary.Keys.Should().HaveCount(1).And.Contain(key);
-
             Dictionary[key].Should().Be(User.Test);
         }
 
@@ -44,31 +42,28 @@ namespace FluentCaching.Tests.Integration.Cache
         public async Task CacheAsync_AllPossibleKeyTypes_CachesValue()
         {
             const string staticKeyPart = "user";
-
-            Configuration
+            var cache = CacheBuilder
                 .For<User>(u => u.UseAsKey(staticKeyPart).CombinedWith(u => u.Id)
-                    .Complete());
+                    .Complete())
+                .Build();
 
             var key = $"{staticKeyPart}{User.Test.Id}";
-
-            await User.Test.CacheAsync(Configuration);
+            await cache.CacheAsync(User.Test);
 
             Dictionary.Keys.Should().HaveCount(1).And.Contain(key);
-
             Dictionary[key].Should().Be(User.Test);
         }
 
         [Fact]
         public void CacheAsync_MissingConfiguration_ThrowsException()
         {
-            Configuration
-                .For<User>(u => u.UseAsKey("test").CombinedWith(u => u.Id)
-                    .Complete());
+             var cache = CacheBuilder
+                .For<User>(u => u.UseAsKey("test").CombinedWith(u => u.Id).Complete())
+                .Build();
 
-            Func<Task> cacheAsync = async () => await Order.Test.CacheAsync(Configuration);
+            Func<Task> cacheAsync = async () => await cache.CacheAsync(Order.Test);
 
             cacheAsync.Should().Throw<ConfigurationNotFoundException>();
-
             Dictionary.Keys.Should().BeEmpty();
         }
 
@@ -76,16 +71,14 @@ namespace FluentCaching.Tests.Integration.Cache
         public void CacheAsync_NullKeyPart_ThrowsException()
         {
             var user = User.Test.Clone();
-
             user.FirstName = null;
+            var cache = CacheBuilder
+               .For<User>(u => u.UseAsKey(u => u.FirstName).Complete())
+               .Build();
 
-            Configuration
-                .For<User>(u => u.UseAsKey(u => u.FirstName).Complete());
-
-            Func<Task> cacheAsync = async () => await user.CacheAsync(Configuration);
+            Func<Task> cacheAsync = async () => await cache.CacheAsync(user);
 
             cacheAsync.Should().Throw<KeyPartNullException>();
-
             Dictionary.Keys.Should().BeEmpty();
         }
     }

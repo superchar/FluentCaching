@@ -14,31 +14,27 @@ namespace FluentCaching.Tests.Integration.Cache
         public async Task RemoveAsync_StaticKey_RemovesValue()
         {
             const string key = "user";
+            var cache = CacheBuilder
+                .For<User>(u => u.UseAsKey(key).Complete())
+                .Build();
 
-            Configuration
-                .For<User>(u => u.UseAsKey(key).Complete());
-
-            await User.Test.CacheAsync(Configuration);
-
-            await key.RemoveAsync<User>(Configuration);
-
-            var result = await key.RetrieveAsync<User>(Configuration);
+            await cache.CacheAsync(User.Test);
+            await cache.RemoveAsync<User>(key);
+            var result = await cache.RetrieveAsync<User>(key);
 
             result.Should().BeNull();
         }
 
-
         [Fact]
         public async Task RemoveAsync_SinglePropertyKey_RemovesValue()
         {
-            Configuration
-                .For<User>(u => u.UseAsKey(u => u.Id).Complete());
+            var cache = CacheBuilder
+                .For<User>(u => u.UseAsKey(u => u.Id).Complete())
+                .Build();
 
-            await User.Test.CacheAsync(Configuration);
-
-            await User.Test.Id.RemoveAsync<User>(Configuration);
-
-            var result = await User.Test.Id.RetrieveAsync<User>(Configuration);
+            await cache.CacheAsync(User.Test);
+            await cache.RemoveAsync<User>(User.Test.Id);
+            var result = await cache.RetrieveAsync<User>(User.Test.Id);
 
             result.Should().BeNull();
         }
@@ -46,16 +42,14 @@ namespace FluentCaching.Tests.Integration.Cache
         [Fact]
         public async Task RemoveAsync_MultiPropertyKey_RemovesValue()
         {
-            Configuration
-                .For<User>(u => u.UseAsKey(u => u.Id).CombinedWith(u => u.LastName).Complete());
+            var cache = CacheBuilder
+                .For<User>(u => u.UseAsKey(u => u.Id).CombinedWith(u => u.LastName).Complete())
+                .Build();
 
-            await User.Test.CacheAsync(Configuration);
-
+            await cache.CacheAsync(User.Test);
             var key = new { User.Test.Id, User.Test.LastName };
-
-            await key.RemoveAsync<User>(Configuration);
-
-            var result = await key.RetrieveAsync<User>(Configuration);
+            await cache.RemoveAsync<User>(key);
+            var result = await cache.RetrieveAsync<User>(key);
 
             result.Should().BeNull();
         }
@@ -63,12 +57,13 @@ namespace FluentCaching.Tests.Integration.Cache
         [Fact]
         public void RemoveAsync_MissingConfiguration_ThrowsException()
         {
-            Configuration
+            var cache = CacheBuilder
                 .For<User>(u => u.UseAsKey("test")
                     .CombinedWith(_ => _.LastName)
-                    .CombinedWith(_ => _.Id).Complete());
+                    .CombinedWith(_ => _.Id).Complete())
+                .Build();
 
-            Func<Task<Order>> retrieveAsync = async () => await new { Id = 1, LastName = "Test" }.RetrieveAsync<Order>(Configuration);
+            Func<Task<Order>> retrieveAsync = async () => await cache.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" });
 
             retrieveAsync.Should().Throw<ConfigurationNotFoundException>();
         }

@@ -1,4 +1,4 @@
-﻿using FluentCaching.Api;
+﻿using FluentCaching.PolicyBuilders;
 
 namespace FluentCaching.Memory
 {

@@ -17,3 +17,8 @@
 /FluentCaching.Tests/bin/Release/netcoreapp3.1
 /FluentCaching.Memory/bin/Release/netstandard2.0
 /FluentCaching.Tests/FluentCaching.Tests.csproj.user
+project-colors.json
+.futdcache.v1
+.suo
+000.testlog
+testlog.manifest

@@ -1,7 +1,8 @@
-﻿using System;
+﻿using FluentCaching.Cache;
+using FluentCaching.Cache.Models;
+using System;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
-using FluentCaching.Parameters;
 
 namespace FluentCaching.Memory
 {
@@ -14,13 +15,13 @@ namespace FluentCaching.Memory
             return Cache.Contains(key) ? Task.FromResult((T)Cache[key]) : Task.FromResult(default(T));
         }
 
-        public Task SetAsync<T>(string key, T targetObject, CachingOptions options)
+        public Task SetAsync<T>(string key, T targetObject, CacheOptions options)
         {
             Cache.Set(key, targetObject, CreatePolicy(options));
             return Task.CompletedTask;
         }
 
-        private static CacheItemPolicy CreatePolicy(CachingOptions options) =>
+        private static CacheItemPolicy CreatePolicy(CacheOptions options) =>
             options.ExpirationType == ExpirationType.Sliding ?
                 new CacheItemPolicy
                 {

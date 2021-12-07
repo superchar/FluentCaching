@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using FluentCaching.Cache;
+using FluentCaching.Cache.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentCaching.Parameters;
 
 namespace FluentCaching.Tests.Integration.Fakes
 {
@@ -19,7 +20,7 @@ namespace FluentCaching.Tests.Integration.Fakes
             return Task.CompletedTask;
         }
 
-        public Task SetAsync<T>(string key, T targetObject, CachingOptions options)
+        public Task SetAsync<T>(string key, T targetObject, CacheOptions options)
         {
             Dictionary[key] = targetObject;
             return Task.CompletedTask;
