@@ -1,33 +1,31 @@
 # FluentCaching
 FluentCaching library provides abstraction layer over caching implementation (memory, Redis, etc.) with really small overhead (check benchmarks).
-Instead of writing boilerplate code to support caching, just configure caching policy for object using fluent api and use convinient extension methods to manipulate caching abstraction.  
+Instead of writing boilerplate code to support caching, just configure caching policy for object using fluent api and use cache object to manipulate caching abstraction.  
 
 *Plans*
-- Add api for non expiring items + 
-- Add api UseClassNameAsKey and CombinedWithClassName
 - Cover everything with unit tests
-- Add dynamic selection of cache implementation (based on predicates)
 
-
-**Configure caching policy by entity**
+**Configure caching policy by entity and build cache object**
 ```csharp
-CachingConfiguration.Instance
+
+var cache = new CacheBuilder()
 .For<User>(u => u.UseAsKey("user").CombinedWith(u => u.Id)
-.And().WithTtlOf(2).Minutes.And(10).Seconds
-.And().SlidingExpiration());
+                .And().WithTtlOf(2).Minutes.And(10).Seconds
+                .And().SlidingExpiration())
+.Build();
 ```
 **Add object to cache**
 ```csharp
 var user = _userService.GetUserById(42);
 
-await user.CacheAsync();
+await cache.CacheAsync(user);
 ```
 
 **Retrieve object from cache**
 ```csharp
 var userId = 42;
 
-await userId.RetrieveAsync<User>();
+await cache.RetrieveAsync<User>(userId);
 
 ```
 
@@ -35,7 +33,7 @@ await userId.RetrieveAsync<User>();
 ```csharp
 var userId = 42;
 
-await userId.RemoveAsync<User>();
+await cache.RemoveAsync<User>(userId);
 
 ```
 
@@ -43,32 +41,31 @@ await userId.RemoveAsync<User>();
 ```csharp
 var userId = 42;
 
-var result = await key.RetrieveAsync<User>()
-                .Or()
-                .CacheAsync(() => _userService.GetUserById(userId))
+var result = await cache.RetrieveOrStoreAsync<User>(userId, id => _userService.GetUserById(id));
 ```
 
 **Multi property configuration is supported with the same set of features**
 ```csharp
-CachingConfiguration.Instance
+var cache = new CacheBuilder()
 .For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
 .And().WithTtlOf(2).Minutes.And(10).Seconds
-.And().SlidingExpiration());
+.And().SlidingExpiration())
+.Build();
 
 var userKey = new {FirstName = "John", LastName = "Doe"}; // may be any class with corresponding properties
-await userKey.RetrieveAsync<User>();
+await cache.RetrieveAsync<User>(userKey);
 ```
 
 **Different cache implementations for different entities are supported**
 ```csharp
-CachingConfiguration.Instance
+var cache = new CacheBuilder()
 .For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
-.And().WithTtlOf(2).Minutes.And(10).Seconds
-.And().SlidingExpiration().WithInMemoryCache());
-
-CachingConfiguration.Instance
+                .And().WithTtlOf(2).Minutes.And(10).Seconds
+                .And().SlidingExpiration().WithInMemoryCache())
 .For<Order>(o => o.UseAsKey(o => o.Date).CombinedWith("order")
-.And().WithTtlOf(5).Minutes.And().SlidingExpiration().WithRedisCache());
+                .And().WithTtlOf(5).Minutes
+                .And().SlidingExpiration().WithRedisCache())
+.Build();
 
 ```
 
