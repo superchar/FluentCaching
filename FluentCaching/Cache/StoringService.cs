@@ -57,23 +57,93 @@ namespace FluentCaching.Cache
                 .RemoveAsync(key);
         }
 
-        public Task<T> RetrieveOrStoreAsync<T>(string key, Func<string, Task<T>> entityFetcher) where T : class
-            => RetrieveOrStoreAsync((object)key, k => entityFetcher((string)k));
+        public async Task<T> RetrieveOrStoreAsync<T>(string key, Func<string, Task<T>> entityFetcher) where T : class
+        {
+            var keyHash = _concurrencyHelper.TakeKeyLock(key);
 
-        public Task<T> RetrieveOrStoreAsync<T>(object key, Func<object, Task<T>> entityFetcher) where T : class
-           => _concurrencyHelper
-               .ExecuteAsync(key, async k =>
-               {
-                   var value = await RetrieveAsync<T>(k);
+            try
+            {
+                var value = await RetrieveAsync<T>(key);
 
-                   if (value is null)
-                   {
-                       value = await entityFetcher(k);
-                       await StoreAsync(value);
-                   }
+                if (value is null)
+                {
+                    value = await entityFetcher(key);
+                    await StoreAsync(value);
+                }
 
-                   return value;
-               });
+                return value;
+            }
+            finally
+            {
+                _concurrencyHelper.ReleaseKeyLock(keyHash);
+            }
+        }
+
+        public async Task<T> RetrieveOrStoreAsync<T>(string key, Func<string, T> entityFetcher) where T : class
+        {
+            var keyHash = _concurrencyHelper.TakeKeyLock(key);
+
+            try
+            {
+                var value = await RetrieveAsync<T>(key);
+
+                if (value is null)
+                {
+                    value = entityFetcher(key);
+                    await StoreAsync(value);
+                }
+
+                return value;
+            }
+            finally
+            {
+                _concurrencyHelper.ReleaseKeyLock(keyHash);
+            }
+        }
+
+        public async Task<T> RetrieveOrStoreAsync<T>(object key, Func<object, Task<T>> entityFetcher) where T : class
+        {
+            var keyHash = _concurrencyHelper.TakeKeyLock(key);
+
+            try
+            {
+                var value = await RetrieveAsync<T>(key);
+
+                if (value is null)
+                {
+                    value = await entityFetcher(key);
+                    await StoreAsync(value);
+                }
+
+                return value;
+            }
+            finally
+            {
+                _concurrencyHelper.ReleaseKeyLock(keyHash); 
+            }
+        }
+
+        public async Task<T> RetrieveOrStoreAsync<T>(object key, Func<object, T> entityFetcher) where T : class
+        {
+            var keyHash = _concurrencyHelper.TakeKeyLock(key);
+
+            try
+            {
+                var value = await RetrieveAsync<T>(key);
+
+                if (value is null)
+                {
+                    value = entityFetcher(key);
+                    await StoreAsync(value);
+                }
+
+                return value;
+            }
+            finally
+            {
+                _concurrencyHelper.ReleaseKeyLock(keyHash);
+            }
+        }
 
         private CacheConfigurationItem<T> GetConfigurationItem<T>() where T : class =>
             _configuration.GetItem<T>() ?? throw new ConfigurationNotFoundException(typeof(T));

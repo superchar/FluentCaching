@@ -14,10 +14,7 @@ namespace FluentCaching.Cache.Helpers
             _keyLocks = new int[lockCount];
         }
 
-        public Task<T> ExecuteAsync<T>(string key, Func<string, Task<T>> callback) where T : class
-            => ExecuteAsync((object)key, k => callback((string)k));
-
-        public async Task<T> ExecuteAsync<T>(object key, Func<object, Task<T>> callback) where T : class
+        public uint TakeKeyLock<TKey>(TKey key)
         {
             var hash = (uint)key.GetHashCode() % (uint)_keyLocks.Length;
 
@@ -26,18 +23,12 @@ namespace FluentCaching.Cache.Helpers
                 Thread.Yield();
             }
 
-            T result = null;
+            return hash;
+        }
 
-            try
-            {
-                result = await callback(key);
-            }
-            finally
-            {
-                _keyLocks[hash] = 0;
-            }
-
-            return result;
+        public void ReleaseKeyLock(uint keyHash)
+        {
+            _keyLocks[keyHash] = 0;
         }
     }
 }

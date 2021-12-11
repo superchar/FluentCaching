@@ -123,14 +123,14 @@ namespace FluentCaching.Cache
             => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
 
         public Task<T> RetrieveOrStoreAsync<T>(string key, Func<string, T> entityFetcher) where T : class
-            => _storingService.RetrieveOrStoreAsync(key, k => Task.FromResult(entityFetcher(k)));
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
 
         public Task<T> RetrieveOrStoreAsync<T>(object key, Func<object, Task<T>> entityFetcher) where T : class
             => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
 
         public Task<T> RetrieveOrStoreAsync<T>(object key, Func<object, T> entityFetcher) where T : class
-            => _storingService.RetrieveOrStoreAsync(key, k => Task.FromResult(entityFetcher(k)));
-
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+   
         #endregion
     }
 }
