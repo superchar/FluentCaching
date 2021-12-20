@@ -12,7 +12,7 @@ namespace FluentCaching.Tests.Integration.Cache
         public void ForOfT_NotAPropertyExpression_ThrowsException()
         {
             Action forOfUser = () =>
-                Configuration
+                CacheBuilder
                     .For<User>(_ => _.UseAsKey(u => 1 + 1).Complete());
 
             forOfUser.Should().Throw<ArgumentException>()

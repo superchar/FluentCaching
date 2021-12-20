@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using FluentCaching.Cache;
+using FluentCaching.Cache.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentCaching.Parameters;
 
 namespace FluentCaching.Benchmarks
 {
@@ -13,7 +14,7 @@ namespace FluentCaching.Benchmarks
             return Task.FromResult((T)_dictionary[key]);
         }
 
-        public Task SetAsync<T>(string key, T targetObject, CachingOptions options)
+        public Task SetAsync<T>(string key, T targetObject, CacheOptions options)
         {
             _dictionary[key] = targetObject;
             return Task.CompletedTask;

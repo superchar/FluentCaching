@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
-using FluentCaching.Api;
-using FluentCaching.Api.Keys;
+using FluentCaching.PolicyBuilders.Keys;
+using FluentCaching.PolicyBuilders.Ttl;
 
 namespace FluentCaching.Benchmarks
 {
@@ -12,15 +12,15 @@ namespace FluentCaching.Benchmarks
         {
             foreach (var user in Users)
             {
-                await user.CacheAsync(Configuration);
+                await Cache.CacheAsync(user);
 
                 var key = new {user.Id, user.LastName, user.FirstName};
 
-                await key.RetrieveAsync<User>(Configuration);
+                await Cache.RetrieveAsync<User>(key);
             }
         }
 
-        protected override ExpirationBuilder Configure(CachingKeyBuilder<User> builder) =>
+        protected override ExpirationTypeBuilder Configure(CachingKeyBuilder<User> builder) =>
             builder.UseAsKey("user")
                 .CombinedWith(_ => _.Id)
                 .CombinedWith(_ => _.FirstName)

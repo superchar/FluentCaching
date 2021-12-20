@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentCaching.Configuration;
+﻿using System.Collections.Generic;
+using FluentCaching.Cache;
+using FluentCaching.Cache.Builders;
 using FluentCaching.Tests.Integration.Fakes;
 
 namespace FluentCaching.Tests.Integration
 {
-    public class BaseTest : IDisposable
+    public class BaseTest
     {
-        protected DictionaryCacheImplementation Cache { get; set; } = new DictionaryCacheImplementation();
-
-        protected CachingConfiguration Configuration { get; set; } = CachingConfiguration.Create();
-
-        protected Dictionary<string, object> Dictionary => Cache.Dictionary;
-
         protected BaseTest()
         {
-            Configuration.SetImplementation(Cache);
+            CacheBuilder.SetGenericCache(DictionaryCacheImplementation);
         }
 
-        public void Dispose()
-        {
-            Configuration.Reset();
-        }
+        protected ICacheBuilder CacheBuilder { get; set; } = new CacheBuilder();
+
+        protected DictionaryCacheImplementation DictionaryCacheImplementation { get; set; } = new DictionaryCacheImplementation();
+
+        protected Dictionary<string, object> Dictionary => DictionaryCacheImplementation.Dictionary;
     }
 }
