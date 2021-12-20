@@ -23,7 +23,7 @@ namespace FluentCaching.Cache
             var item = GetConfigurationItem<T>();
             var key = item.Tracker.GetStoreKey(targetObject);
             return GetCacheImplementation(item)
-                .SetAsync(key, targetObject, item.Options);
+                .CacheAsync(key, targetObject, item.Options);
         }
 
         public Task<T> RetrieveAsync<T>(object targetObject) where T : class
@@ -31,7 +31,7 @@ namespace FluentCaching.Cache
             var item = GetConfigurationItem<T>();
             var key = item.Tracker.GetRetrieveKeyComplex(targetObject);
             return GetCacheImplementation(item)
-                .GetAsync<T>(key);
+                .RetrieveAsync<T>(key);
         }
 
         public Task<T> RetrieveAsync<T>(string targetString) where T : class
@@ -39,7 +39,7 @@ namespace FluentCaching.Cache
             var item = GetConfigurationItem<T>();
             var key = item.Tracker.GetRetrieveKeySimple(targetString);
             return GetCacheImplementation(item)
-                .GetAsync<T>(key);
+                .RetrieveAsync<T>(key);
         }
 
         public Task RemoveAsync<T>(object targetObject) where T : class

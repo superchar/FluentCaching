@@ -22,3 +22,5 @@ project-colors.json
 .suo
 000.testlog
 testlog.manifest
+bin
+obj
