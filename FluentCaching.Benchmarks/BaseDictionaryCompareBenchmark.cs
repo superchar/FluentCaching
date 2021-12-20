@@ -2,12 +2,12 @@
 using BenchmarkDotNet.Attributes;
 using FluentCaching.Cache;
 using FluentCaching.Cache.Builders;
-using FluentCaching.Configuration;
 using FluentCaching.PolicyBuilders.Keys;
 using FluentCaching.PolicyBuilders.Ttl;
 
 namespace FluentCaching.Benchmarks
 {
+    [MemoryDiagnoser]
     public abstract class BaseDictionaryCompareBenchmark
     {
         private Dictionary<string, object> _dictionary;

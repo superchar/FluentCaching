@@ -15,11 +15,11 @@ namespace FluentCaching.Cache
 
         Task StoreAsync<T>(T targetObject) where T : class;
 
-        Task<T> RetrieveOrStoreAsync<T>(string key, Func<string, Task<T>> entityFetcher) where T : class;
+        Task<TValue> RetrieveOrStoreAsync<TKey, TValue>(TKey key, Func<TKey, Task<TValue>> entityFetcher) where TValue : class;
 
         Task<T> RetrieveOrStoreAsync<T>(object key, Func<object, Task<T>> entityFetcher) where T : class;
 
-        Task<T> RetrieveOrStoreAsync<T>(string key, Func<string, T> entityFetcher) where T : class;
+        Task<TValue> RetrieveOrStoreAsync<TKey, TValue>(TKey key, Func<TKey, TValue> entityFetcher) where TValue : class;
 
         Task<T> RetrieveOrStoreAsync<T>(object key, Func<object, T> entityFetcher) where T : class;
     }

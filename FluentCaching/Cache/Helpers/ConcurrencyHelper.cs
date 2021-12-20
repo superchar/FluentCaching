@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace FluentCaching.Cache.Helpers
 {
@@ -16,19 +15,19 @@ namespace FluentCaching.Cache.Helpers
 
         public uint TakeKeyLock<TKey>(TKey key)
         {
-            var hash = (uint)key.GetHashCode() % (uint)_keyLocks.Length;
+            var bucket = (uint)key.GetHashCode() % (uint)_keyLocks.Length;
 
-            while (Interlocked.CompareExchange(ref _keyLocks[hash], 1, 0) == 1)
+            while (Interlocked.CompareExchange(ref _keyLocks[bucket], 1, 0) == 1)
             {
                 Thread.Yield();
             }
 
-            return hash;
+            return bucket;
         }
 
-        public void ReleaseKeyLock(uint keyHash)
+        public void ReleaseKeyLock(uint keyBucket)
         {
-            _keyLocks[keyHash] = 0;
+            _keyLocks[keyBucket] = 0;
         }
     }
 }

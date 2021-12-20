@@ -57,39 +57,18 @@ namespace FluentCaching.Cache
                 .RemoveAsync(key);
         }
 
-        public async Task<T> RetrieveOrStoreAsync<T>(string key, Func<string, Task<T>> entityFetcher) where T : class
+        public async Task<TValue> RetrieveOrStoreAsync<TKey, TValue>(TKey key, Func<TKey, Task<TValue>> entityFetcher)
+           where TValue : class
         {
             var keyHash = _concurrencyHelper.TakeKeyLock(key);
 
             try
             {
-                var value = await RetrieveAsync<T>(key);
+                var value = await RetrieveAsync<TValue>(key.ToString());
 
                 if (value is null)
                 {
                     value = await entityFetcher(key);
-                    await StoreAsync(value);
-                }
-
-                return value;
-            }
-            finally
-            {
-                _concurrencyHelper.ReleaseKeyLock(keyHash);
-            }
-        }
-
-        public async Task<T> RetrieveOrStoreAsync<T>(string key, Func<string, T> entityFetcher) where T : class
-        {
-            var keyHash = _concurrencyHelper.TakeKeyLock(key);
-
-            try
-            {
-                var value = await RetrieveAsync<T>(key);
-
-                if (value is null)
-                {
-                    value = entityFetcher(key);
                     await StoreAsync(value);
                 }
 
@@ -120,6 +99,29 @@ namespace FluentCaching.Cache
             finally
             {
                 _concurrencyHelper.ReleaseKeyLock(keyHash); 
+            }
+        }
+
+        public async Task<TValue> RetrieveOrStoreAsync<TKey, TValue>(TKey key, Func<TKey, TValue> entityFetcher)
+            where TValue : class
+        {
+            var keyHash = _concurrencyHelper.TakeKeyLock(key);
+
+            try
+            {
+                var value = await RetrieveAsync<TValue>(key.ToString());
+
+                if (value is null)
+                {
+                    value = entityFetcher(key);
+                    await StoreAsync(value);
+                }
+
+                return value;
+            }
+            finally
+            {
+                _concurrencyHelper.ReleaseKeyLock(keyHash);
             }
         }
 

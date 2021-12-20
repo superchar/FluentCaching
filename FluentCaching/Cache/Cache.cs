@@ -130,7 +130,85 @@ namespace FluentCaching.Cache
 
         public Task<T> RetrieveOrStoreAsync<T>(object key, Func<object, T> entityFetcher) where T : class
             => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
-   
+
+        public Task<T> RetrieveOrStoreAsync<T>(bool key, Func<bool, Task<T>> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(bool key, Func<bool, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(int key, Func<int, Task<T>> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(int key, Func<int, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(byte key, Func<byte, Task<T>> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(byte key, Func<byte, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(sbyte key, Func<sbyte, Task<T>> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(sbyte key, Func<sbyte, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(char key, Func<char, Task<T>> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(char key, Func<char, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(decimal key, Func<decimal, Task<T>> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(decimal key, Func<decimal, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(double key, Func<double, Task<T>> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(double key, Func<double, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(float key, Func<float, Task<T>> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(float key, Func<float, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(long key, Func<long, Task<T>> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(long key, Func<long, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(ulong key, Func<ulong, Task<T>> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(ulong key, Func<ulong, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(short key, Func<short, Task<T>> entityFetcher) where T : class
+           => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(short key, Func<short, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(ushort key, Func<ushort, Task<T>> entityFetcher) where T : class
+           => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(ushort key, Func<ushort, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(uint key, Func<uint, Task<T>> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(uint key, Func<uint, T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
         #endregion
     }
 }
