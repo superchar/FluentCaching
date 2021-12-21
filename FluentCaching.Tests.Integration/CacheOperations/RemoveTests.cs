@@ -16,7 +16,7 @@ namespace FluentCaching.Tests.Integration.CacheOperations
 
             Func<Task<Order>> retrieveAsync = async () => await Cache.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" });
 
-            retrieveAsync.Should().Throw<ConfigurationNotFoundException>();
+            retrieveAsync.Should().ThrowAsync<ConfigurationNotFoundException>();
         }
 
         [Fact]

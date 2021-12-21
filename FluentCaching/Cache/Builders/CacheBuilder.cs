@@ -9,25 +9,34 @@ namespace FluentCaching.Cache.Builders
 {
     public class CacheBuilder : ICacheBuilder
     {
-        private readonly CacheConfiguration _cacheConfiguration = new CacheConfiguration();
+        private readonly ICacheConfiguration _cacheConfiguration;
 
-        public CacheBuilder For<T>(Func<CachingKeyBuilder<T>, CacheImplementationBuilder> factoryFunc)
+        public CacheBuilder() : this(new CacheConfiguration())
+        {
+        }
+
+        internal CacheBuilder(ICacheConfiguration cacheConfiguration)
+        {
+            _cacheConfiguration = cacheConfiguration;
+        }
+
+        public ICacheBuilder For<T>(Func<CachingKeyBuilder<T>, CacheImplementationBuilder> factoryFunc)
             where T : class
         {
             _cacheConfiguration.For(factoryFunc);
             return this;
         }
 
-        public CacheBuilder For<T>(Func<CachingKeyBuilder<T>, ExpirationTypeBuilder> factoryFunc)
+        public ICacheBuilder For<T>(Func<CachingKeyBuilder<T>, ExpirationTypeBuilder> factoryFunc)
             where T : class
         {
             _cacheConfiguration.For(factoryFunc);
             return this;
         }
 
-        public CacheBuilder SetGenericCache(ICacheImplementation cacheImplementation)
+        public ICacheBuilder SetGenericCache(ICacheImplementation cacheImplementation)
         {
-            _cacheConfiguration.SetImplementation(cacheImplementation);
+            _cacheConfiguration.SetGenericCache(cacheImplementation);
             return this;
         }
 

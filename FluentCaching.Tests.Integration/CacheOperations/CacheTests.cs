@@ -25,7 +25,7 @@ namespace FluentCaching.Tests.Integration.CacheOperations
         {
             Func<Task> cacheAsync = async () => await Cache.CacheAsync(Order.Test);
 
-            cacheAsync.Should().Throw<ConfigurationNotFoundException>();
+            cacheAsync.Should().ThrowAsync<ConfigurationNotFoundException>();
             CacheImplementationMock
                 .Verify(i => i.CacheAsync(It.IsAny<string>(), It.IsAny<User>(), It.IsAny<CacheOptions>()), Times.Never);
         }

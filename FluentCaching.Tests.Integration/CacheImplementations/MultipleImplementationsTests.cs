@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using FluentAssertions;
 using Xunit;
 using FluentCaching.Tests.Integration.Models;
 using FluentCaching.Tests.Integration.Extensions;

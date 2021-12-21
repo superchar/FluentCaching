@@ -18,17 +18,17 @@ namespace FluentCaching.Configuration
 
         public ICacheImplementation Current => _cacheImplementation;
 
-        public CacheConfiguration SetImplementation(ICacheImplementation cacheImplementation)
+        public ICacheConfiguration SetGenericCache(ICacheImplementation cacheImplementation)
         {
             _cacheImplementation = cacheImplementation;
             return this;
         }
 
-        public CacheConfiguration For<T>(Func<CachingKeyBuilder<T>, ExpirationTypeBuilder> factoryFunc)
+        public ICacheConfiguration For<T>(Func<CachingKeyBuilder<T>, ExpirationTypeBuilder> factoryFunc)
             where T : class
             => For<T>(factoryFunc(new CachingKeyBuilder<T>()).CachingOptions);
 
-        public CacheConfiguration For<T>(Func<CachingKeyBuilder<T>, CacheImplementationBuilder> factoryFunc)
+        public ICacheConfiguration For<T>(Func<CachingKeyBuilder<T>, CacheImplementationBuilder> factoryFunc)
             where T : class
             => For<T>(factoryFunc(new CachingKeyBuilder<T>()).CachingOptions);
 
@@ -37,7 +37,7 @@ namespace FluentCaching.Configuration
                 ? configurationItem as CacheConfigurationItem<T>
                 : null;
 
-        private CacheConfiguration For<T>(CacheOptions options)
+        private ICacheConfiguration For<T>(CacheOptions options)
             where T : class
         {
             _predefinedConfigurations[typeof(T)] = new CacheConfigurationItem<T>(options);

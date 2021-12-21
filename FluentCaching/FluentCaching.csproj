@@ -19,6 +19,14 @@
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 			<_Parameter1>FluentCaching.Benchmarks</_Parameter1>
 		</AssemblyAttribute>
+
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>FluentCaching.Tests.Unit</_Parameter1>
+		</AssemblyAttribute>
+
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
+		</AssemblyAttribute>
 	</ItemGroup>
 
 </Project>
