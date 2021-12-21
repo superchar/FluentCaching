@@ -9,7 +9,7 @@ namespace FluentCaching.Tests.Integration.Fakes
     {
         public Dictionary<string, object> Dictionary { get; set; } = new Dictionary<string, object>();
 
-        public Task<T> GetAsync<T>(string key)
+        public Task<T> RetrieveAsync<T>(string key)
         {
             return Task.FromResult((T)Dictionary.GetValueOrDefault(key));
         }
@@ -20,7 +20,7 @@ namespace FluentCaching.Tests.Integration.Fakes
             return Task.CompletedTask;
         }
 
-        public Task SetAsync<T>(string key, T targetObject, CacheOptions options)
+        public Task CacheAsync<T>(string key, T targetObject, CacheOptions options)
         {
             Dictionary[key] = targetObject;
             return Task.CompletedTask;

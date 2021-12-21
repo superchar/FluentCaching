@@ -20,11 +20,6 @@ namespace FluentCaching.Configuration
 
         public CacheConfiguration SetImplementation(ICacheImplementation cacheImplementation)
         {
-            if (_cacheImplementation != null)
-            {
-                throw new ArgumentException("Cache implementation is already set", nameof(cacheImplementation));
-            }
-
             _cacheImplementation = cacheImplementation;
             return this;
         }

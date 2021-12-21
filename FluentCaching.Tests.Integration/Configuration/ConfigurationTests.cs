@@ -4,7 +4,7 @@ using Xunit;
 using FluentCaching.Tests.Integration.Extensions;
 using FluentCaching.Tests.Integration.Models;
 
-namespace FluentCaching.Tests.Integration.Cache
+namespace FluentCaching.Tests.Integration.Configuration
 {
     public class ConfigurationTests : BaseTest
     {

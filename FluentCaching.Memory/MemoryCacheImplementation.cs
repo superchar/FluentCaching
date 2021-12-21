@@ -10,12 +10,12 @@ namespace FluentCaching.Memory
     {
         private static readonly ObjectCache Cache = MemoryCache.Default;
 
-        public Task<T> GetAsync<T>(string key)
+        public Task<T> RetrieveAsync<T>(string key)
         {
             return Cache.Contains(key) ? Task.FromResult((T)Cache[key]) : Task.FromResult(default(T));
         }
 
-        public Task SetAsync<T>(string key, T targetObject, CacheOptions options)
+        public Task CacheAsync<T>(string key, T targetObject, CacheOptions options)
         {
             Cache.Set(key, targetObject, CreatePolicy(options));
             return Task.CompletedTask;
