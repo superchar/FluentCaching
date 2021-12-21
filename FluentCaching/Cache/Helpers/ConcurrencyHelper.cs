@@ -7,10 +7,13 @@ namespace FluentCaching.Cache.Helpers
     {
         private readonly int[] _keyLocks;
 
-        public ConcurrencyHelper()
+        public ConcurrencyHelper() : this(Math.Max(Environment.ProcessorCount * 8, 32))
         {
-            var lockCount = Math.Max(Environment.ProcessorCount * 8, 32);
-            _keyLocks = new int[lockCount];
+        }
+
+        public ConcurrencyHelper(int locksCount)
+        {
+            _keyLocks = new int[locksCount];
         }
 
         public uint TakeKeyLock<TKey>(TKey key)
@@ -27,6 +30,11 @@ namespace FluentCaching.Cache.Helpers
 
         public void ReleaseKeyLock(uint keyBucket)
         {
+            if(_keyLocks.Length <= keyBucket)
+            {
+                throw new ArgumentException("Key bucket is out of locks range", nameof(keyBucket));
+            }
+
             _keyLocks[keyBucket] = 0;
         }
     }
