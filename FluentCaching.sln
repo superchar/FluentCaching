@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentCaching.Benchmarks", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentCaching.Tests.Integration", "FluentCaching.Tests.Integration\FluentCaching.Tests.Integration.csproj", "{6D4C5A33-86A2-4689-838E-66892A408002}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.Tests.Unit", "FluentCaching.Tests.Unit\FluentCaching.Tests.Unit.csproj", "{5DD67251-EB1F-4AB0-96E6-5EA5B2089C45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{6D4C5A33-86A2-4689-838E-66892A408002}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D4C5A33-86A2-4689-838E-66892A408002}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D4C5A33-86A2-4689-838E-66892A408002}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DD67251-EB1F-4AB0-96E6-5EA5B2089C45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DD67251-EB1F-4AB0-96E6-5EA5B2089C45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DD67251-EB1F-4AB0-96E6-5EA5B2089C45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DD67251-EB1F-4AB0-96E6-5EA5B2089C45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
