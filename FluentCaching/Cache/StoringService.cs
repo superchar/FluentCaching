@@ -18,7 +18,7 @@ namespace FluentCaching.Cache
             _concurrencyHelper = concurrencyHelper;
         }
 
-        public Task StoreAsync<T>(T targetObject) where T : class
+        public Task CacheAsync<T>(T targetObject) where T : class
         {
             var item = GetConfigurationItem<T>();
             var key = item.Tracker.GetStoreKey(targetObject);
@@ -69,7 +69,7 @@ namespace FluentCaching.Cache
                 if (value is null)
                 {
                     value = await entityFetcher(key);
-                    await StoreAsync(value);
+                    await CacheAsync(value);
                 }
 
                 return value;
@@ -91,7 +91,7 @@ namespace FluentCaching.Cache
                 if (value is null)
                 {
                     value = await entityFetcher(key);
-                    await StoreAsync(value);
+                    await CacheAsync(value);
                 }
 
                 return value;
@@ -114,7 +114,7 @@ namespace FluentCaching.Cache
                 if (value is null)
                 {
                     value = entityFetcher(key);
-                    await StoreAsync(value);
+                    await CacheAsync(value);
                 }
 
                 return value;
@@ -136,7 +136,7 @@ namespace FluentCaching.Cache
                 if (value is null)
                 {
                     value = entityFetcher(key);
-                    await StoreAsync(value);
+                    await CacheAsync(value);
                 }
 
                 return value;
@@ -147,10 +147,10 @@ namespace FluentCaching.Cache
             }
         }
 
-        private CacheConfigurationItem<T> GetConfigurationItem<T>() where T : class =>
+        private ICacheConfigurationItem<T> GetConfigurationItem<T>() where T : class =>
             _configuration.GetItem<T>() ?? throw new ConfigurationNotFoundException(typeof(T));
 
-        private ICacheImplementation GetCacheImplementation<T>(CacheConfigurationItem<T> item) where T : class =>
+        private ICacheImplementation GetCacheImplementation<T>(ICacheConfigurationItem<T> item) where T : class =>
             item.Options.CacheImplementation ??
             _configuration.Current ??
             throw new ConfigurationNotFoundException(typeof(T));

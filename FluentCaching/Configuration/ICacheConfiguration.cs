@@ -10,7 +10,7 @@ namespace FluentCaching.Configuration
     {
         ICacheImplementation Current { get; }
 
-        CacheConfigurationItem<T> GetItem<T>()
+        ICacheConfigurationItem<T> GetItem<T>()
             where T : class;
 
         ICacheConfiguration For<T>(Func<CachingKeyBuilder<T>, ExpirationTypeBuilder> factoryFunc)

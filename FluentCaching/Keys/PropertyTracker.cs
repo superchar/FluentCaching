@@ -7,7 +7,7 @@ using FluentCaching.Keys.Complex;
 
 namespace FluentCaching.Keys
 {
-    internal class PropertyTracker<T> : IPropertyTracker
+    internal class PropertyTracker<T> : IPropertyTracker<T>
         where T : class
     {
         private static readonly Func<T, IDictionary<string, object>, string> DefaultFactory =

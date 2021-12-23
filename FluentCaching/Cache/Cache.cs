@@ -15,7 +15,7 @@ namespace FluentCaching.Cache
         #region CacheAsync
 
         public Task CacheAsync<TEntity>(TEntity targetObject) where TEntity : class
-           => _storingService.StoreAsync(targetObject);
+           => _storingService.CacheAsync(targetObject);
 
         #endregion
 

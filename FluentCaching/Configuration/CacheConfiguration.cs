@@ -32,7 +32,7 @@ namespace FluentCaching.Configuration
             where T : class
             => For<T>(factoryFunc(new CachingKeyBuilder<T>()).CachingOptions);
 
-        public CacheConfigurationItem<T> GetItem<T>() where T : class =>
+        public ICacheConfigurationItem<T> GetItem<T>() where T : class =>
             _predefinedConfigurations.TryGetValue(typeof(T), out var configurationItem)
                 ? configurationItem as CacheConfigurationItem<T>
                 : null;
