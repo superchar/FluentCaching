@@ -1,4 +1,4 @@
-﻿namespace FluentCaching.Tests.Unit.Cache.Models
+﻿namespace FluentCaching.Tests.Unit.Models
 {
     public class User
     {

@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using FluentCaching.Keys.Helpers;
-using FluentCaching.Tests.Unit.Cache.Models;
+using FluentCaching.Tests.Unit.Models;
 using System;
 using Xunit;
 
-namespace FluentCaching.Tests.Unit.Keys
+namespace FluentCaching.Tests.Unit.Keys.Helpers
 {
     public class ExpressionsHelperTests
     {

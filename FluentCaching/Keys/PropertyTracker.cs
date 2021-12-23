@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using FluentCaching.Exceptions;
-using FluentCaching.Keys.Complex;
 using FluentCaching.Keys.Helpers;
 
 namespace FluentCaching.Keys
@@ -23,14 +22,19 @@ namespace FluentCaching.Keys
 
         private readonly IExpressionsHelper _expressionHelper;
 
-        public PropertyTracker() : this(new ExpressionsHelper())
+        private readonly IComplexKeysHelper _complexKeysHelper;
+
+        public PropertyTracker() : this(new ExpressionsHelper(), new ComplexKeysHelper())
         {
 
         }
 
-        public PropertyTracker(IExpressionsHelper expressionsHelper)
+        public PropertyTracker(
+            IExpressionsHelper expressionsHelper, 
+            IComplexKeysHelper complexKeysHelper)
         {
             _expressionHelper = expressionsHelper;
+            _complexKeysHelper = complexKeysHelper;
         }
 
         public string GetStoreKey(T obj)
@@ -65,7 +69,7 @@ namespace FluentCaching.Keys
 
         private IDictionary<string, object> GetValueSourceDictionary(object targetObject)
         {
-            var properties = ComplexKeysHelper.GetProperties(targetObject.GetType())
+            var properties = _complexKeysHelper.GetProperties(targetObject.GetType())
                 .Where(_ => _keys.ContainsKey(_.Name))
                 .ToList();
 
