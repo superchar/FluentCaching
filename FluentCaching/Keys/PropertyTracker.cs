@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using FluentCaching.Exceptions;
 using FluentCaching.Keys.Complex;
+using FluentCaching.Keys.Helpers;
 
 namespace FluentCaching.Keys
 {
@@ -19,6 +20,18 @@ namespace FluentCaching.Keys
             _keys = new Dictionary<string, bool>(); // Guaranteed to be thread safe when readonly (unlike hashset)
 
         private Func<T, IDictionary<string, object>, string> _factory = DefaultFactory;
+
+        private readonly IExpressionsHelper _expressionHelper;
+
+        public PropertyTracker() : this(new ExpressionsHelper())
+        {
+
+        }
+
+        public PropertyTracker(IExpressionsHelper expressionsHelper)
+        {
+            _expressionHelper = expressionsHelper;
+        }
 
         public string GetStoreKey(T obj)
         {
@@ -39,7 +52,7 @@ namespace FluentCaching.Keys
 
         public void TrackExpression<TValue>(Expression<Func<T, TValue>> valueGetter)
         {
-            var property = ExpressionsHelper.GetProperty(valueGetter).Name;
+            var property = _expressionHelper.GetProperty(valueGetter).Name;
             _keys[property] = true;
             var compiledExpression = valueGetter.Compile();
             var factory = _factory;
