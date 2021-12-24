@@ -45,6 +45,8 @@ namespace FluentCaching.Tests.Unit.Keys
             _sut.TrackExpression(u => u.Name);
 
             _sut.Invoking(s => s.GetRetrieveKeySimple("user")).Should().NotThrow();
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
         }
 
         [Fact]
@@ -69,6 +71,10 @@ namespace FluentCaching.Tests.Unit.Keys
 
             _sut.Invoking(s => s.GetRetrieveKeySimple("user"))
                 .Should().Throw<KeyNotFoundException>().WithMessage("A single dynamic key must be defined in configuration");
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, int>>>()), Times.Once);
         }
 
         [Fact]
@@ -92,6 +98,12 @@ namespace FluentCaching.Tests.Unit.Keys
 
             _sut.Invoking(s => s.GetRetrieveKeyComplex(new { Name = "Test user" }))
                 .Should().Throw<KeyNotFoundException>().WithMessage("Key schema is not correct");
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, int>>>()), Times.Once);
+            _complexKeysHelperMock
+                .Verify(k => k.GetProperties(It.IsAny<Type>()), Times.Once);
         }
 
         [Fact]
@@ -117,6 +129,12 @@ namespace FluentCaching.Tests.Unit.Keys
 
             _sut.Invoking(s => s.GetRetrieveKeyComplex(new { Name = "Test user", Id = 42, Age = 20 }))
                 .Should().NotThrow();
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, int>>>()), Times.Once);
+            _complexKeysHelperMock
+                .Verify(k => k.GetProperties(It.IsAny<Type>()), Times.Once);
         }
 
         [Fact]
@@ -141,6 +159,12 @@ namespace FluentCaching.Tests.Unit.Keys
 
             _sut.Invoking(s => s.GetRetrieveKeyComplex(new { Name = "Test user", Id = 42 }))
                 .Should().NotThrow();
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, int>>>()), Times.Once);
+            _complexKeysHelperMock
+                .Verify(k => k.GetProperties(It.IsAny<Type>()), Times.Once);
         }
 
         [Fact]
@@ -185,6 +209,8 @@ namespace FluentCaching.Tests.Unit.Keys
 
             _sut.Invoking(s => s.GetStoreKey(new User()))
                 .Should().Throw<KeyPartNullException>().WithMessage("A part of a caching key cannot be null");
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
         }
 
         [Fact]
@@ -198,6 +224,8 @@ namespace FluentCaching.Tests.Unit.Keys
 
             var user = new User { Name = "Test user" };
             _sut.GetStoreKey(user).Should().Contain("Test user");
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
         }
 
         [Fact]
@@ -211,6 +239,8 @@ namespace FluentCaching.Tests.Unit.Keys
             _sut.TrackExpression(u => u.Name);
 
             _sut.GetRetrieveKeySimple("Test user").Should().Be("user_Test user");
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
         }
 
         [Fact]
@@ -236,6 +266,10 @@ namespace FluentCaching.Tests.Unit.Keys
 
             _sut.GetRetrieveKeyComplex(new { Id = 42, Name = "Test user" })
                 .Should().Contain("Test user");
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
+            _expressionsHelperMock
+                .Verify(e => e.GetProperty(It.IsAny<Expression<Func<User, int>>>()), Times.Once);
         }
     }
 }

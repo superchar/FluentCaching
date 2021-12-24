@@ -20,7 +20,8 @@ namespace FluentCaching.Configuration
 
         public ICacheConfiguration SetGenericCache(ICacheImplementation cacheImplementation)
         {
-            _cacheImplementation = cacheImplementation;
+            _cacheImplementation = cacheImplementation 
+                ?? throw new ArgumentNullException(nameof(cacheImplementation), "Cache implementation cannot be null");
             return this;
         }
 
