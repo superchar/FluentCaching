@@ -67,6 +67,8 @@ namespace FluentCaching.Keys
                     : valueDict[property])?.ToString()));
         }
 
+        private static string ThrowIfKeyPartIsNull(string part) => part ?? throw new KeyPartNullException();
+
         private IDictionary<string, object> GetValueSourceDictionary(object targetObject)
         {
             var properties = _complexKeysHelper.GetProperties(targetObject.GetType())
@@ -86,8 +88,7 @@ namespace FluentCaching.Keys
         {
             if (_keys.Count > 1)
             {
-                throw new ArgumentException(
-                    "A single dynamic key must be defined in configuration", nameof(targetString));
+                throw new KeyNotFoundException("A single dynamic key must be defined in configuration");
             }
 
             if (!_keys.Any())
@@ -102,7 +103,5 @@ namespace FluentCaching.Keys
                 } // First will work faster as _keys is guaranteed to have a single item
             };
         }
-
-        private static string ThrowIfKeyPartIsNull(string part) => part ?? throw new KeyPartNullException();
     }
 }

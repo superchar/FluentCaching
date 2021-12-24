@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Tests.Unit.Models;
-using System.Linq;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.Keys.Helpers
@@ -23,10 +22,9 @@ namespace FluentCaching.Tests.Unit.Keys.Helpers
         {
             var result = _sut.GetProperties(typeof(User));
 
-            result.Should().HaveCount(1);
-            var property = result.Single();
-            property.Should().NotBeNull();
-            property.Name.Should().Be("Name");
+            result.Should().HaveCount(2);
+            result.Should().Contain(e => e.Name == "Name")
+                .And.Contain(e => e.Name == "Id");
         }
     }
 }
