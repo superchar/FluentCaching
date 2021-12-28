@@ -1,31 +1,39 @@
-﻿using System;
-using System.Linq.Expressions;
-using Moq;
-using Xunit;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentCaching.Keys;
 using FluentCaching.PolicyBuilders.Keys;
 using FluentCaching.Tests.Unit.Models;
+using Moq;
+using System;
+using System.Linq.Expressions;
+using Xunit;
 
 namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys
 {
-    public class CachingKeyBuilderTests
+    public class CombinedCachingKeyBuilderTests
     {
         private readonly Mock<IPropertyTracker<User>> _propertyTrackerMock;
 
-        private readonly CachingKeyBuilder<User> _sut;
+        private readonly CombinedCachingKeyBuilder<User> _sut;
 
-        public CachingKeyBuilderTests()
+        public CombinedCachingKeyBuilderTests()
         {
             _propertyTrackerMock = new Mock<IPropertyTracker<User>>();
 
-            _sut = new CachingKeyBuilder<User>(_propertyTrackerMock.Object);
+            _sut = new CombinedCachingKeyBuilder<User>(_propertyTrackerMock.Object);
         }
 
         [Fact]
-        public void UseAsKey_Expression_CallsTrackExpressionWithProperParameter()
+        public void And_HappyPath_ReturnsNotNullTtlTypeBuilder()
         {
-            var result = _sut.UseAsKey(u => u.Name);
+            var result = _sut.And();
+
+            result.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void CombinedWith_Expression_CallsTrackExpressionWithProperParameter()
+        {
+            var result = _sut.CombinedWith(u => u.Name);
 
             result.Should().NotBeNull();
             _propertyTrackerMock
@@ -33,9 +41,9 @@ namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys
         }
 
         [Fact]
-        public void UseAsKey_StaticValue_CallsTrackStaticWithProperParameter()
+        public void CombinedWith_StaticValue_CallsTrackStaticWithProperParameter()
         {
-            var result = _sut.UseAsKey("static value");
+            var result = _sut.CombinedWith("static value");
 
             result.Should().NotBeNull();
             _propertyTrackerMock
@@ -43,9 +51,9 @@ namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys
         }
 
         [Fact]
-        public void UseClassNameAsKey_ClassName_CallsTrackStaticWithProperParameter()
+        public void CombinedWithClassName_ClassName_CallsTrackStaticWithProperParameter()
         {
-            var result = _sut.UseClassNameAsKey();
+            var result = _sut.CombinedWithClassName();
 
             result.Should().NotBeNull();
             _propertyTrackerMock
@@ -53,9 +61,9 @@ namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys
         }
 
         [Fact]
-        public void UseClassFullNameAsKey_ClassNameFullName_CallsTrackStaticWithProperParameter()
+        public void CombinedWithClassFullName_ClassNameFullName_CallsTrackStaticWithProperParameter()
         {
-            var result = _sut.UseClassFullNameAsKey();
+            var result = _sut.CombinedWithClassFullName();
 
             result.Should().NotBeNull();
             _propertyTrackerMock
