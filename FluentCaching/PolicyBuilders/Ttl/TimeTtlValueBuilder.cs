@@ -9,7 +9,7 @@
             _ttlBuilder = ttlBuilder;
         }
 
-        public TimeTtlBuilder And(short value)
+        public TimeTtlBuilder And(ushort value)
         {
             _ttlBuilder.SetCurrentValue(value);
             return _ttlBuilder;

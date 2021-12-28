@@ -13,7 +13,7 @@ namespace FluentCaching.PolicyBuilders.Ttl
             _currentOptions.PropertyTracker = propertyTracker;
         }
 
-        public TimeTtlBuilder WithTtlOf(short value) => new TimeTtlBuilder(_currentOptions, value);
+        public TimeTtlBuilder WithTtlOf(ushort value) => new TimeTtlBuilder(_currentOptions, value);
 
         public AndBuilder<CacheImplementationBuilder> WithInfiniteTtl()
         {

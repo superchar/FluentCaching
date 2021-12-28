@@ -7,17 +7,17 @@ namespace FluentCaching.PolicyBuilders.Ttl
     {
         private CacheOptions _currentOptions;
 
-        private short _currentValue;
+        private ushort _currentValue;
 
-        private short _seconds;
+        private ushort _seconds;
 
-        private short _minutes;
+        private ushort _minutes;
 
-        private short _hours;
+        private ushort _hours;
 
-        private short _days;
+        private ushort _days;
 
-        public TimeTtlBuilder(CacheOptions currentOptions, short currentValue)
+        public TimeTtlBuilder(CacheOptions currentOptions, ushort currentValue)
         {
             _currentOptions = currentOptions;
             _currentValue = currentValue;
@@ -59,7 +59,7 @@ namespace FluentCaching.PolicyBuilders.Ttl
             }
         }
 
-        internal void SetCurrentValue(short value) => _currentValue = value;
+        internal void SetCurrentValue(ushort value) => _currentValue = value;
 
         internal ExpirationTypeBuilder Build()
         {
