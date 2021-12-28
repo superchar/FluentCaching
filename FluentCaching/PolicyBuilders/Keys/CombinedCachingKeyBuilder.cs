@@ -12,9 +12,9 @@ namespace FluentCaching.PolicyBuilders.Keys
 
         private static readonly string ClassFullName = typeof(T).FullName;
 
-        private readonly PropertyTracker<T> _propertyTracker;
+        private readonly IPropertyTracker<T> _propertyTracker;
 
-        internal CombinedCachingKeyBuilder(PropertyTracker<T> propertyTracker)
+        internal CombinedCachingKeyBuilder(IPropertyTracker<T> propertyTracker)
         {
             _propertyTracker = propertyTracker;
         }
