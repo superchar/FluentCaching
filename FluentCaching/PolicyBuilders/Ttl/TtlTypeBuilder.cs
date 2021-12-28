@@ -1,4 +1,5 @@
-﻿using FluentCaching.Cache.Models;
+﻿using System;
+using FluentCaching.Cache.Models;
 using FluentCaching.Keys;
 
 namespace FluentCaching.PolicyBuilders.Ttl
@@ -14,6 +15,10 @@ namespace FluentCaching.PolicyBuilders.Ttl
 
         public TimeTtlBuilder WithTtlOf(short value) => new TimeTtlBuilder(_currentOptions, value);
 
-        public InfiniteTtlBuilder WithInfiniteTtl() => new InfiniteTtlBuilder(_currentOptions);
+        public AndBuilder<CacheImplementationBuilder> WithInfiniteTtl()
+        {
+            _currentOptions.Ttl = TimeSpan.MaxValue;
+            return new AndBuilder<CacheImplementationBuilder>(new CacheImplementationBuilder(_currentOptions));
+        }
     }
 }

@@ -4,25 +4,25 @@ namespace FluentCaching.PolicyBuilders.Ttl
 {
     public class ExpirationTypeBuilder
     {
-        private CacheOptions _currentOptions;
+        private readonly CacheOptions _cacheOptions;
 
         public ExpirationTypeBuilder(CacheOptions currentOptions)
         {
-            _currentOptions = currentOptions;
+            _cacheOptions = currentOptions;
         }
 
-        public CacheOptions CachingOptions => _currentOptions;
+        public CacheOptions CachingOptions => _cacheOptions;
 
-        public ExpirationTypeBuilder AbsoluteExpiration() => ExpirationType(FluentCaching.Cache.Models.ExpirationType.Absolute);
+        public AndBuilder<CacheImplementationBuilder> AbsoluteExpiration() 
+            => ExpirationType(Cache.Models.ExpirationType.Absolute);
 
-        public ExpirationTypeBuilder SlidingExpiration() => ExpirationType(FluentCaching.Cache.Models.ExpirationType.Sliding);
+        public AndBuilder<CacheImplementationBuilder> SlidingExpiration() 
+            => ExpirationType(Cache.Models.ExpirationType.Sliding);
 
-        private ExpirationTypeBuilder ExpirationType(ExpirationType expirationType)
+        private AndBuilder<CacheImplementationBuilder> ExpirationType(ExpirationType expirationType)
         {
-            _currentOptions.ExpirationType = expirationType;
-            return this;
+            _cacheOptions.ExpirationType = expirationType;
+            return new AndBuilder<CacheImplementationBuilder>(new CacheImplementationBuilder(_cacheOptions));
         }
-
-        public CacheImplementationBuilder And() => new CacheImplementationBuilder(_currentOptions);
     }
 }

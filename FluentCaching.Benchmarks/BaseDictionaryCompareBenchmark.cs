@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Attributes;
 using FluentCaching.Cache;
 using FluentCaching.Cache.Builders;
+using FluentCaching.PolicyBuilders;
 using FluentCaching.PolicyBuilders.Keys;
 using FluentCaching.PolicyBuilders.Ttl;
 
@@ -50,7 +51,7 @@ namespace FluentCaching.Benchmarks
             }
         }
 
-        protected abstract ExpirationTypeBuilder Configure(CachingKeyBuilder<User> builder);
+        protected abstract AndBuilder<CacheImplementationBuilder> Configure(CachingKeyBuilder<User> builder);
 
         protected abstract string GetDictionaryKey(User user);
     }

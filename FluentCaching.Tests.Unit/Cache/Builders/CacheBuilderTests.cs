@@ -46,12 +46,12 @@ namespace FluentCaching.Tests.Unit.Cache.Builders
         [Fact]
         public void For_GenericCacheHappyPath_CallsCorrespondingMethodInConfiguration() 
         {
-            var factoryFuncMock = new Mock<Func<CachingKeyBuilder<string>, ExpirationTypeBuilder>>();
+            var factoryFuncMock = new Mock<Func<CachingKeyBuilder<string>, AndBuilder<CacheImplementationBuilder>>>();
 
             _sut.For(factoryFuncMock.Object);
 
             _cacheConfigurationMock
-                .Verify(c => c.For(It.IsAny<Func<CachingKeyBuilder<string>, ExpirationTypeBuilder>>()), Times.Once);
+                .Verify(c => c.For(It.IsAny<Func<CachingKeyBuilder<string>, AndBuilder<CacheImplementationBuilder>>>()), Times.Once);
         }
 
         [Fact]

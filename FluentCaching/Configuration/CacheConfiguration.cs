@@ -25,9 +25,9 @@ namespace FluentCaching.Configuration
             return this;
         }
 
-        public ICacheConfiguration For<T>(Func<CachingKeyBuilder<T>, ExpirationTypeBuilder> factoryFunc)
+        public ICacheConfiguration For<T>(Func<CachingKeyBuilder<T>, AndBuilder<CacheImplementationBuilder>> factoryFunc)
             where T : class
-            => For<T>(factoryFunc(new CachingKeyBuilder<T>()).CachingOptions);
+            => For<T>(factoryFunc(new CachingKeyBuilder<T>()).And().CachingOptions);
 
         public ICacheConfiguration For<T>(Func<CachingKeyBuilder<T>, CacheImplementationBuilder> factoryFunc)
             where T : class

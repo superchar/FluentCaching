@@ -13,7 +13,7 @@ namespace FluentCaching.Configuration
         ICacheConfigurationItem<T> GetItem<T>()
             where T : class;
 
-        ICacheConfiguration For<T>(Func<CachingKeyBuilder<T>, ExpirationTypeBuilder> factoryFunc)
+        ICacheConfiguration For<T>(Func<CachingKeyBuilder<T>, AndBuilder<CacheImplementationBuilder>> factoryFunc)
             where T : class;
 
         ICacheConfiguration For<T>(Func<CachingKeyBuilder<T>, CacheImplementationBuilder> factoryFunc)

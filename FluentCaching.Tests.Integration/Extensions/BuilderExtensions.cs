@@ -7,7 +7,7 @@ namespace FluentCaching.Tests.Integration.Extensions
 {
     public static class BuilderExtensions
     {
-        public static ExpirationTypeBuilder Complete<T>(this CombinedCachingKeyBuilder<T> builder)
+        public static AndBuilder<CacheImplementationBuilder> Complete<T>(this CombinedCachingKeyBuilder<T> builder)
             where T : class
         {
             return builder.And().WithTtlOf(5).Seconds.And().SlidingExpiration();

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
+using FluentCaching.PolicyBuilders;
 using FluentCaching.PolicyBuilders.Keys;
 using FluentCaching.PolicyBuilders.Ttl;
 
@@ -20,7 +21,7 @@ namespace FluentCaching.Benchmarks
             }
         }
 
-        protected override ExpirationTypeBuilder Configure(CachingKeyBuilder<User> builder) => builder
+        protected override AndBuilder<CacheImplementationBuilder> Configure(CachingKeyBuilder<User> builder) => builder
             .UseAsKey("user").CombinedWith(u => u.Id)
             .And().WithTtlOf(5).Seconds
             .And().SlidingExpiration();

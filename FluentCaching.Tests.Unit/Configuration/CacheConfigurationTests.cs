@@ -35,10 +35,10 @@ namespace FluentCaching.Tests.Unit.Configuration
         [Fact]
         public void For_GenericCache_CallsFactoryWithCachingKeyBuilder()
         {
-            var factoryMock = new Mock<Func<CachingKeyBuilder<User>, ExpirationTypeBuilder>>();
+            var factoryMock = new Mock<Func<CachingKeyBuilder<User>, AndBuilder<CacheImplementationBuilder>>>();
             factoryMock
                 .Setup(f => f(It.IsAny<CachingKeyBuilder<User>>()))
-                .Returns(new ExpirationTypeBuilder(new CacheOptions()));
+                .Returns(new AndBuilder<CacheImplementationBuilder>(new CacheImplementationBuilder(new CacheOptions())));
 
             _sut.For(factoryMock.Object);
 
@@ -71,10 +71,10 @@ namespace FluentCaching.Tests.Unit.Configuration
         [Fact]
         public void GetItem_ConfigurationExists_ReturnsConfiguration()
         {
-            var factoryMock = new Mock<Func<CachingKeyBuilder<User>, ExpirationTypeBuilder>>();
+            var factoryMock = new Mock<Func<CachingKeyBuilder<User>, AndBuilder<CacheImplementationBuilder>>> ();
             factoryMock
                 .Setup(f => f(It.IsAny<CachingKeyBuilder<User>>()))
-                .Returns(new ExpirationTypeBuilder(new CacheOptions()));
+                .Returns(new AndBuilder<CacheImplementationBuilder>(new CacheImplementationBuilder(new CacheOptions())));
             _sut.For(factoryMock.Object);
 
             var result = _sut.GetItem<User>();
