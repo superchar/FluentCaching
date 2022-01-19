@@ -13,11 +13,11 @@ namespace FluentCaching.Tests.Integration.CacheOperations
     public class RetrieveOrStoreTests : CacheOperationBaseTest
     {
         [Fact]
-        public void RetrieveOrStoreAsync_MissingConfiguration_ThrowsException()
+        public async Task RetrieveOrStoreAsync_MissingConfiguration_ThrowsException()
         {
             Func<Task<Order>> retrieveOrStoreAsync = () => Cache.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" });
 
-            retrieveOrStoreAsync.Should().ThrowAsync<ConfigurationNotFoundException>();
+            await retrieveOrStoreAsync.Should().ThrowAsync<ConfigurationNotFoundException>();
         }
 
         [Fact]

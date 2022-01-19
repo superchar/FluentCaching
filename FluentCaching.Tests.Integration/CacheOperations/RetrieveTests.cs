@@ -20,11 +20,11 @@ namespace FluentCaching.Tests.Integration.CacheOperations
         }
 
         [Fact]
-        public void RetrieveAsync_MissingConfiguration_ThrowsException()
+        public async Task RetrieveAsync_MissingConfiguration_ThrowsException()
         {
             Func<Task<Order>> retrieveAsync = async () => await Cache.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" });
 
-            retrieveAsync.Should().ThrowAsync<ConfigurationNotFoundException>();
+            await retrieveAsync.Should().ThrowAsync<ConfigurationNotFoundException>();
             CacheImplementationMock
                 .Verify(i => i.RetrieveAsync<Order>(It.IsAny<string>()), Times.Never);
         }

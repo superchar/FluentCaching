@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace FluentCaching.Cache
 {
-    internal interface IStoringService 
+    internal interface ICacheService 
     {
         Task RemoveAsync<T>(object targetObject) where T : class;
 

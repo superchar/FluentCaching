@@ -11,12 +11,12 @@ namespace FluentCaching.Tests.Integration.CacheOperations
     public class RemoveTests : CacheOperationBaseTest
     {
         [Fact]
-        public void RemoveAsync_MissingConfiguration_ThrowsException()
+        public async Task RemoveAsync_MissingConfiguration_ThrowsException()
         {
 
             Func<Task<Order>> retrieveAsync = async () => await Cache.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" });
 
-            retrieveAsync.Should().ThrowAsync<ConfigurationNotFoundException>();
+            await retrieveAsync.Should().ThrowAsync<ConfigurationNotFoundException>();
         }
 
         [Fact]

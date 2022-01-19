@@ -6,13 +6,13 @@ using FluentCaching.Exceptions;
 
 namespace FluentCaching.Cache
 {
-    internal class StoringService : IStoringService
+    internal class CacheService : ICacheService
     {
         private readonly IConcurrencyHelper _concurrencyHelper;
 
         private readonly ICacheConfiguration _configuration;
 
-        public StoringService(ICacheConfiguration configuration, IConcurrencyHelper concurrencyHelper)
+        public CacheService(ICacheConfiguration configuration, IConcurrencyHelper concurrencyHelper)
         {
             _configuration = configuration;
             _concurrencyHelper = concurrencyHelper;
@@ -46,7 +46,8 @@ namespace FluentCaching.Cache
         {
             var item = GetConfigurationItem<T>();
             var key = item.Tracker.GetRetrieveKeyComplex(targetObject);
-            return GetCacheImplementation(item).RemoveAsync(key);
+            return GetCacheImplementation(item)
+                .RemoveAsync(key);
         }
 
         public Task RemoveAsync<T>(string targetString) where T : class
@@ -153,6 +154,6 @@ namespace FluentCaching.Cache
         private ICacheImplementation GetCacheImplementation<T>(ICacheConfigurationItem<T> item) where T : class =>
             item.Options.CacheImplementation ??
             _configuration.Current ??
-            throw new ConfigurationNotFoundException(typeof(T));
+            throw new CacheImplementationNotFoundException(typeof(T));
     }
 }

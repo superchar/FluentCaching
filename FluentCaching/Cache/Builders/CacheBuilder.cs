@@ -40,6 +40,6 @@ namespace FluentCaching.Cache.Builders
             return this;
         }
 
-        public ICache Build() => new Cache(new StoringService(_cacheConfiguration, new ConcurrencyHelper()));
+        public ICache Build() => new Cache(new CacheService(_cacheConfiguration, new ConcurrencyHelper()));
     }
 }

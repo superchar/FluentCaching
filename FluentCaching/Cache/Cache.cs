@@ -5,9 +5,9 @@ namespace FluentCaching.Cache
 {
     internal class Cache : ICache
     {
-        private readonly IStoringService _storingService;
+        private readonly ICacheService _storingService;
 
-        public Cache(IStoringService storingService)
+        public Cache(ICacheService storingService)
         {
             _storingService = storingService;
         }
