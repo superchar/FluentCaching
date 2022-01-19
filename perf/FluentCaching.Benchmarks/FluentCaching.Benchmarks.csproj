@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FluentCaching\FluentCaching.csproj" />
+    <ProjectReference Include="..\..\src\FluentCaching\FluentCaching.csproj" />
   </ItemGroup>
 
 </Project>
