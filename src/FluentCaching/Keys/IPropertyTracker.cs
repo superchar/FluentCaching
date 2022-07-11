@@ -6,6 +6,8 @@
 
         string GetRetrieveKeyComplex(object obj);
 
+        string GetRetrieveKeyStatic();
+
         void TrackStatic<TValue>(TValue value);
     }
 }

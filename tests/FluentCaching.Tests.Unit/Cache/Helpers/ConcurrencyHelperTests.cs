@@ -14,7 +14,7 @@ namespace FluentCaching.Tests.Unit.Cache.Helpers
         [InlineData(5, 42, 2)]
         [InlineData(6, int.MaxValue, 1)]
         [InlineData(10, 578, 8)]
-        public void TakeKeyLock_HappyPath_ReturnsCorrectBucket(int locksCount, int key, uint expectedBucket) 
+        public void TakeKeyLock_HappyPath_ReturnsCorrectBucket(int locksCount, int key, uint expectedBucket)
         {
             var sut = new ConcurrencyHelper(locksCount);
 
@@ -28,11 +28,11 @@ namespace FluentCaching.Tests.Unit.Cache.Helpers
         [InlineData(10, 9)]
         [InlineData(15, 0)]
         [InlineData(20, 5)]
-        public void ReleaseKeyLock_HappyPath_CompletesSucessfully(int locksCount, uint keyBucket)
+        public void ReleaseKeyLock_HappyPath_CompletesSuccessfully(int locksCount, uint keyBucket)
         {
             var sut = new ConcurrencyHelper(locksCount);
 
-            var releaseKeyLock = sut
+            sut
                 .Invoking(s => s.ReleaseKeyLock(keyBucket))
                 .Should().NotThrow();
         }
@@ -45,7 +45,7 @@ namespace FluentCaching.Tests.Unit.Cache.Helpers
         {
             var sut = new ConcurrencyHelper(locksCount);
 
-            var releaseKeyLock = sut
+            sut
                 .Invoking(s => s.ReleaseKeyLock(keyBucket))
                 .Should()
                 .Throw<ArgumentException>().WithMessage("Key bucket is out of locks range (Parameter 'keyBucket')");

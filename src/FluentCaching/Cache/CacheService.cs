@@ -42,6 +42,14 @@ namespace FluentCaching.Cache
                 .RetrieveAsync<T>(key);
         }
 
+        public Task<T> RetrieveAsync<T>() where T : class
+        {
+            var item = GetConfigurationItem<T>();
+            var key = item.Tracker.GetRetrieveKeyStatic();
+            return GetCacheImplementation(item)
+                .RetrieveAsync<T>(key);
+        }
+
         public Task RemoveAsync<T>(object targetObject) where T : class
         {
             var item = GetConfigurationItem<T>();
@@ -137,6 +145,28 @@ namespace FluentCaching.Cache
                 if (value is null)
                 {
                     value = entityFetcher(key);
+                    await CacheAsync(value);
+                }
+
+                return value;
+            }
+            finally
+            {
+                _concurrencyHelper.ReleaseKeyLock(keyHash);
+            }
+        }
+
+        public async Task<T> RetrieveOrStoreAsync<T>(Func<T> entityFetcher) where T : class
+        {
+            var keyHash = _concurrencyHelper.TakeKeyLock(typeof(T));
+
+            try
+            {
+                var value = await RetrieveAsync<T>();
+
+                if (value is null)
+                {
+                    value = entityFetcher();
                     await CacheAsync(value);
                 }
 

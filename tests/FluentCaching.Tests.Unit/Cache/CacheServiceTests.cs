@@ -275,6 +275,106 @@ namespace FluentCaching.Tests.Unit.Cache
         }
 
         [Fact]
+        public async Task RetrieveAsyncStaticKey_MissingCachingPolicy_ThrowsException()
+        {
+            await _sut.Invoking(s => s.RetrieveAsync<User>()).Should()
+                .ThrowAsync<ConfigurationNotFoundException>()
+                .WithMessage("Caching configuration for type 'FluentCaching.Tests.Unit.Models.User' is not found");
+        }
+
+        [Fact]
+        public async Task RetrieveAsyncStaticKey_MissingCacheImplementation_ThrowsException()
+        {
+            var configurationItemMock = new Mock<ICacheConfigurationItem<User>>();
+            configurationItemMock
+                .SetupGet(i => i.Options).Returns(new CacheOptions());
+            var propertyTrackerMock = new Mock<IPropertyTracker<User>>();
+            configurationItemMock
+                .SetupGet(i => i.Tracker).Returns(propertyTrackerMock.Object);
+            _cacheConfigurationMock
+                .Setup(c => c.GetItem<User>()).Returns(configurationItemMock.Object);
+
+            await _sut.Invoking(s => s.RetrieveAsync<User>()).Should()
+                .ThrowAsync<CacheImplementationNotFoundException>()
+                .WithMessage("No caching implementation configured for type - 'FluentCaching.Tests.Unit.Models.User'");
+            configurationItemMock
+                .VerifyGet(i => i.Options, Times.AtLeastOnce);
+            propertyTrackerMock
+                .Verify(p => p.GetRetrieveKeyStatic(), Times.Once);
+            configurationItemMock
+                .VerifyGet(i => i.Tracker, Times.AtLeastOnce);
+            _cacheConfigurationMock
+                .Verify(c => c.GetItem<User>(), Times.Once);
+            _cacheConfigurationMock
+                .VerifyGet(c => c.Current, Times.AtLeastOnce);
+        }
+
+        [Fact]
+        public async Task RetrieveAsyncStaticKey_SpecificCacheImplementation_UsesSpecificCache()
+        {
+            var configurationItemMock = new Mock<ICacheConfigurationItem<User>>();
+            var specificCacheImplementationMock = new Mock<ICacheImplementation>();
+            configurationItemMock
+                .SetupGet(i => i.Options).Returns(new CacheOptions { CacheImplementation = specificCacheImplementationMock.Object });
+            var propertyTrackerMock = new Mock<IPropertyTracker<User>>();
+            propertyTrackerMock
+                .Setup(p => p.GetRetrieveKeyStatic()).Returns("User_Key");
+            configurationItemMock
+                .SetupGet(i => i.Tracker).Returns(propertyTrackerMock.Object);
+            _cacheConfigurationMock
+                .Setup(c => c.GetItem<User>()).Returns(configurationItemMock.Object);
+            var genericCacheImplementationMock = new Mock<ICacheImplementation>();
+            _cacheConfigurationMock
+                .SetupGet(c => c.Current).Returns(genericCacheImplementationMock.Object);
+
+            await _sut.RetrieveAsync<User>();
+
+            genericCacheImplementationMock
+                .Verify(c => c.RetrieveAsync<User>("User_Key"), Times.Never);
+            specificCacheImplementationMock
+                .Verify(c => c.RetrieveAsync<User>("User_Key"), Times.Once);
+            configurationItemMock
+                .VerifyGet(i => i.Options, Times.AtLeastOnce);
+            propertyTrackerMock
+                .Verify(p => p.GetRetrieveKeyStatic(), Times.Once);
+            configurationItemMock
+                .VerifyGet(i => i.Tracker, Times.AtLeastOnce);
+            _cacheConfigurationMock
+                .Verify(c => c.GetItem<User>(), Times.Once);
+        }
+
+        [Fact]
+        public async Task RetrieveAsyncStaticKey_OnlyGenericCacheImplementation_UsesGenericCache()
+        {
+            var configurationItemMock = new Mock<ICacheConfigurationItem<User>>();
+            configurationItemMock
+                .SetupGet(i => i.Options).Returns(new CacheOptions());
+            var propertyTrackerMock = new Mock<IPropertyTracker<User>>();
+            propertyTrackerMock
+                .Setup(p => p.GetRetrieveKeyStatic()).Returns("User_Key");
+            configurationItemMock
+                .SetupGet(i => i.Tracker).Returns(propertyTrackerMock.Object);
+            _cacheConfigurationMock
+                .Setup(c => c.GetItem<User>()).Returns(configurationItemMock.Object);
+            var genericCacheImplementationMock = new Mock<ICacheImplementation>();
+            _cacheConfigurationMock
+                .SetupGet(c => c.Current).Returns(genericCacheImplementationMock.Object);
+
+            await _sut.RetrieveAsync<User>();
+
+            genericCacheImplementationMock
+                .Verify(c => c.RetrieveAsync<User>("User_Key"), Times.Once);
+            configurationItemMock
+                .VerifyGet(i => i.Options, Times.AtLeastOnce);
+            propertyTrackerMock
+                .Verify(p => p.GetRetrieveKeyStatic(), Times.Once);
+            configurationItemMock
+                .VerifyGet(i => i.Tracker, Times.AtLeastOnce);
+            _cacheConfigurationMock
+                .Verify(c => c.GetItem<User>(), Times.Once);
+        }
+
+        [Fact]
         public async Task RetrieveAsyncSimpleKey_MissingCachingPolicy_ThrowsException()
         {
             await _sut.Invoking(s => s.RetrieveAsync<User>("Key")).Should()
@@ -373,6 +473,7 @@ namespace FluentCaching.Tests.Unit.Cache
             _cacheConfigurationMock
                 .Verify(c => c.GetItem<User>(), Times.Once);
         }
+
         [Fact]
         public async Task RemoveAsyncComplexKey_MissingCachingPolicy_ThrowsException()
         {

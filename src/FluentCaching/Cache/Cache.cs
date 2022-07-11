@@ -66,6 +66,9 @@ namespace FluentCaching.Cache
         public Task<TEntity> RetrieveAsync<TEntity>(string key) where TEntity : class
             => _storingService.RetrieveAsync<TEntity>(key);
 
+        public Task<TEntity> RetrieveAsync<TEntity>() where TEntity : class
+            => _storingService.RetrieveAsync<TEntity>();
+
         #endregion
 
         #region RemoveAsync
@@ -208,6 +211,9 @@ namespace FluentCaching.Cache
 
         public Task<T> RetrieveOrStoreAsync<T>(uint key, Func<uint, T> entityFetcher) where T : class
             => _storingService.RetrieveOrStoreAsync(key, entityFetcher);
+
+        public Task<T> RetrieveOrStoreAsync<T>(Func<T> entityFetcher) where T : class
+            => _storingService.RetrieveOrStoreAsync(entityFetcher);
 
         #endregion
     }

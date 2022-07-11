@@ -28,6 +28,19 @@ namespace FluentCaching.Cache.Helpers
             return bucket;
         }
 
+        public uint TakeKeyLock(Type type)
+        {
+            var key = type.FullName;
+            var bucket = (uint)key.GetHashCode() % (uint)_keyLocks.Length;
+
+            while (Interlocked.CompareExchange(ref _keyLocks[bucket], 1, 0) == 1)
+            {
+                Thread.Yield();
+            }
+
+            return bucket;
+        }
+
         public void ReleaseKeyLock(uint keyBucket)
         {
             if(_keyLocks.Length <= keyBucket)

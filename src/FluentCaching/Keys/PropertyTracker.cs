@@ -46,6 +46,8 @@ namespace FluentCaching.Keys
 
         public string GetRetrieveKeyComplex(object obj) => _factory(null, GetValueSourceDictionary(obj));
 
+        public string GetRetrieveKeyStatic() => _factory(null, GetValueSourceDictionary());
+
         public void TrackStatic<TValue>(TValue value)
         {
             var staticPart = value?.ToString();
@@ -84,7 +86,7 @@ namespace FluentCaching.Keys
                 .ToDictionary(p => p.Name, p => p.Get(targetObject));
         }
 
-        private IDictionary<string, object> GetValueSourceDictionary(string targetString)
+        private IDictionary<string, object> GetValueSourceDictionary(string targetString = default)
         {
             if (_keys.Count > 1)
             {
