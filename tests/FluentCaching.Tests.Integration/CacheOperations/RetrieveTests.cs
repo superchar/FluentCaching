@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
-using FluentCaching.Exceptions;
+using FluentCaching.Keys;
 using FluentCaching.Tests.Integration.Models;
 using Moq;
 

@@ -1,5 +1,6 @@
 ﻿using FluentCaching.Cache.Models;
 using FluentCaching.Keys;
+using FluentCaching.Keys.Builders;
 
 namespace FluentCaching.Configuration
 {
@@ -7,11 +8,11 @@ namespace FluentCaching.Configuration
     {
         public CacheConfigurationItem(CacheOptions options)
         {
-            Tracker = options.PropertyTracker as PropertyTracker<T>;
+            KeyBuilder = options.KeyBuilder as KeyBuilder<T>;
             Options = options;
         }
 
-        public IPropertyTracker<T> Tracker { get; }
+        public IKeyBuilder<T> KeyBuilder { get; }
 
         public CacheOptions Options { get; }
     }

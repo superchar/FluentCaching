@@ -1,19 +1,20 @@
 ﻿using System;
 using FluentCaching.Cache.Models;
 using FluentCaching.Keys;
+using FluentCaching.Keys.Builders;
 
 namespace FluentCaching.PolicyBuilders.Ttl
 {
     public class TtlTypeBuilder
     {
-        private readonly CacheOptions _currentOptions = new CacheOptions();
+        private readonly CacheOptions _currentOptions = new ();
 
-        internal TtlTypeBuilder(IPropertyTracker propertyTracker)
+        internal TtlTypeBuilder(IKeyBuilder keyBuilder)
         {
-            _currentOptions.PropertyTracker = propertyTracker;
+            _currentOptions.KeyBuilder = keyBuilder;
         }
 
-        public TimeTtlBuilder WithTtlOf(ushort value) => new TimeTtlBuilder(_currentOptions, value);
+        public TimeTtlBuilder WithTtlOf(ushort value) => new (_currentOptions, value);
 
         public AndBuilder<CacheImplementationBuilder> WithInfiniteTtl()
         {

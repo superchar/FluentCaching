@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FluentCaching.Exceptions
+namespace FluentCaching.Keys
 {
     public class ConfigurationNotFoundException : Exception
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using FluentCaching.Keys;
+using FluentCaching.Keys.Builders;
 
 namespace FluentCaching.PolicyBuilders.Keys
 {
@@ -8,42 +9,41 @@ namespace FluentCaching.PolicyBuilders.Keys
         where T : class
     {
         private static readonly string ClassName = typeof(T).Name;
-
         private static readonly string ClassFullName = typeof(T).FullName;
 
-        private readonly IPropertyTracker<T> _propertyTracker;
-
-        public CachingKeyBuilder() : this(new PropertyTracker<T>())
+        private readonly IKeyBuilder<T> _keyBuilder;
+        
+        internal CachingKeyBuilder() : this(new KeyBuilder<T>())
         {
         }
-
-        internal CachingKeyBuilder(IPropertyTracker<T> propertyTracker)
+        
+        internal CachingKeyBuilder(IKeyBuilder<T> keyBuilder)
         {
-            _propertyTracker = propertyTracker;
+            _keyBuilder = keyBuilder;
         }
 
         public CombinedCachingKeyBuilder<T> UseAsKey<TValue>(Expression<Func<T, TValue>> valueGetter)
         {
-            _propertyTracker.TrackExpression(valueGetter);
-            return new CombinedCachingKeyBuilder<T>(_propertyTracker);
+            _keyBuilder.AppendExpression(valueGetter);
+            return new CombinedCachingKeyBuilder<T>(_keyBuilder);
         }
 
         public CombinedCachingKeyBuilder<T> UseAsKey<TValue>(TValue value)
         {
-            _propertyTracker.TrackStatic(value);
-            return new CombinedCachingKeyBuilder<T>(_propertyTracker);
+            _keyBuilder.AppendStatic(value);
+            return new CombinedCachingKeyBuilder<T>(_keyBuilder);
         }
 
         public CombinedCachingKeyBuilder<T> UseClassNameAsKey()
         {
-            _propertyTracker.TrackStatic(ClassName);
-            return new CombinedCachingKeyBuilder<T>(_propertyTracker);
+            _keyBuilder.AppendStatic(ClassName);
+            return new CombinedCachingKeyBuilder<T>(_keyBuilder);
         }
 
         public CombinedCachingKeyBuilder<T> UseClassFullNameAsKey()
         {
-            _propertyTracker.TrackStatic(ClassFullName);
-            return new CombinedCachingKeyBuilder<T>(_propertyTracker);
+            _keyBuilder.AppendStatic(ClassFullName);
+            return new CombinedCachingKeyBuilder<T>(_keyBuilder);
         }
     }
 }

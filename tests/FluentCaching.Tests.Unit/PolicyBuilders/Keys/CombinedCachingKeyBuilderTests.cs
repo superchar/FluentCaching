@@ -5,21 +5,22 @@ using FluentCaching.Tests.Unit.Models;
 using Moq;
 using System;
 using System.Linq.Expressions;
+using FluentCaching.Keys.Builders;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys
 {
     public class CombinedCachingKeyBuilderTests
     {
-        private readonly Mock<IPropertyTracker<User>> _propertyTrackerMock;
+        private readonly Mock<IKeyBuilder<User>> _keyBuilderMock;
 
         private readonly CombinedCachingKeyBuilder<User> _sut;
 
         public CombinedCachingKeyBuilderTests()
         {
-            _propertyTrackerMock = new Mock<IPropertyTracker<User>>();
+            _keyBuilderMock = new Mock<IKeyBuilder<User>>();
 
-            _sut = new CombinedCachingKeyBuilder<User>(_propertyTrackerMock.Object);
+            _sut = new CombinedCachingKeyBuilder<User>(_keyBuilderMock.Object);
         }
 
         [Fact]
@@ -36,8 +37,8 @@ namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys
             var result = _sut.CombinedWith(u => u.Name);
 
             result.Should().NotBeNull();
-            _propertyTrackerMock
-                .Verify(p => p.TrackExpression(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
+            _keyBuilderMock
+                .Verify(p => p.AppendExpression(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
         }
 
         [Fact]
@@ -46,8 +47,8 @@ namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys
             var result = _sut.CombinedWith("static value");
 
             result.Should().NotBeNull();
-            _propertyTrackerMock
-                .Verify(p => p.TrackStatic("static value"), Times.Once);
+            _keyBuilderMock
+                .Verify(p => p.AppendStatic("static value"), Times.Once);
         }
 
         [Fact]
@@ -56,8 +57,8 @@ namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys
             var result = _sut.CombinedWithClassName();
 
             result.Should().NotBeNull();
-            _propertyTrackerMock
-                .Verify(p => p.TrackStatic("User"), Times.Once);
+            _keyBuilderMock
+                .Verify(p => p.AppendStatic("User"), Times.Once);
         }
 
         [Fact]
@@ -66,8 +67,8 @@ namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys
             var result = _sut.CombinedWithClassFullName();
 
             result.Should().NotBeNull();
-            _propertyTrackerMock
-                .Verify(p => p.TrackStatic("FluentCaching.Tests.Unit.Models.User"), Times.Once);
+            _keyBuilderMock
+                .Verify(p => p.AppendStatic("FluentCaching.Tests.Unit.Models.User"), Times.Once);
         }
     }
 }

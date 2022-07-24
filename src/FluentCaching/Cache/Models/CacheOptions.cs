@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentCaching.Keys;
+using FluentCaching.Keys.Builders;
 
 namespace FluentCaching.Cache.Models
 {
@@ -9,7 +10,7 @@ namespace FluentCaching.Cache.Models
 
         public ExpirationType ExpirationType { get; set; }
 
-        internal IPropertyTracker PropertyTracker { get; set; }
+        internal IKeyBuilder KeyBuilder { get; set; }
 
         internal ICacheImplementation CacheImplementation { get; set; }
     }

@@ -3,21 +3,22 @@ using FluentCaching.Keys;
 using FluentCaching.PolicyBuilders.Ttl;
 using Moq;
 using System;
+using FluentCaching.Keys.Builders;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.PolicyBuilders.Ttl
 {
     public class TtlTypeBuilderTests
     {
-        private readonly Mock<IPropertyTracker> _propertyTrackerMock;
+        private readonly Mock<IKeyBuilder> _keyBuilderMock;
 
         private readonly TtlTypeBuilder _sut;
 
         public TtlTypeBuilderTests()
         {
-            _propertyTrackerMock = new Mock<IPropertyTracker>();
+            _keyBuilderMock = new Mock<IKeyBuilder>();
 
-            _sut = new TtlTypeBuilder(_propertyTrackerMock.Object);
+            _sut = new TtlTypeBuilder(_keyBuilderMock.Object);
         }
 
         [Theory]

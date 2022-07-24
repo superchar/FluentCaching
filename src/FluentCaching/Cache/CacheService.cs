@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using FluentCaching.Cache.Helpers;
 using FluentCaching.Configuration;
-using FluentCaching.Exceptions;
+using FluentCaching.Keys;
 
 namespace FluentCaching.Cache
 {
@@ -21,7 +21,7 @@ namespace FluentCaching.Cache
         public Task CacheAsync<T>(T targetObject) where T : class
         {
             var item = GetConfigurationItem<T>();
-            var key = item.Tracker.GetStoreKey(targetObject);
+            var key = item.KeyBuilder.BuildFromCachedObject(targetObject);
             return GetCacheImplementation(item)
                 .CacheAsync(key, targetObject, item.Options);
         }
@@ -29,7 +29,7 @@ namespace FluentCaching.Cache
         public Task<T> RetrieveAsync<T>(object targetObject) where T : class
         {
             var item = GetConfigurationItem<T>();
-            var key = item.Tracker.GetRetrieveKeyComplex(targetObject);
+            var key = item.KeyBuilder.BuildFromObjectKey(targetObject);
             return GetCacheImplementation(item)
                 .RetrieveAsync<T>(key);
         }
@@ -37,7 +37,7 @@ namespace FluentCaching.Cache
         public Task<T> RetrieveAsync<T>(string targetString) where T : class
         {
             var item = GetConfigurationItem<T>();
-            var key = item.Tracker.GetRetrieveKeySimple(targetString);
+            var key = item.KeyBuilder.BuildFromStringKey(targetString);
             return GetCacheImplementation(item)
                 .RetrieveAsync<T>(key);
         }
@@ -45,7 +45,7 @@ namespace FluentCaching.Cache
         public Task<T> RetrieveAsync<T>() where T : class
         {
             var item = GetConfigurationItem<T>();
-            var key = item.Tracker.GetRetrieveKeyStatic();
+            var key = item.KeyBuilder.BuildFromStaticKey();
             return GetCacheImplementation(item)
                 .RetrieveAsync<T>(key);
         }
@@ -53,7 +53,7 @@ namespace FluentCaching.Cache
         public Task RemoveAsync<T>(object targetObject) where T : class
         {
             var item = GetConfigurationItem<T>();
-            var key = item.Tracker.GetRetrieveKeyComplex(targetObject);
+            var key = item.KeyBuilder.BuildFromObjectKey(targetObject);
             return GetCacheImplementation(item)
                 .RemoveAsync(key);
         }
@@ -61,7 +61,7 @@ namespace FluentCaching.Cache
         public Task RemoveAsync<T>(string targetString) where T : class
         {
             var item = GetConfigurationItem<T>();
-            var key = item.Tracker.GetRetrieveKeySimple(targetString);
+            var key = item.KeyBuilder.BuildFromStringKey(targetString);
             return GetCacheImplementation(item)
                 .RemoveAsync(key);
         }
