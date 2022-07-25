@@ -48,7 +48,7 @@ namespace FluentCaching.Tests.Unit.Cache.Helpers
             sut
                 .Invoking(s => s.ReleaseKeyLock(keyBucket))
                 .Should()
-                .Throw<ArgumentException>().WithMessage("CachedObject bucket is out of locks range (Parameter 'keyBucket')");
+                .Throw<ArgumentException>().WithMessage("Key bucket is out of locks range (Parameter 'keyBucket')");
         }
     }
 }

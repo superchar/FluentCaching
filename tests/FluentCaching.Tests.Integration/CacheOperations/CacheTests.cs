@@ -6,6 +6,7 @@ using FluentCaching.Keys;
 using FluentCaching.Tests.Integration.Models;
 using Moq;
 using FluentCaching.Cache.Models;
+using FluentCaching.Configuration.Exceptions;
 
 namespace FluentCaching.Tests.Integration.CacheOperations
 {

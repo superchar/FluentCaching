@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FluentCaching.Cache.Helpers;
 using FluentCaching.Configuration;
+using FluentCaching.Configuration.Exceptions;
 using FluentCaching.Keys;
 
 namespace FluentCaching.Cache

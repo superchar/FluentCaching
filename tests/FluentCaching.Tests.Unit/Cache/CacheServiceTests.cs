@@ -4,6 +4,7 @@ using FluentCaching.Cache;
 using FluentCaching.Cache.Helpers;
 using FluentCaching.Cache.Models;
 using FluentCaching.Configuration;
+using FluentCaching.Configuration.Exceptions;
 using FluentCaching.Keys;
 using FluentCaching.Keys.Builders;
 using FluentCaching.Tests.Unit.Models;
