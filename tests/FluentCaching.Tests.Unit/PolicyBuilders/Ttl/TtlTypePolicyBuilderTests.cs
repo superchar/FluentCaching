@@ -8,17 +8,17 @@ using Xunit;
 
 namespace FluentCaching.Tests.Unit.PolicyBuilders.Ttl
 {
-    public class TtlTypeBuilderTests
+    public class TtlTypePolicyBuilderTests
     {
         private readonly Mock<IKeyBuilder> _keyBuilderMock;
 
-        private readonly TtlTypeBuilder _sut;
+        private readonly TtlTypePolicyBuilder _sut;
 
-        public TtlTypeBuilderTests()
+        public TtlTypePolicyBuilderTests()
         {
             _keyBuilderMock = new Mock<IKeyBuilder>();
 
-            _sut = new TtlTypeBuilder(_keyBuilderMock.Object);
+            _sut = new TtlTypePolicyBuilder(_keyBuilderMock.Object);
         }
 
         [Theory]

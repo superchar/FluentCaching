@@ -7,16 +7,16 @@ namespace FluentCaching.Tests.Integration.Extensions
 {
     public static class BuilderExtensions
     {
-        public static AndBuilder<CacheImplementationBuilder> Complete<T>(this CombinedCachingKeyBuilder<T> builder)
+        public static AndPolicyBuilder<CacheImplementationPolicyBuilder> Complete<T>(this CombinedCachingKeyPolicyBuilder<T> policyBuilder)
             where T : class
         {
-            return builder.And().WithTtlOf(5).Seconds.And().SlidingExpiration();
+            return policyBuilder.And().WithTtlOf(5).Seconds.And().SlidingExpiration();
         }
 
-        public static CacheImplementationBuilder Complete<T>(this CombinedCachingKeyBuilder<T> builder, ICacheImplementation cacheImplementation)
+        public static CacheImplementationPolicyBuilder Complete<T>(this CombinedCachingKeyPolicyBuilder<T> policyBuilder, ICacheImplementation cacheImplementation)
             where T : class
         {
-            return Complete<T>(builder)
+            return Complete<T>(policyBuilder)
                 .And()
                 .WithCacheImplementation(cacheImplementation);
         }

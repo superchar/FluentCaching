@@ -13,10 +13,10 @@ namespace FluentCaching.Configuration
         ICacheConfigurationItem<T> GetItem<T>()
             where T : class;
 
-        ICacheConfiguration For<T>(Func<CachingKeyBuilder<T>, AndBuilder<CacheImplementationBuilder>> factoryFunc)
+        ICacheConfiguration For<T>(Func<CachingKeyPolicyBuilder<T>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
             where T : class;
 
-        ICacheConfiguration For<T>(Func<CachingKeyBuilder<T>, CacheImplementationBuilder> factoryFunc)
+        ICacheConfiguration For<T>(Func<CachingKeyPolicyBuilder<T>, CacheImplementationPolicyBuilder> factoryFunc)
             where T : class;
 
         ICacheConfiguration SetGenericCache(ICacheImplementation cacheImplementation);

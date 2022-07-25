@@ -21,8 +21,8 @@ namespace FluentCaching.Benchmarks
             }
         }
 
-        protected override AndBuilder<CacheImplementationBuilder> Configure(CachingKeyBuilder<User> builder) =>
-            builder.UseAsKey("user")
+        protected override AndPolicyBuilder<CacheImplementationPolicyBuilder> Configure(CachingKeyPolicyBuilder<User> policyBuilder) =>
+            policyBuilder.UseAsKey("user")
                 .CombinedWith(_ => _.Id)
                 .CombinedWith(_ => _.FirstName)
                 .CombinedWith(_ => _.LastName)

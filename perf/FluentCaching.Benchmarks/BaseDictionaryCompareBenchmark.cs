@@ -51,7 +51,7 @@ namespace FluentCaching.Benchmarks
             }
         }
 
-        protected abstract AndBuilder<CacheImplementationBuilder> Configure(CachingKeyBuilder<User> builder);
+        protected abstract AndPolicyBuilder<CacheImplementationPolicyBuilder> Configure(CachingKeyPolicyBuilder<User> policyBuilder);
 
         protected abstract string GetDictionaryKey(User user);
     }

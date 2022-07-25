@@ -9,9 +9,9 @@ namespace FluentCaching.Cache.Builders
     {
         ICache Build();
 
-        ICacheBuilder For<T>(Func<CachingKeyBuilder<T>, CacheImplementationBuilder> factoryFunc) where T : class;
+        ICacheBuilder For<T>(Func<CachingKeyPolicyBuilder<T>, CacheImplementationPolicyBuilder> factoryFunc) where T : class;
 
-        ICacheBuilder For<T>(Func<CachingKeyBuilder<T>, AndBuilder<CacheImplementationBuilder>> factoryFunc) where T : class;
+        ICacheBuilder For<T>(Func<CachingKeyPolicyBuilder<T>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc) where T : class;
 
         ICacheBuilder SetGenericCache(ICacheImplementation cacheImplementation);
     }

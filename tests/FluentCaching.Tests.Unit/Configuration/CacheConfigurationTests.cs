@@ -35,29 +35,29 @@ namespace FluentCaching.Tests.Unit.Configuration
         [Fact]
         public void For_GenericCache_CallsFactoryWithCachingKeyBuilder()
         {
-            var factoryMock = new Mock<Func<CachingKeyBuilder<User>, AndBuilder<CacheImplementationBuilder>>>();
+            var factoryMock = new Mock<Func<CachingKeyPolicyBuilder<User>, AndPolicyBuilder<CacheImplementationPolicyBuilder>>>();
             factoryMock
-                .Setup(f => f(It.IsAny<CachingKeyBuilder<User>>()))
-                .Returns(new AndBuilder<CacheImplementationBuilder>(new CacheImplementationBuilder(new CacheOptions())));
+                .Setup(f => f(It.IsAny<CachingKeyPolicyBuilder<User>>()))
+                .Returns(new AndPolicyBuilder<CacheImplementationPolicyBuilder>(new CacheImplementationPolicyBuilder(new CacheOptions())));
 
             _sut.For(factoryMock.Object);
 
             factoryMock
-                .Verify(f => f(It.IsAny<CachingKeyBuilder<User>>()), Times.Once);
+                .Verify(f => f(It.IsAny<CachingKeyPolicyBuilder<User>>()), Times.Once);
         }
 
         [Fact]
         public void For_SpecificCache_CallsFactoryWithCachingKeyBuilder()
         {
-            var factoryMock = new Mock<Func<CachingKeyBuilder<User>, CacheImplementationBuilder>>();
+            var factoryMock = new Mock<Func<CachingKeyPolicyBuilder<User>, CacheImplementationPolicyBuilder>>();
             factoryMock
-                .Setup(f => f(It.IsAny<CachingKeyBuilder<User>>()))
-                .Returns(new CacheImplementationBuilder(new CacheOptions()));
+                .Setup(f => f(It.IsAny<CachingKeyPolicyBuilder<User>>()))
+                .Returns(new CacheImplementationPolicyBuilder(new CacheOptions()));
 
             _sut.For(factoryMock.Object);
 
             factoryMock
-                .Verify(f => f(It.IsAny<CachingKeyBuilder<User>>()), Times.Once);
+                .Verify(f => f(It.IsAny<CachingKeyPolicyBuilder<User>>()), Times.Once);
         }
 
         [Fact]
@@ -71,17 +71,17 @@ namespace FluentCaching.Tests.Unit.Configuration
         [Fact]
         public void GetItem_ConfigurationExists_ReturnsConfiguration()
         {
-            var factoryMock = new Mock<Func<CachingKeyBuilder<User>, AndBuilder<CacheImplementationBuilder>>> ();
+            var factoryMock = new Mock<Func<CachingKeyPolicyBuilder<User>, AndPolicyBuilder<CacheImplementationPolicyBuilder>>> ();
             factoryMock
-                .Setup(f => f(It.IsAny<CachingKeyBuilder<User>>()))
-                .Returns(new AndBuilder<CacheImplementationBuilder>(new CacheImplementationBuilder(new CacheOptions())));
+                .Setup(f => f(It.IsAny<CachingKeyPolicyBuilder<User>>()))
+                .Returns(new AndPolicyBuilder<CacheImplementationPolicyBuilder>(new CacheImplementationPolicyBuilder(new CacheOptions())));
             _sut.For(factoryMock.Object);
 
             var result = _sut.GetItem<User>();
 
             result.Should().NotBeNull();
             factoryMock
-                .Verify(f => f(It.IsAny<CachingKeyBuilder<User>>()), Times.Once);
+                .Verify(f => f(It.IsAny<CachingKeyPolicyBuilder<User>>()), Times.Once);
         }
     }
 }

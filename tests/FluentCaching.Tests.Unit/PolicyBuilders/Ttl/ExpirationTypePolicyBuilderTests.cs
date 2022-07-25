@@ -5,17 +5,17 @@ using Xunit;
 
 namespace FluentCaching.Tests.Unit.PolicyBuilders.Ttl
 {
-    public class ExpirationTypeBuilderTests
+    public class ExpirationTypePolicyBuilderTests
     {
         private readonly CacheOptions _cacheOptions;
 
-        private readonly ExpirationTypeBuilder _sut;
+        private readonly ExpirationTypePolicyBuilder _sut;
 
-        public ExpirationTypeBuilderTests()
+        public ExpirationTypePolicyBuilderTests()
         {
             _cacheOptions = new CacheOptions();
 
-            _sut = new ExpirationTypeBuilder(_cacheOptions);
+            _sut = new ExpirationTypePolicyBuilder(_cacheOptions);
         }
 
         [Fact]

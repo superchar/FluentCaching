@@ -21,7 +21,7 @@ namespace FluentCaching.Benchmarks
             }
         }
 
-        protected override AndBuilder<CacheImplementationBuilder> Configure(CachingKeyBuilder<User> builder) => builder
+        protected override AndPolicyBuilder<CacheImplementationPolicyBuilder> Configure(CachingKeyPolicyBuilder<User> policyBuilder) => policyBuilder
             .UseAsKey("user").CombinedWith(u => u.Id)
             .And().WithTtlOf(5).Seconds
             .And().SlidingExpiration();

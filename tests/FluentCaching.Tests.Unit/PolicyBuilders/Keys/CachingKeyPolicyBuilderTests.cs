@@ -10,17 +10,17 @@ using FluentCaching.Tests.Unit.Models;
 
 namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys
 {
-    public class CachingKeyBuilderTests
+    public class CachingKeyPolicyBuilderTests
     {
         private readonly Mock<IKeyBuilder<User>> _keyBuilderMock;
 
-        private readonly CachingKeyBuilder<User> _sut;
+        private readonly CachingKeyPolicyBuilder<User> _sut;
 
-        public CachingKeyBuilderTests()
+        public CachingKeyPolicyBuilderTests()
         {
             _keyBuilderMock = new Mock<IKeyBuilder<User>>();
 
-            _sut = new CachingKeyBuilder<User>(_keyBuilderMock.Object);
+            _sut = new CachingKeyPolicyBuilder<User>(_keyBuilderMock.Object);
         }
 
         [Fact]

@@ -3,7 +3,7 @@ using System;
 
 namespace FluentCaching.PolicyBuilders.Ttl
 {
-    public class TimeTtlBuilder
+    public class TimeTtlPolicyBuilder
     {
         private CacheOptions _currentOptions;
 
@@ -17,54 +17,54 @@ namespace FluentCaching.PolicyBuilders.Ttl
 
         private ushort _days;
 
-        public TimeTtlBuilder(CacheOptions currentOptions, ushort currentValue)
+        public TimeTtlPolicyBuilder(CacheOptions currentOptions, ushort currentValue)
         {
             _currentOptions = currentOptions;
             _currentValue = currentValue;
         }
 
-        public TimeTtlValueBuilder Seconds
+        public TimeTtlValuePolicyBuilder Seconds
         {
             get
             {
                 _seconds = _currentValue;
-                return new TimeTtlValueBuilder(this);
+                return new TimeTtlValuePolicyBuilder(this);
             }
         }
 
-        public TimeTtlValueBuilder Minutes
+        public TimeTtlValuePolicyBuilder Minutes
         {
             get
             {
                 _minutes = _currentValue;
-                return new TimeTtlValueBuilder(this);
+                return new TimeTtlValuePolicyBuilder(this);
             }
         }
 
-        public TimeTtlValueBuilder Hours
+        public TimeTtlValuePolicyBuilder Hours
         {
             get
             {
                 _hours = _currentValue;
-                return new TimeTtlValueBuilder(this);
+                return new TimeTtlValuePolicyBuilder(this);
             }
         }
 
-        public TimeTtlValueBuilder Days
+        public TimeTtlValuePolicyBuilder Days
         {
             get
             {
                 _days = _currentValue;
-                return new TimeTtlValueBuilder(this);
+                return new TimeTtlValuePolicyBuilder(this);
             }
         }
 
         internal void SetCurrentValue(ushort value) => _currentValue = value;
 
-        internal ExpirationTypeBuilder Build()
+        internal ExpirationTypePolicyBuilder Build()
         {
             _currentOptions.Ttl = new TimeSpan(_days, _hours, _minutes, _seconds);
-            return new ExpirationTypeBuilder(_currentOptions);
+            return new ExpirationTypePolicyBuilder(_currentOptions);
         }
     }
 }

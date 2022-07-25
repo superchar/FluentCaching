@@ -8,17 +8,17 @@ using FluentCaching.PolicyBuilders;
 
 namespace FluentCaching.Tests.Unit.PolicyBuilders
 {
-    public class CacheImplementationBuilderTests
+    public class CacheImplementationPolicyBuilderTests
     {
         private readonly CacheOptions _cacheOptions;
 
-        private readonly CacheImplementationBuilder _sut;
+        private readonly CacheImplementationPolicyBuilder _sut;
 
-        public CacheImplementationBuilderTests()
+        public CacheImplementationPolicyBuilderTests()
         {
             _cacheOptions = new CacheOptions();
 
-            _sut = new CacheImplementationBuilder(_cacheOptions);
+            _sut = new CacheImplementationPolicyBuilder(_cacheOptions);
         }
 
         [Fact]

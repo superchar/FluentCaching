@@ -6,7 +6,7 @@ using FluentCaching.PolicyBuilders.Ttl;
 
 namespace FluentCaching.PolicyBuilders.Keys
 {
-    public class CombinedCachingKeyBuilder<T>
+    public class CombinedCachingKeyPolicyBuilder<T>
         where T : class
     {
         private static readonly string ClassName = typeof(T).Name;
@@ -14,32 +14,32 @@ namespace FluentCaching.PolicyBuilders.Keys
 
         private readonly IKeyBuilder<T> _keyBuilder;
 
-        internal CombinedCachingKeyBuilder(IKeyBuilder<T> keyBuilder)
+        internal CombinedCachingKeyPolicyBuilder(IKeyBuilder<T> keyBuilder)
         {
             _keyBuilder = keyBuilder;
         }
 
-        public TtlTypeBuilder And() => new (_keyBuilder);
+        public TtlTypePolicyBuilder And() => new (_keyBuilder);
 
-        public CombinedCachingKeyBuilder<T> CombinedWith<TValue>(Expression<Func<T, TValue>> valueGetter)
+        public CombinedCachingKeyPolicyBuilder<T> CombinedWith<TValue>(Expression<Func<T, TValue>> valueGetter)
         {
             _keyBuilder.AppendExpression(valueGetter);
             return this;
         }
 
-        public CombinedCachingKeyBuilder<T> CombinedWith<TValue>(TValue value)
+        public CombinedCachingKeyPolicyBuilder<T> CombinedWith<TValue>(TValue value)
         {
             _keyBuilder.AppendStatic(value);
             return this;
         }
 
-        public CombinedCachingKeyBuilder<T> CombinedWithClassName()
+        public CombinedCachingKeyPolicyBuilder<T> CombinedWithClassName()
         {
             _keyBuilder.AppendStatic(ClassName);
             return this;
         }
 
-        public CombinedCachingKeyBuilder<T> CombinedWithClassFullName()
+        public CombinedCachingKeyPolicyBuilder<T> CombinedWithClassFullName()
         {
             _keyBuilder.AppendStatic(ClassFullName);
             return this;
