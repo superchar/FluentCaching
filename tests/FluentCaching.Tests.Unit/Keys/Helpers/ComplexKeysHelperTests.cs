@@ -7,7 +7,7 @@ namespace FluentCaching.Tests.Unit.Keys.Helpers
 {
     public class ComplexKeysHelperTests
     {
-        private readonly ComplexKeysHelper _sut = new ComplexKeysHelper();
+        private readonly ComplexKeysHelper _sut = new ();
 
         [Fact]
         public void GetProperties_TypeHasNoProperties_ReturnsEmptyArray()
@@ -22,9 +22,11 @@ namespace FluentCaching.Tests.Unit.Keys.Helpers
         {
             var result = _sut.GetProperties(typeof(User));
 
-            result.Should().HaveCount(2);
-            result.Should().Contain(e => e.Name == "Name")
-                .And.Contain(e => e.Name == "Id");
+            result.Should().HaveCount(4);
+            result.Should().Contain(e => e.Name == nameof(User.Name))
+                .And.Contain(e => e.Name == nameof(User.Id))
+                .And.Contain(e => e.Name == nameof(User.Currency))
+                .And.Contain(e => e.Name == nameof(User.SubscriptionId));
         }
     }
 }

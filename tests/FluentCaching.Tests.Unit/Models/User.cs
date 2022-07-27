@@ -5,5 +5,9 @@
         public string Name { get; set; }
 
         public int Id { get; set; }
+
+        public int? SubscriptionId { get; set; }
+
+        public Currency Currency { get; set; }
     }
 }

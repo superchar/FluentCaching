@@ -11,7 +11,7 @@ namespace FluentCaching.Keys.Builders
         where T : class
     {
         private bool _hasDynamicParts = false;
-        private List<Func<KeySource<T>, string>> _keyPartBuilders = new();
+        private List<Func<KeyContextSource<T>, string>> _keyPartBuilders = new();
 
         private readonly IKeyContextBuilder _keyContextBuilder;
         private readonly IExpressionsHelper _expressionHelper;
@@ -40,20 +40,22 @@ namespace FluentCaching.Keys.Builders
             _hasDynamicParts = true;
             var property = _expressionHelper.GetProperty(valueGetter).Name;
             _keyContextBuilder.AddKey(property);
-            var compiledExpression = valueGetter.Compile();
-            Func<KeySource<T>, string> keyPartBuilder = 
-                _ => ThrowIfKeyPartIsEmpty((_.CachedObject != null
-                    ? compiledExpression(_.CachedObject)
-                    : _.KeyContext[property])?.ToString());
+            var compiledExpression = _expressionHelper
+                .RewriteWithSafeToString(valueGetter)
+                .Compile();
+            Func<KeyContextSource<T>, string> keyPartBuilder = 
+                _ => ThrowIfKeyPartIsEmpty(_.Store != null
+                    ? compiledExpression(_.Store)
+                    : _.Retrieve[property]?.ToString());
             _keyPartBuilders.Add(keyPartBuilder);
         }
 
-        public string BuildFromCachedObject(T cachedObject) => BuildKey(new KeySource<T>(cachedObject));
+        public string BuildFromCachedObject(T cachedObject) => BuildKey(new KeyContextSource<T>(cachedObject));
 
         public string BuildFromStringKey(string stringKey)
         {
             var context = _keyContextBuilder.BuildKeyContextFromString(stringKey);
-            var source = new KeySource<T>(context);
+            var source = new KeyContextSource<T>(context);
 
             return BuildKey(source);
         }
@@ -61,7 +63,7 @@ namespace FluentCaching.Keys.Builders
         public string BuildFromObjectKey(object objectKey)
         {
             var context = _keyContextBuilder.BuildKeyContextFromObject(objectKey);
-            var source = new KeySource<T>(context);
+            var source = new KeyContextSource<T>(context);
 
             return BuildKey(source);
         }
@@ -73,7 +75,7 @@ namespace FluentCaching.Keys.Builders
                 throw new KeyPartMissingException();
             }
 
-            return BuildKey(KeySource<T>.Null);
+            return BuildKey(KeyContextSource<T>.Null);
         }
 
         private static string ThrowIfKeyPartIsEmpty(string part)
@@ -86,13 +88,13 @@ namespace FluentCaching.Keys.Builders
             return part;
         }
 
-        private string BuildKey(KeySource<T> source) => string.Join(string.Empty, BuildKeyParts(source));
+        private string BuildKey(KeyContextSource<T> contextSource) => string.Join(string.Empty, BuildKeyParts(contextSource));
         
-        private IEnumerable<string> BuildKeyParts(KeySource<T> source)
+        private IEnumerable<string> BuildKeyParts(KeyContextSource<T> contextSource)
         {
             foreach (var action in _keyPartBuilders)
             {
-                yield return action(source);
+                yield return action(contextSource);
             }
         }
     }

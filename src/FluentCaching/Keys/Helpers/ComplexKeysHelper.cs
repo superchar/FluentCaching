@@ -7,8 +7,7 @@ namespace FluentCaching.Keys.Helpers
 {
     internal class ComplexKeysHelper : IComplexKeysHelper
     {
-        private static readonly ConcurrentDictionary<Type, PropertyAccessor[]> Cache
-            = new ConcurrentDictionary<Type, PropertyAccessor[]>();
+        private static readonly ConcurrentDictionary<Type, PropertyAccessor[]> Cache = new ();
 
         private static readonly MethodInfo CallInnerDelegateMethod =
             typeof(ComplexKeysHelper).GetMethod(nameof(CallInnerDelegate),

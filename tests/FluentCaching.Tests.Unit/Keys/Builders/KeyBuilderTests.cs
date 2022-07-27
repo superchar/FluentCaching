@@ -26,6 +26,11 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
             _keyContextBuilderMock = new Mock<IKeyContextBuilder>();
             _expressionHelperMock = new Mock<IExpressionsHelper>();
 
+            _expressionHelperMock
+                .Setup(_ => _.RewriteWithSafeToString<User, string>(
+                    It.IsAny<Expression<Func<User, string>>>()))
+                .Returns(_ => _.Name == null ? null : _.Name.ToString());
+
             _sut = new KeyBuilder<User>(_keyContextBuilderMock.Object, _expressionHelperMock.Object);
         }
 
@@ -49,7 +54,7 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
         }
         
         [Fact]
-        public void AppendExpression_WhenCalled_CallsExpressionHelper()
+        public void AppendExpression_WhenCalled_CallsGetProperty()
         {
             MockProperty();
             
@@ -57,6 +62,17 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
             
             _expressionHelperMock
                 .Verify(_ => _.GetProperty(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
+        }
+        
+        [Fact]
+        public void AppendExpression_WhenCalled_CallsRewriteWithSafeToString()
+        {
+            MockProperty();
+            
+            _sut.AppendExpression(_ => _.Name);
+            
+            _expressionHelperMock
+                .Verify(_ => _.RewriteWithSafeToString(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
         }
         
         [Fact]
