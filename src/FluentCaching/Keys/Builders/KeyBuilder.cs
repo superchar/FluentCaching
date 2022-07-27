@@ -39,6 +39,7 @@ namespace FluentCaching.Keys.Builders
         {
             _hasDynamicParts = true;
             var property = _expressionHelper.GetProperty(valueGetter).Name;
+            _keyContextBuilder.AddKey(property);
             var compiledExpression = valueGetter.Compile();
             Func<KeySource<T>, string> keyPartBuilder = 
                 _ => ThrowIfKeyPartIsEmpty((_.CachedObject != null

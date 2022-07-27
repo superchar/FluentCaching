@@ -57,13 +57,11 @@ namespace FluentCaching.Tests.Integration.CacheOperations
             var entityFetcherMock = new Mock<Func<string, Task<User>>>();
             entityFetcherMock
                 .Setup(f => f(KEY))
-                .Returns(Task.Delay(500).ContinueWith(_ => User.Test));
+                .ReturnsAsync(User.Test);
 
-            var tasks = Enumerable.Range(0, 10)
-                .Select(_ => Cache.RetrieveOrStoreAsync(KEY, entityFetcherMock.Object))
-                .ToList();
-            await Task.WhenAll(tasks);
-
+            Cache.RetrieveOrStoreAsync(KEY, entityFetcherMock.Object);
+            
+            Cache.RetrieveOrStoreAsync(KEY, entityFetcherMock.Object);
             entityFetcherMock.Verify(f => f(KEY), Times.Once);
         }
     }

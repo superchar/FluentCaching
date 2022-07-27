@@ -59,6 +59,17 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
                 .Verify(_ => _.GetProperty(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
         }
         
+        [Fact]
+        public void AppendExpression_WhenCalled_AddsKeyToContext()
+        {
+            MockProperty(nameof(User.Name));
+
+            _sut.AppendExpression(_ => _.Name);
+            
+            _keyContextBuilderMock
+                .Verify(_ => _.AddKey(nameof(User.Name)), Times.Once);
+        }
+        
         [Theory]
         [InlineData("")]
         [InlineData(null)]

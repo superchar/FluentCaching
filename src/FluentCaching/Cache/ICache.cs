@@ -5,11 +5,11 @@ namespace FluentCaching.Cache
 {
     public interface ICache
     {
-        #region CacheAsync 
+        #region StoreAsync 
         
         Task CacheAsync<TEntity>(TEntity targetObject) where TEntity : class;
 
-        #endregion CacheAsync
+        #endregion StoreAsync
 
         #region RemoveAsync
 
@@ -85,66 +85,36 @@ namespace FluentCaching.Cache
         #region RetrieveOrStoreAsync
 
         Task<T> RetrieveOrStoreAsync<T>(string key, Func<string, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(string key, Func<string, T> entityFetcher) where T : class;
-
+        
         Task<T> RetrieveOrStoreAsync<T>(object key, Func<object, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(object key, Func<object, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(bool key, Func<bool, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(bool key, Func<bool, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(int key, Func<int, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(int key, Func<int, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(byte key, Func<byte, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(byte key, Func<byte, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(sbyte key, Func<sbyte, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(sbyte key, Func<sbyte, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(char key, Func<char, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(char key, Func<char, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(decimal key, Func<decimal, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(decimal key, Func<decimal, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(double key, Func<double, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(double key, Func<double, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(float key, Func<float, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(float key, Func<float, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(long key, Func<long, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(long key, Func<long, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(ulong key, Func<ulong, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(ulong key, Func<ulong, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(short key, Func<short, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(short key, Func<short, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(ushort key, Func<ushort, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(ushort key, Func<ushort, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(uint key, Func<uint, Task<T>> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(uint key, Func<uint, T> entityFetcher) where T : class;
-
-        Task<T> RetrieveOrStoreAsync<T>(Func<T> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(bool key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(int key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(byte key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(sbyte key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(char key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(decimal key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(double key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(float key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(long key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(ulong key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(short key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(ushort key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(uint key, Func<string, Task<T>> entityFetcher) where T : class;
+        
+        Task<T> RetrieveOrStoreAsync<T>(Func<Task<T>> entityFetcher) where T : class;
 
         #endregion
     }

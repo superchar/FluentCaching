@@ -1,9 +1,10 @@
-﻿using FluentCaching.Cache.Helpers;
-using FluentCaching.Configuration;
+﻿using FluentCaching.Configuration;
 using FluentCaching.PolicyBuilders;
 using FluentCaching.PolicyBuilders.Keys;
 using FluentCaching.PolicyBuilders.Ttl;
 using System;
+using FluentCaching.Cache.Facades;
+using FluentCaching.Cache.Strategies.Factories;
 
 namespace FluentCaching.Cache.Builders
 {
@@ -40,6 +41,6 @@ namespace FluentCaching.Cache.Builders
             return this;
         }
 
-        public ICache Build() => new Cache(new CacheService(_cacheConfiguration, new ConcurrencyHelper()));
+        public ICache Build() => new Cache(new CacheFacade(new CacheStrategyFactory(_cacheConfiguration)));
     }
 }
