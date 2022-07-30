@@ -2,7 +2,7 @@
 
 namespace FluentCaching.Keys.Helpers
 {
-    internal readonly struct PropertyAccessor
+    internal struct PropertyAccessor
     {
         public PropertyAccessor(string name, Func<object, object> get)
         {

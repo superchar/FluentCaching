@@ -7,8 +7,8 @@ namespace FluentCaching.Keys.Helpers
 {
     internal class ExpressionsHelper : IExpressionsHelper
     {
-        public MemberInfo GetProperty<T, TValue>(Expression<Func<T, TValue>> expression)
-            => GetPropertyExpression(expression).Member;
+        public string GetPropertyName<T, TValue>(Expression<Func<T, TValue>> expression)
+            => GetPropertyExpression(expression).Member.Name;
 
         public Expression<Func<T, string>> RewriteWithSafeToString<T, TValue>(Expression<Func<T, TValue>> expression)
         {

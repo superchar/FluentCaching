@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentCaching.Keys.Helpers;
+using FluentCaching.Keys.Models;
 
 namespace FluentCaching.Keys.Builders
 {

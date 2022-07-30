@@ -13,17 +13,16 @@ namespace FluentCaching.Tests.Unit.Keys.Helpers
         [Fact]
         public void GetProperty_ExpressionIsNotSingleProperty_ThrowsException()
         {
-            _sut.Invoking(s => s.GetProperty<User, string>(u => "test"))
+            _sut.Invoking(s => s.GetPropertyName<User, string>(u => "test"))
                 .Should().Throw<ArgumentException>().WithMessage("Expression should be a single property expression");
         }
 
         [Fact]
         public void GetProperty_ExpressionIsSingleProperty_ReturnsMemberyInfo()
         {
-            var result = _sut.GetProperty<User, string>(u => u.Name);
+            var result = _sut.GetPropertyName<User, string>(u => u.Name);
 
-            result.Should().NotBeNull();
-            result.Name.Should().Be("Name");
+            result.Should().Be("Name");
         }
 
         [Fact]

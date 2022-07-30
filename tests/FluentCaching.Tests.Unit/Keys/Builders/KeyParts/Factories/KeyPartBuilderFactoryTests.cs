@@ -1,0 +1,46 @@
+using System;
+using System.Linq.Expressions;
+using System.Reflection;
+using FluentAssertions;
+using FluentCaching.Keys.Builders.KeyParts;
+using FluentCaching.Keys.Builders.KeyParts.Factories;
+using FluentCaching.Keys.Helpers;
+using FluentCaching.Tests.Unit.Models;
+using Moq;
+using Xunit;
+
+namespace FluentCaching.Tests.Unit.Keys.Builders.KeyParts.Factories;
+
+public class KeyPartBuilderFactoryTests
+{
+    private readonly Mock<IExpressionsHelper> _expressionsHelperMock = new();
+
+    private readonly KeyPartBuilderFactory<User> _sut;
+
+    public KeyPartBuilderFactoryTests()
+    {
+        _expressionsHelperMock= new Mock<IExpressionsHelper>();
+
+        _sut = new KeyPartBuilderFactory<User>(_expressionsHelperMock.Object);
+    }
+
+    [Fact]
+    public void Create_StaticValue_ReturnsStaticKeyPartBuilder()
+    {
+        var result = _sut.Create("test");
+
+        result.Should().BeOfType<StaticKeyPartBuilder<User>>();
+    }
+    
+    [Fact]
+    public void Create_ExpressionValue_ReturnsExpressionKeyPartBuilder()
+    {
+        _expressionsHelperMock
+            .Setup(_ => _.RewriteWithSafeToString(It.IsAny<Expression<Func<User, string>>>()))
+            .Returns(_ => _.Name.ToString());
+
+        var result = _sut.Create(_ => _.Name);
+
+        result.Should().BeOfType<ExpressionKeyPartBuilder<User>>();
+    }
+}

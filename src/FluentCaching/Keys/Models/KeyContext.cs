@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace FluentCaching.Keys
+namespace FluentCaching.Keys.Models
 {
     public struct KeyContext<T>
         where T : class

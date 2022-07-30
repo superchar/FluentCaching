@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FluentCaching.Keys.Models;
 
 namespace FluentCaching.Keys.Builders
 {
