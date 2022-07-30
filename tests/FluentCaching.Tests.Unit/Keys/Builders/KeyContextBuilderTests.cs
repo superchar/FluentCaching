@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using FluentCaching.Keys;
 using FluentCaching.Keys.Builders;
 using FluentCaching.Keys.Helpers;
+using FluentCaching.Tests.Unit.Models;
 using Moq;
 using Xunit;
 
@@ -12,119 +15,126 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
     {
         private Mock<IComplexKeysHelper> _complexKeysHelperMock;
 
-        private KeyContextBuilder _sut;
+        private KeyContextBuilder<User> _sut;
 
         public KeyContextBuilderTests()
         {
             _complexKeysHelperMock = new Mock<IComplexKeysHelper>();
 
-            _sut = new KeyContextBuilder(_complexKeysHelperMock.Object);
+            _sut = new KeyContextBuilder<User>(_complexKeysHelperMock.Object);
         }
 
         [Fact]
         public void AddKey_WhenCalled_IncludesKeyInContext()
         {
             const string key = "key";
-            
+
             _sut.AddKey(key);
 
-            var result = _sut.BuildKeyContextFromString("some string");
-            result.Should().ContainKey(key);
+            var result = _sut.BuildRetrieveContextFromStringKey("some string");
+            result.Retrieve.Should().ContainKey(key);
         }
-        
+
         [Fact]
-        public void BuildKeyContextFromString_KeysCountAreGreaterThanOne_ThrowsKeyPartMissingException()
+        public void BuildRetrieveContextFromStringKey_KeysCountAreGreaterThanOne_ThrowsKeyPartMissingException()
         {
             _sut.AddKey("first");
             _sut.AddKey("second");
 
-            _sut.Invoking(_ => _.BuildKeyContextFromString("target string"))
+            _sut.Invoking(_ => _.BuildRetrieveContextFromStringKey("target string"))
                 .Should()
                 .Throw<KeyPartMissingException>();
         }
-        
-        [Fact]
-        public void BuildKeyContextFromString_NoKeysAdded_ReturnsEmptyContext()
-        {
-            var result = _sut.BuildKeyContextFromString("target string");
 
-            result.Should().BeEmpty();
-        }
-        
         [Fact]
-        public void BuildKeyContextFromString_SingleKeyAdded_ReturnsSingleKeyContext()
+        public void BuildRetrieveContextFromStringKey_NoKeysAdded_ReturnsEmptyContext()
+        {
+            var result = _sut.BuildRetrieveContextFromStringKey("target string");
+
+            result.Retrieve.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void BuildRetrieveContextFromStringKey_SingleKeyAdded_ReturnsSingleKeyContext()
         {
             const string key = "key";
             const string targetString = "target string";
             _sut.AddKey(key);
-            
-            var result = _sut.BuildKeyContextFromString(targetString);
 
-            result.Keys.Should().HaveCount(1);
-            result.Should().ContainKey(key).WhoseValue.Should().Be(targetString);
+            var result = _sut.BuildRetrieveContextFromStringKey(targetString);
+
+            result.Retrieve.Should().HaveCount(1)
+                .And.ContainKey(key).WhoseValue.Should().Be(targetString);
         }
-        
+
         [Fact]
-        public void BuildKeyContextFromObject_CallsComplexKeysHelper_WhenCalled()
+        public void BuildRetrieveContextFromObjectKey_CallsComplexKeysHelper_WhenCalled()
         {
-            _sut.BuildKeyContextFromObject(new object());
-            
+            _sut.BuildRetrieveContextFromObjectKey(new object());
+
             _complexKeysHelperMock
                 .Verify(_ => _.GetProperties(typeof(object)), Times.Once);
         }
 
         [Fact]
-        public void BuildKeyContextFromObject_PropertyConfiguredAsKeyIsMissing_ThrowsKeyPartMissingException()
+        public void BuildRetrieveContextFromObjectKey_PropertyConfiguredAsKeyIsMissing_ThrowsKeyPartMissingException()
         {
             var objectKey = new { FirstKey = "Value" };
             _sut.AddKey(nameof(objectKey.FirstKey));
             _sut.AddKey("SecondKey");
+            MockProperties(objectKey, nameof(objectKey.FirstKey));
 
-            _sut.Invoking(_ => _.BuildKeyContextFromObject(objectKey))
+            _sut.Invoking(_ => _.BuildRetrieveContextFromObjectKey(objectKey))
                 .Should()
                 .Throw<KeyPartMissingException>();
         }
-        
+
         [Fact]
-        public void BuildKeyContextFromObject_PropertyIsNotConfiguredAsKey_SkipsSuchProperty()
+        public void BuildRetrieveContextFromObjectKey_PropertyIsNotConfiguredAsKey_SkipsSuchProperty()
         {
             var objectKey = new { FirstKey = "Value", SecondKey = "Second Value" };
             _sut.AddKey(nameof(objectKey.FirstKey));
-            var properties = new[]
-            {
-                new PropertyAccessor(nameof(objectKey.FirstKey), _ => _),
-                new PropertyAccessor(nameof(objectKey.SecondKey), _ => _)
-            };
-            _complexKeysHelperMock
-                .Setup(_ => _.GetProperties(objectKey.GetType()))
-                .Returns(properties);
+            MockProperties(objectKey, nameof(objectKey.FirstKey), nameof(objectKey.SecondKey));
 
-            var result = _sut.BuildKeyContextFromObject(objectKey);
+            var result = _sut.BuildRetrieveContextFromObjectKey(objectKey);
 
-            result.Should().HaveCount(1);
-            result.Should().ContainKey(nameof(objectKey.FirstKey));
+            result.Retrieve.Should().HaveCount(1)
+                .And.ContainKey(nameof(objectKey.FirstKey));
         }
-        
+
         [Fact]
-        public void BuildKeyContextFromObject_DefaultHappyPath_ReturnsContext()
+        public void BuildRetrieveContextFromObjectKey_DefaultHappyPath_ReturnsContext()
         {
             var objectKey = new { FirstKey = "Value", SecondKey = "Second Value" };
             _sut.AddKey(nameof(objectKey.FirstKey));
             _sut.AddKey(nameof(objectKey.SecondKey));
-            var properties = new[]
-            {
-                new PropertyAccessor(nameof(objectKey.FirstKey), _ => _),
-                new PropertyAccessor(nameof(objectKey.SecondKey), _ => _)
-            };
+            MockProperties(objectKey, nameof(objectKey.FirstKey), nameof(objectKey.SecondKey));
+
+            var result = _sut.BuildRetrieveContextFromObjectKey(objectKey);
+
+            result.Retrieve.Should().HaveCount(2)
+                .And.ContainKeys(nameof(objectKey.FirstKey), nameof(objectKey.SecondKey));
+        }
+
+        [Fact]
+        public void BuildCacheContext_WhenCalled_ReturnsKeyContext()
+        {
+            var user = new User();
+
+            var result = _sut.BuildCacheContext(user);
+
+            result.Store.Should().Be(user);
+        }
+
+        private void MockProperties(object key, params string[] propertyNames)
+        {
+            var properties = propertyNames
+                .Select(n => new PropertyAccessor(n, _ => _))
+                .ToArray();
+            
             _complexKeysHelperMock
-                .Setup(_ => _.GetProperties(objectKey.GetType()))
+                .Setup(_ => _.GetProperties(key.GetType()))
                 .Returns(properties);
-
-            var result = _sut.BuildKeyContextFromObject(objectKey);
-
-            result.Should().HaveCount(2);
-            result.Should().ContainKey(nameof(objectKey.FirstKey));
-            result.Should().ContainKey(nameof(objectKey.SecondKey));
         }
     }
 }

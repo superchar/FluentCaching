@@ -2,12 +2,15 @@ using System.Collections.Generic;
 
 namespace FluentCaching.Keys.Builders
 {
-    internal interface IKeyContextBuilder
+    internal interface IKeyContextBuilder<T>
+        where T : class
     {
         void AddKey(string key);
     
-        IDictionary<string, object> BuildKeyContextFromObject(object targetObject);
+        KeyContext<T> BuildRetrieveContextFromObjectKey(object targetObject);
         
-        IDictionary<string, object> BuildKeyContextFromString(string targetString);
+        KeyContext<T> BuildRetrieveContextFromStringKey(string targetString);
+        
+        KeyContext<T> BuildCacheContext(T cachedObject);
     }
 }

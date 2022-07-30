@@ -4,9 +4,11 @@ using FluentCaching.Keys.Helpers;
 
 namespace FluentCaching.Keys.Builders
 {
-    internal class KeyContextBuilder : IKeyContextBuilder
+    internal class KeyContextBuilder<T> : IKeyContextBuilder<T>
+        where T : class
     {
-        private static readonly Dictionary<string, object> EmptyContext = new ();
+        private static readonly KeyContext<T> EmptyRetrieveContext 
+            = new (new Dictionary<string, object>());
 
         private readonly Dictionary<string, bool> _keys = new (); // Guaranteed to be thread safe when readonly (unlike hashset)
 
@@ -19,7 +21,7 @@ namespace FluentCaching.Keys.Builders
 
         public void AddKey(string key) => _keys[key] = true;
 
-        public IDictionary<string, object> BuildKeyContextFromObject(object targetObject)
+        public KeyContext<T> BuildRetrieveContextFromObjectKey(object targetObject)
         {
             var properties = _complexKeysHelper.GetProperties(targetObject.GetType())
                 .Where(_ => _keys.ContainsKey(_.Name))
@@ -30,11 +32,12 @@ namespace FluentCaching.Keys.Builders
                 throw new KeyPartMissingException();
             }
 
-            return properties
+            var retrieveContext = properties
                 .ToDictionary(p => p.Name, p => p.Get(targetObject));
+            return new KeyContext<T>(retrieveContext);
         }
 
-        public IDictionary<string, object> BuildKeyContextFromString(string targetString)
+        public KeyContext<T> BuildRetrieveContextFromStringKey(string targetString)
         {
             if (_keys.Count > 1)
             {
@@ -43,15 +46,19 @@ namespace FluentCaching.Keys.Builders
 
             if (!_keys.Any())
             {
-                return EmptyContext;
+                return EmptyRetrieveContext;
             }
 
-            return new Dictionary<string, object>
+            var retrieveContext = new Dictionary<string, object>
             {
                 {
                     _keys.Keys.First(), targetString // First will work faster as _keys is guaranteed to have a single item
                 } 
             };
+
+            return new KeyContext<T>(retrieveContext);
         }
+
+        public KeyContext<T> BuildCacheContext(T cachedObject) => new(cachedObject);
     }
 }
