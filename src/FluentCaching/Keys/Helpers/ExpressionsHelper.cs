@@ -1,40 +1,44 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using FluentCaching.Keys.Helpers.Visitors;
 
 namespace FluentCaching.Keys.Helpers
 {
     internal class ExpressionsHelper : IExpressionsHelper
     {
-        public string GetPropertyName<T, TValue>(Expression<Func<T, TValue>> expression)
-            => GetPropertyExpression(expression).Member.Name;
-
-        public Expression<Func<T, string>> RewriteWithSafeToString<T, TValue>(Expression<Func<T, TValue>> expression)
+        public IReadOnlyCollection<string> GetParameterPropertyNames<T, TValue>(Expression<Func<T, TValue>> expression)
         {
-            var nullableProperty = ConvertToNullableExpression(
-                GetPropertyExpression<T, TValue>(expression));
+            var visitor = new CollectParameterPropertyNamesVisitor();
+            visitor.Visit(expression.Body);
+
+            return visitor.Properties;
+        }
+
+        public Expression<Func<T, string>> ReplaceResultTypeWithString<T, TValue>(Expression<Func<T, TValue>> expression)
+        {
+            var body = ConvertToNullableExpression(expression.Body);
             var propertyToStringCall = Expression
-                .Call(nullableProperty, nameof(object.ToString), Type.EmptyTypes);
-            var propertyNullCheck = GenerateNullCheck(nullableProperty, 
+                .Call(body, nameof(object.ToString), Type.EmptyTypes);
+
+            var resultNullCheck = GenerateNullCheck(body,
                 ifNotNull: propertyToStringCall);
-            
             var cachedObject = expression.Parameters.Single();
             var cachedObjectNullCheck = GenerateNullCheck(cachedObject,
-                ifNotNull: propertyNullCheck);
+                ifNotNull: resultNullCheck);
 
             return Expression.Lambda<Func<T, string>>(cachedObjectNullCheck, cachedObject);
         }
 
-        private MemberExpression GetPropertyExpression<T, TValue>(Expression<Func<T, TValue>> expression)
+        public Expression<Func<Dictionary<string, object>, string>> ReplaceParameterWithDictionary<T>(Expression<Func<T, string>> expression)
         {
-            switch (expression.Body)
-            {
-                case MemberExpression property when property.Member.MemberType == MemberTypes.Property:
-                    return property;
-                default:
-                    throw new ArgumentException("Expression should be a single property expression");
-            }
+            var dictionaryParam = Expression.Parameter(typeof(Dictionary<string, object>));
+
+            var body = new ReplaceParameterWithDictionaryVisitor(dictionaryParam).Visit(expression.Body);
+            
+            return Expression.Lambda<Func<Dictionary<string, object>, string>>(body, dictionaryParam);
         }
 
         private static Expression GenerateNullCheck(Expression expression, Expression ifNotNull)

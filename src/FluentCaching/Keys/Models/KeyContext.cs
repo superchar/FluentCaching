@@ -11,11 +11,11 @@ namespace FluentCaching.Keys.Models
         {
         }
         
-        public KeyContext(IDictionary<string, object> keyContext) : this(null, keyContext)
+        public KeyContext(Dictionary<string, object> keyContext) : this(null, keyContext)
         {
         }
 
-        private KeyContext(T store, IDictionary<string, object> retrieve)
+        private KeyContext(T store, Dictionary<string, object> retrieve)
         {
             Store = store;
             Retrieve = retrieve;
@@ -23,6 +23,6 @@ namespace FluentCaching.Keys.Models
 
         public T Store { get; }
 
-        public IDictionary<string, object> Retrieve { get; }
+        public Dictionary<string, object> Retrieve { get; }
     }
 }

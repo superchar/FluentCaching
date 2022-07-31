@@ -11,18 +11,19 @@ namespace FluentCaching.Tests.Unit.Keys.Helpers
         private readonly ExpressionsHelper _sut = new ();
 
         [Fact]
-        public void GetProperty_ExpressionIsNotSingleProperty_ThrowsException()
+        public void GetProperty_ExpressionIsNotSingleProperty_DoesNotThrowException()
         {
-            _sut.Invoking(s => s.GetPropertyName<User, string>(u => "test"))
-                .Should().Throw<ArgumentException>().WithMessage("Expression should be a single property expression");
+            _sut.Invoking(s => s.GetParameterPropertyNames<User, string>(u => "test"))
+                .Should().NotThrow();
         }
 
         [Fact]
-        public void GetProperty_ExpressionIsSingleProperty_ReturnsMemberyInfo()
+        public void GetProperty_ExpressionWithMultipleProperties_ReturnsPropertyNames()
         {
-            var result = _sut.GetPropertyName<User, string>(u => u.Name);
+            var result = _sut.GetParameterPropertyNames<User, int>(u => u.Id + u.SubscriptionId.Value);
 
-            result.Should().Be("Name");
+            var expectedProperties = new[] { nameof(User.Id), nameof(User.SubscriptionId) };
+            result.Should().BeEquivalentTo(expectedProperties);
         }
 
         [Fact]
@@ -33,7 +34,7 @@ namespace FluentCaching.Tests.Unit.Keys.Helpers
                 Id = 42
             };
 
-            var resultExpression = _sut.RewriteWithSafeToString<User, int>(_ => _.Id);
+            var resultExpression = _sut.ReplaceResultTypeWithString<User, int>(_ => _.Id);
 
             var compiledExpression = resultExpression.Compile();
             var result = compiledExpression(user);
@@ -48,7 +49,7 @@ namespace FluentCaching.Tests.Unit.Keys.Helpers
                 SubscriptionId = 42
             };
 
-            var resultExpression = _sut.RewriteWithSafeToString<User, int?>(_ => _.SubscriptionId);
+            var resultExpression = _sut.ReplaceResultTypeWithString<User, int?>(_ => _.SubscriptionId);
 
             var compiledExpression = resultExpression.Compile();
             var result = compiledExpression(user);
@@ -63,7 +64,7 @@ namespace FluentCaching.Tests.Unit.Keys.Helpers
                 Currency = new Currency("USD")
             };
 
-            var resultExpression = _sut.RewriteWithSafeToString<User, Currency>(_ => _.Currency);
+            var resultExpression = _sut.ReplaceResultTypeWithString<User, Currency>(_ => _.Currency);
 
             var compiledExpression = resultExpression.Compile();
             var result = compiledExpression(user);
@@ -73,7 +74,7 @@ namespace FluentCaching.Tests.Unit.Keys.Helpers
         [Fact]
         public void RewriteWithSafeToString_CachedObjectIsNull_AddsNullCheck()
         {
-            var resultExpression = _sut.RewriteWithSafeToString<User, int>(_ => _.Id);
+            var resultExpression = _sut.ReplaceResultTypeWithString<User, int>(_ => _.Id);
 
             var compiledExpression = resultExpression.Compile();
             var result = compiledExpression(null);
@@ -83,7 +84,7 @@ namespace FluentCaching.Tests.Unit.Keys.Helpers
         [Fact]
         public void RewriteWithSafeToString_NullablePrimitiveTypePropertyIsNull_AddsNullCheck()
         {
-            var resultExpression = _sut.RewriteWithSafeToString<User, int?>(_ => _.SubscriptionId);
+            var resultExpression = _sut.ReplaceResultTypeWithString<User, int?>(_ => _.SubscriptionId);
 
             var compiledExpression = resultExpression.Compile();
             var result = compiledExpression(new User());
@@ -93,7 +94,7 @@ namespace FluentCaching.Tests.Unit.Keys.Helpers
         [Fact]
         public void RewriteWithSafeToString_ReferenceTypePropertyIsNull_AddsNullCheck()
         {
-            var resultExpression = _sut.RewriteWithSafeToString<User, Currency>(_ => _.Currency);
+            var resultExpression = _sut.ReplaceResultTypeWithString<User, Currency>(_ => _.Currency);
 
             var compiledExpression = resultExpression.Compile();
             var result = compiledExpression(new User());

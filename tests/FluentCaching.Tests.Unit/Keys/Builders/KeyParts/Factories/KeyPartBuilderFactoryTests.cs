@@ -36,8 +36,11 @@ public class KeyPartBuilderFactoryTests
     public void Create_ExpressionValue_ReturnsExpressionKeyPartBuilder()
     {
         _expressionsHelperMock
-            .Setup(_ => _.RewriteWithSafeToString(It.IsAny<Expression<Func<User, string>>>()))
+            .Setup(_ => _.ReplaceResultTypeWithString(It.IsAny<Expression<Func<User, string>>>()))
             .Returns(_ => _.Name.ToString());
+        _expressionsHelperMock
+            .Setup(_ => _.ReplaceParameterWithDictionary(It.IsAny<Expression<Func<User, string>>>()))
+            .Returns(_ => _[nameof(User.Name)].ToString());
 
         var result = _sut.Create(_ => _.Name);
 

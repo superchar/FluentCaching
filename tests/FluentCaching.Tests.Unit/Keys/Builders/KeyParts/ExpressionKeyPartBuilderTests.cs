@@ -21,27 +21,27 @@ public class ExpressionKeyPartBuilderTests
     {
         _expressionsHelperMock = new Mock<IExpressionsHelper>();
     }
-    
-    [Fact]
-    public void Create_WhenCalled_CallsGetProperty()
-    {
-        MockExpressionRewrite();
 
-        Create(_ => _.Name, _expressionsHelperMock.Object);
+    [Fact]
+    public void Create_WhenCalled_CallsReplaceResultTypeWithString()
+    {
+        SetupExpressionRewriteFakes();
+
+        Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
 
         _expressionsHelperMock
-            .Verify(_ => _.GetPropertyName(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
+            .Verify(_ => _.ReplaceResultTypeWithString(It.IsAny<Expression<Func<User, int?>>>()), Times.Once);
     }
-    
-    [Fact]
-    public void Create_WhenCalled_CallsRewriteWithSafeToString()
-    {
-        MockExpressionRewrite();
 
-        Create(_ => _.Name, _expressionsHelperMock.Object);
+    [Fact]
+    public void Create_WhenCalled_CallsReplaceParameterWithDictionary()
+    {
+        SetupExpressionRewriteFakes();
+
+        Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
 
         _expressionsHelperMock
-            .Verify(_ => _.RewriteWithSafeToString(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
+            .Verify(_ => _.ReplaceParameterWithDictionary(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
     }
 
     [Fact]
@@ -49,57 +49,59 @@ public class ExpressionKeyPartBuilderTests
     {
         var user = new User
         {
-            Name = "user name"
+            SubscriptionId = 42,
         };
-        MockExpressionRewrite();
-        var builder = Create(_ => _.Name, _expressionsHelperMock.Object);
+        SetupExpressionRewriteFakes();
+        var builder = Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
 
         var result = builder.Build(new KeyContext<User>(user));
-        result.Should().Be(user.Name);
+        result.Should().Be(user.SubscriptionId.ToString());
     }
-    
+
     [Fact]
     public void Build_RetrieveContext_BuildsKeyPart()
     {
-        var userName = "user name";
+        var subscriptionId = 42;
         var retrieveContext = new Dictionary<string, object>
         {
-            { nameof(User.Name), userName }
+            { nameof(User.SubscriptionId), subscriptionId }
         };
-        _expressionsHelperMock
-            .Setup(_ => _.GetPropertyName(It.IsAny<Expression<Func<User, string>>>()))
-            .Returns(nameof(User.Name));
-        MockExpressionRewrite();
-        var builder = Create(_ => _.Name, _expressionsHelperMock.Object);
+        SetupExpressionRewriteFakes();
+        var builder = Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
 
         var result = builder.Build(new KeyContext<User>(retrieveContext));
-        result.Should().Be(userName);
+        result.Should().Be(subscriptionId.ToString());
     }
-    
-    [Theory]
-    [InlineData("")]
-    [InlineData(null)]
-    public void Build_ValueIsEmpty_ThrowsKeyPartMissingException(string missingName)
+
+    [Fact]
+    public void Build_ValueIsNull_ThrowsKeyPartMissingException()
     {
         var user = new User
         {
-            Name = missingName
+            SubscriptionId = null,
         };
-        MockExpressionRewrite();
-        var builder = Create(_ => _.Name, _expressionsHelperMock.Object);
-        
+        SetupExpressionRewriteFakes();
+        var builder = Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
+
         builder.Invoking(_ => _.Build(new KeyContext<User>(user)))
             .Should()
             .Throw<KeyPartMissingException>();
     }
-    
-    private static ExpressionKeyPartBuilder<User> Create<T>(Expression<Func<User, T>> valueGetter, 
-        IExpressionsHelper expressionsHelper) where T : class
+
+    private static ExpressionKeyPartBuilder<User> Create<T>(Expression<Func<User, T>> valueGetter,
+        IExpressionsHelper expressionsHelper)
         => ExpressionKeyPartBuilder<User>.Create(valueGetter, expressionsHelper);
 
-    private void MockExpressionRewrite()
-        => _expressionsHelperMock
-            .Setup(_ => _.RewriteWithSafeToString<User, string>(
+    private void SetupExpressionRewriteFakes()
+    {
+        _expressionsHelperMock
+            .Setup(_ => _.ReplaceResultTypeWithString<User, int?>(
+                It.IsAny<Expression<Func<User, int?>>>()))
+            .Returns(_ => _.SubscriptionId == null ? null : _.SubscriptionId.ToString());
+
+        _expressionsHelperMock
+            .Setup(_ => _.ReplaceParameterWithDictionary(
                 It.IsAny<Expression<Func<User, string>>>()))
-            .Returns(_ => _.Name == null ? null : _.Name.ToString());
+            .Returns(_ => _[nameof(User.SubscriptionId)] == null ? null : _[nameof(User.SubscriptionId)].ToString());
+    }
 }

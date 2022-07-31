@@ -45,24 +45,29 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
         }
 
         [Fact]
-        public void AppendExpression_WhenCalled_CallsGetProperty()
+        public void AppendExpression_WhenCalled_CallsGetPropertyNames()
         {
+            MockProperties();
+            
             _sut.AppendExpression(_ => _.Name);
 
             _expressionHelperMock
-                .Verify(_ => _.GetPropertyName(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
+                .Verify(_ => _.GetParameterPropertyNames(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
         }
 
         [Fact]
-        public void AppendExpression_WhenCalled_AddsKeyToContext()
+        public void AppendExpression_WhenCalled_AddsKeysToContext()
         {
-            _expressionHelperMock
-                .Setup(_ => _.GetPropertyName(It.IsAny<Expression<Func<User, string>>>()))
-                .Returns(nameof(User.Name));
+            var nameProperty = nameof(User.Name);
+            var idProperty = nameof(User.Id);
+            MockProperties(nameProperty, idProperty);
+
             _sut.AppendExpression(_ => _.Name);
 
             _keyContextBuilderMock
-                .Verify(_ => _.AddKey(nameof(User.Name)), Times.Once);
+                .Verify(_ => _.AddKey(nameProperty), Times.Once);
+            _keyContextBuilderMock
+                .Verify(_ => _.AddKey(idProperty), Times.Once);
         }
 
         [Fact]
@@ -90,6 +95,7 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
         [Fact]
         public void BuildFromStaticKey_DynamicPartsExist_ThrowsKeyPartMissingException()
         {
+            MockProperties();
             var keyPartBuilderMock = new Mock<IKeyPartBuilder<User>>();
             keyPartBuilderMock
                 .SetupGet(_ => _.IsDynamic)
@@ -123,5 +129,10 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
             _keyContextBuilderMock
                 .Verify(_ => _.BuildRetrieveContextFromObjectKey(obj), Times.Once);
         }
+        
+        private void MockProperties(params string [] properties) =>
+            _expressionHelperMock
+                .Setup(_ => _.GetParameterPropertyNames(It.IsAny<Expression<Func<User, string>>>()))
+                .Returns(properties);
     }
 }

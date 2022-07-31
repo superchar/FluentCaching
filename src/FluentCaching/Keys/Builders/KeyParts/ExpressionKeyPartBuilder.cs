@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using FluentCaching.Keys.Builders.KeyParts.Extensions;
 using FluentCaching.Keys.Helpers;
@@ -9,10 +10,9 @@ namespace FluentCaching.Keys.Builders.KeyParts;
 internal class ExpressionKeyPartBuilder<T> : IKeyPartBuilder<T>
     where T : class
 {
-    private string _property;
-
-    private Func<T, string> _compiledExpression;
-
+    private Func<T, string> _storeFunc;
+    private Func<Dictionary<string, object>, string> _retrieveFunc;
+    
     private readonly IExpressionsHelper _expressionsHelper;
 
     private ExpressionKeyPartBuilder(IExpressionsHelper expressionsHelper)
@@ -29,19 +29,19 @@ internal class ExpressionKeyPartBuilder<T> : IKeyPartBuilder<T>
 
     private ExpressionKeyPartBuilder<T> AddExpression<TValue>(Expression<Func<T, TValue>> valueGetter)
     {
-        _property = _expressionsHelper.GetPropertyName(valueGetter);
-        _compiledExpression = _expressionsHelper
-            .RewriteWithSafeToString(valueGetter)
-            .Compile();
+        var storeExpression = _expressionsHelper.ReplaceResultTypeWithString(valueGetter);
+        var retrieveExpression = _expressionsHelper.ReplaceParameterWithDictionary(storeExpression);
+
+        _storeFunc = storeExpression.Compile();
+        _retrieveFunc = retrieveExpression.Compile();
 
         return this;
     }
 
     public string Build(KeyContext<T> keyContext)
     {
-        var keyPart = keyContext.Store != null
-            ? _compiledExpression(keyContext.Store)
-            : keyContext.Retrieve[_property]?.ToString();
+        var keyPart = keyContext.Store != null 
+            ? _storeFunc(keyContext.Store) : _retrieveFunc(keyContext.Retrieve);
 
         return keyPart
             .ThrowIfKeyPartIsNullOrEmpty();

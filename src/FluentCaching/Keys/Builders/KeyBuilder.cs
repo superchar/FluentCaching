@@ -42,8 +42,11 @@ namespace FluentCaching.Keys.Builders
         
         public void AppendExpression<TValue>(Expression<Func<T, TValue>> valueGetter)
         {
-            var property = _expressionHelper.GetPropertyName(valueGetter);
-            _keyContextBuilder.AddKey(property);
+            foreach (var propertyName in _expressionHelper.GetParameterPropertyNames(valueGetter))
+            {
+                _keyContextBuilder.AddKey(propertyName);
+            }
+            
             _keyPartBuilders.Add(_keyPartBuilderFactory.Create(valueGetter));
         }
 
