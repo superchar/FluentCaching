@@ -44,7 +44,7 @@ var result = await cache.RetrieveOrStoreAsync<User>(userId, id => _userService.G
 **Multi property configuration is supported with the same set of features**
 ```csharp
 var cache = new CacheBuilder()
-.For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
+.For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName) // alternatively UseAsKey(u => u.FirstName + u.LastName)
                 .And().WithTtlOf(2).Minutes.And(10).Seconds
                 .And().SlidingExpiration())
 .Build();
