@@ -1,11 +1,10 @@
-﻿using FluentAssertions;
-using FluentCaching.Keys;
+﻿using System;
+using System.Linq.Expressions;
+using FluentAssertions;
+using FluentCaching.Keys.Builders;
 using FluentCaching.PolicyBuilders.Keys;
 using FluentCaching.Tests.Unit.Models;
 using Moq;
-using System;
-using System.Linq.Expressions;
-using FluentCaching.Keys.Builders;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys

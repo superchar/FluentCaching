@@ -4,7 +4,6 @@ using FluentCaching.Cache;
 using FluentCaching.Cache.Builders;
 using FluentCaching.PolicyBuilders;
 using FluentCaching.PolicyBuilders.Keys;
-using FluentCaching.PolicyBuilders.Ttl;
 
 namespace FluentCaching.Benchmarks
 {

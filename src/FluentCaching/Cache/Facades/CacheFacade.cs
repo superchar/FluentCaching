@@ -2,9 +2,6 @@
 using System.Threading.Tasks;
 using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Factories;
-using FluentCaching.Configuration;
-using FluentCaching.Configuration.Exceptions;
-using FluentCaching.Keys;
 
 namespace FluentCaching.Cache.Facades
 {

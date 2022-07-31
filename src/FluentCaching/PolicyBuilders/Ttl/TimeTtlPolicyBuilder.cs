@@ -1,5 +1,5 @@
-﻿using FluentCaching.Cache.Models;
-using System;
+﻿using System;
+using FluentCaching.Cache.Models;
 
 namespace FluentCaching.PolicyBuilders.Ttl
 {

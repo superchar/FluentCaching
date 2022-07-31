@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using FluentCaching.Keys;
 using FluentCaching.Keys.Builders.KeyParts;
 using FluentCaching.Keys.Builders.KeyParts.Factories;
 using FluentCaching.Keys.Helpers;

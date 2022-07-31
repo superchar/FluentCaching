@@ -1,7 +1,6 @@
 ﻿using FluentCaching.Cache;
 using FluentCaching.PolicyBuilders;
 using FluentCaching.PolicyBuilders.Keys;
-using FluentCaching.PolicyBuilders.Ttl;
 
 namespace FluentCaching.Tests.Integration.Extensions
 {

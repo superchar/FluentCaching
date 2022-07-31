@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Xunit;
-using FluentCaching.Tests.Integration.Models;
-using FluentCaching.Tests.Integration.Extensions;
 using FluentCaching.Cache;
-using Moq;
 using FluentCaching.Cache.Models;
+using FluentCaching.Tests.Integration.Extensions;
+using FluentCaching.Tests.Integration.Models;
+using Moq;
+using Xunit;
 
 namespace FluentCaching.Tests.Integration.CacheImplementations
 {

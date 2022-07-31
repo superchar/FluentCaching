@@ -1,4 +1,3 @@
-using System;
 using FluentCaching.Keys.Builders.KeyParts.Extensions;
 using FluentCaching.Keys.Models;
 

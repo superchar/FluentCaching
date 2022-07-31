@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using FluentCaching.Keys;
 using FluentCaching.Keys.Builders;
 
 namespace FluentCaching.PolicyBuilders.Keys

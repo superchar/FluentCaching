@@ -1,7 +1,7 @@
-﻿using FluentCaching.Cache;
-using FluentCaching.Cache.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentCaching.Cache;
+using FluentCaching.Cache.Models;
 
 namespace FluentCaching.Tests.Integration.Fakes
 {

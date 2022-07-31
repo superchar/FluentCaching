@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Xunit;
-using FluentCaching.Keys;
-using FluentCaching.Tests.Integration.Models;
-using Moq;
-using System.Linq;
 using FluentCaching.Configuration.Exceptions;
 using FluentCaching.Tests.Integration.Fakes;
+using FluentCaching.Tests.Integration.Models;
+using Moq;
+using Xunit;
 
 namespace FluentCaching.Tests.Integration.CacheOperations
 {

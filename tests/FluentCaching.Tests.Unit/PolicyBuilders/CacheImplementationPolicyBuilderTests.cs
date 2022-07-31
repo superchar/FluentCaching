@@ -1,10 +1,10 @@
 ﻿using System;
-using Moq;
-using Xunit;
 using FluentAssertions;
 using FluentCaching.Cache;
 using FluentCaching.Cache.Models;
 using FluentCaching.PolicyBuilders;
+using Moq;
+using Xunit;
 
 namespace FluentCaching.Tests.Unit.PolicyBuilders
 {

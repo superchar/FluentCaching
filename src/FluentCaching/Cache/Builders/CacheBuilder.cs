@@ -1,10 +1,9 @@
-﻿using FluentCaching.Configuration;
-using FluentCaching.PolicyBuilders;
-using FluentCaching.PolicyBuilders.Keys;
-using FluentCaching.PolicyBuilders.Ttl;
-using System;
+﻿using System;
 using FluentCaching.Cache.Facades;
 using FluentCaching.Cache.Strategies.Factories;
+using FluentCaching.Configuration;
+using FluentCaching.PolicyBuilders;
+using FluentCaching.PolicyBuilders.Keys;
 
 namespace FluentCaching.Cache.Builders
 {
