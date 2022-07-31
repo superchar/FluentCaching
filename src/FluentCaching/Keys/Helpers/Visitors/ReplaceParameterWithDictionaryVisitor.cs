@@ -27,13 +27,6 @@ public class ReplaceParameterWithDictionaryVisitor : BaseParameterPropertyAccess
         return convertedLookupResult;
     }
 
-    private static (string, Type) GetPropertyMetadata(MemberExpression node)
-    {
-        var propertyInfo = (PropertyInfo)node.Member;
-
-        return (propertyInfo.Name, propertyInfo.PropertyType);
-    }
-
     private Expression GenerateDictionaryLookup(string propertyName)
     {
         var dictionaryIndexer = _dictionaryParam.Type.GetProperty("Item");
