@@ -57,9 +57,9 @@ namespace FluentCaching.Tests.Integration.CacheOperations
                 .Setup(f => f(KEY))
                 .ReturnsAsync(User.Test);
 
-            Cache.RetrieveOrStoreAsync(KEY, entityFetcherMock.Object);
+            await Cache.RetrieveOrStoreAsync(KEY, entityFetcherMock.Object);
             
-            Cache.RetrieveOrStoreAsync(KEY, entityFetcherMock.Object);
+            await Cache.RetrieveOrStoreAsync(KEY, entityFetcherMock.Object);
             entityFetcherMock.Verify(f => f(KEY), Times.Once);
         }
     }
