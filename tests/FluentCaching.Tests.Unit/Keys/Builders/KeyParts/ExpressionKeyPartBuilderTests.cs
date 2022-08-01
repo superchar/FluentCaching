@@ -94,8 +94,7 @@ public class ExpressionKeyPartBuilderTests
     private void SetupExpressionRewriteFakes()
     {
         _expressionsHelperMock
-            .Setup(_ => _.ReplaceResultTypeWithString<User, int?>(
-                It.IsAny<Expression<Func<User, int?>>>()))
+            .Setup(_ => _.ReplaceResultTypeWithString(It.IsAny<Expression<Func<User, int?>>>()))
             .Returns(_ => _.SubscriptionId == null ? null : _.SubscriptionId.ToString());
 
         _expressionsHelperMock

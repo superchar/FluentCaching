@@ -22,10 +22,10 @@ namespace FluentCaching.Tests.Integration.CacheOperations
         [Fact]
         public async Task RemoveAsync_CalledWithKey_CallsRemoveInImplementation()
         {
-            await Cache.RemoveAsync<User>(KEY);
+            await Cache.RemoveAsync<User>(Key);
 
             CacheImplementationMock
-                .Verify(i => i.RemoveAsync(KEY), Times.Once);
+                .Verify(i => i.RemoveAsync(Key), Times.Once);
         }
     }
 }

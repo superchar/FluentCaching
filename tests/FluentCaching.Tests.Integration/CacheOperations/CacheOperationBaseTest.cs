@@ -6,12 +6,12 @@ namespace FluentCaching.Tests.Integration.CacheOperations
 {
     public class CacheOperationBaseTest : BaseTest
     {
-        protected const string KEY = "user";
+        protected const string Key = "user";
 
         public CacheOperationBaseTest()
         {
             Cache = CacheBuilder
-                .For<User>(u => u.UseAsKey(KEY).Complete())
+                .For<User>(u => u.UseAsKey(Key).Complete())
                 .Build();
         }
 

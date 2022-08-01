@@ -45,7 +45,7 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies
             var typeImplementation = TypeCacheImplementationMock.Object;
             var globalImplementation = GlobalCacheImplementationMock.Object;
 
-            var implementation = _sut.GetCacheImplementation<User>(ConfigurationItemMock.Object);
+            var implementation = _sut.GetCacheImplementation(ConfigurationItemMock.Object);
 
             implementation.Should().BeSameAs(typeImplementation).And
                 .NotBeSameAs(globalImplementation);
@@ -56,7 +56,7 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies
         {
             SetupEmptyCacheOptions();
             
-            var implementation = _sut.GetCacheImplementation<User>(ConfigurationItemMock.Object);
+            var implementation = _sut.GetCacheImplementation(ConfigurationItemMock.Object);
 
             implementation.Should().BeSameAs(GlobalCacheImplementationMock.Object);
         }

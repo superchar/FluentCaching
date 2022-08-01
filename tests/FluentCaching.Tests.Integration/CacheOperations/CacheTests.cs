@@ -17,7 +17,7 @@ namespace FluentCaching.Tests.Integration.CacheOperations
             await Cache.CacheAsync(User.Test);
 
             CacheImplementationMock
-                   .Verify(i => i.CacheAsync(KEY, User.Test, It.IsAny<CacheOptions>()), Times.Once);
+                   .Verify(i => i.CacheAsync(Key, User.Test, It.IsAny<CacheOptions>()), Times.Once);
         }
 
         [Fact]

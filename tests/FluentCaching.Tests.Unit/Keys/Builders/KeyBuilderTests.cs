@@ -85,7 +85,7 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
                 .Returns(keyPartBuilderMock.Object);
             _sut.AppendStatic("user");
 
-            var result = _sut.BuildFromCachedObject(user);
+            _sut.BuildFromCachedObject(user);
 
             _keyContextBuilderMock
                 .Verify(_ => _.BuildCacheContext(user), Times.Once);

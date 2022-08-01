@@ -10,7 +10,7 @@ namespace FluentCaching.Tests.Integration.CacheImplementations
 {
     public class MultipleImplementationsTests : BaseTest
     {
-        private const string KEY = "user";
+        private const string Key = "user";
 
         private readonly Mock<ICacheImplementation> _userSpecificImplementationMock = new Mock<ICacheImplementation>();
 
@@ -18,13 +18,13 @@ namespace FluentCaching.Tests.Integration.CacheImplementations
         public async Task CacheAsync_SpecificImplementation_UsesSpecificCache()
         {
             var cache = CacheBuilder
-                .For<User>(u => u.UseAsKey(KEY).Complete(_userSpecificImplementationMock.Object))
+                .For<User>(u => u.UseAsKey(Key).Complete(_userSpecificImplementationMock.Object))
                 .Build();
 
             await cache.CacheAsync(User.Test);
 
             _userSpecificImplementationMock
-                .Verify(i => i.CacheAsync(KEY, User.Test, It.IsAny<CacheOptions>()), Times.Once);
+                .Verify(i => i.CacheAsync(Key, User.Test, It.IsAny<CacheOptions>()), Times.Once);
             CacheImplementationMock
                 .Verify(i => i.CacheAsync(It.IsAny<string>(), It.IsAny<User>(), It.IsAny<CacheOptions>()), Times.Never);
         }
@@ -33,13 +33,13 @@ namespace FluentCaching.Tests.Integration.CacheImplementations
         public async Task CacheAsync_GenericImplementation_UsesGenericCache()
         {
             var cache = CacheBuilder
-                .For<User>(u => u.UseAsKey(KEY).Complete())
+                .For<User>(u => u.UseAsKey(Key).Complete())
                 .Build();
 
             await cache.CacheAsync(User.Test);
 
             CacheImplementationMock
-                .Verify(i => i.CacheAsync(KEY, User.Test, It.IsAny<CacheOptions>()), Times.Once);
+                .Verify(i => i.CacheAsync(Key, User.Test, It.IsAny<CacheOptions>()), Times.Once);
 
         }
     }

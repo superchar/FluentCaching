@@ -12,7 +12,7 @@ namespace FluentCaching.Keys.Builders
     internal class KeyBuilder<T> : IKeyBuilder<T>
         where T : class
     {
-        private List<IKeyPartBuilder<T>> _keyPartBuilders = new();
+        private readonly List<IKeyPartBuilder<T>> _keyPartBuilders = new();
 
         private readonly IExpressionsHelper _expressionHelper;
         private readonly IKeyContextBuilder<T> _keyContextBuilder;

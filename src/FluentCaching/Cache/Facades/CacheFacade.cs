@@ -29,10 +29,10 @@ namespace FluentCaching.Cache.Facades
             => RetrieveAsync(CacheSource<T>.Null);
 
         public Task RemoveAsync<T>(object objectKey) where T : class
-            => RemoveAsync<T>(new CacheSource<T>(objectKey));
+            => RemoveAsync(new CacheSource<T>(objectKey));
 
         public Task RemoveAsync<T>(string stringKey) where T : class
-            => RemoveAsync<T>(new CacheSource<T>(stringKey));
+            => RemoveAsync(new CacheSource<T>(stringKey));
 
         public Task<T> RetrieveOrStoreAsync<T>(object key, Func<object, Task<T>> entityFetcher) where T : class
             => RetrieveOrStoreAsync(new CacheSource<T>(key), _ => entityFetcher(_.ObjectKey));
@@ -45,18 +45,18 @@ namespace FluentCaching.Cache.Facades
 
         private Task<T> RetrieveAsync<T>(CacheSource<T> source) where T : class
             => _cacheStrategyFactory
-                .CreateRetrieveStrategy<T>(source)
+                .CreateRetrieveStrategy(source)
                 .RetrieveAsync(source);
         
         private Task RemoveAsync<T>(CacheSource<T> source) where T : class
             => _cacheStrategyFactory
-                .CreateRemoveStrategy<T>(source)
+                .CreateRemoveStrategy(source)
                 .RemoveAsync(source);
         
         private Task<T> RetrieveOrStoreAsync<T>(CacheSource<T> source, 
             Func<CacheSource<T>, Task<T>> entityFetcher) where T : class
             => _cacheStrategyFactory
-                .CreateRetrieveOrStoreStrategy<T>(source)
+                .CreateRetrieveOrStoreStrategy(source)
                 .RetrieveOrStoreAsync(source, entityFetcher);
     }
 }

@@ -46,7 +46,7 @@ namespace FluentCaching.Benchmarks
 
                 _dictionary[key] = user;
 
-                var retrievedUser = _dictionary[key];
+                _ = _dictionary[key];
             }
         }
 

@@ -36,7 +36,7 @@ internal class CacheStrategyFactory : ICacheStrategyFactory
 
     public IRetrieveOrStoreStrategy<T> CreateRetrieveOrStoreStrategy<T>(CacheSource<T> source) where T : class
     {
-        var retrieveStrategy = CreateRetrieveStrategy<T>(source);
+        var retrieveStrategy = CreateRetrieveStrategy(source);
         var cacheStrategy = CreateStoreStrategy<T>();
 
         return new CacheSourceRetrieveOrStoreStrategy<T>(cacheStrategy, retrieveStrategy);

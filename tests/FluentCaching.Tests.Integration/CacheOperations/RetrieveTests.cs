@@ -13,10 +13,10 @@ namespace FluentCaching.Tests.Integration.CacheOperations
         [Fact]
         public async Task RetrieveAsync_CalledWithKey_CallsRetrieveInImplementation()
         {
-            await Cache.RetrieveAsync<User>(KEY);
+            await Cache.RetrieveAsync<User>(Key);
 
             CacheImplementationMock
-                   .Verify(i => i.RetrieveAsync<User>(KEY), Times.Once);
+                   .Verify(i => i.RetrieveAsync<User>(Key), Times.Once);
         }
 
         [Fact]

@@ -20,6 +20,6 @@ public class TestBaseParameterPropertyAccessVisitor : BaseParameterPropertyAcces
         return node;
     }
 
-    public static (string, Type) GetPropertyMetadata(MemberExpression node)
+    public new static (string, Type) GetPropertyMetadata(MemberExpression node)
         => BaseParameterPropertyAccessVisitor.GetPropertyMetadata(node);
 }

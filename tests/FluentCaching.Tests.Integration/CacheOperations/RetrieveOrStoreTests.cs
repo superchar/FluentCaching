@@ -14,7 +14,7 @@ namespace FluentCaching.Tests.Integration.CacheOperations
         [Fact]
         public async Task RetrieveOrStoreAsync_MissingConfiguration_ThrowsException()
         {
-            Func<Task<Order>> retrieveOrStoreAsync = () => Cache.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" });
+            var retrieveOrStoreAsync = () => Cache.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" });
 
             await retrieveOrStoreAsync.Should().ThrowAsync<ConfigurationNotFoundException>();
         }
@@ -25,10 +25,10 @@ namespace FluentCaching.Tests.Integration.CacheOperations
             await Cache.CacheAsync(User.Test);
             var entityFetcherMock = new Mock<Func<string, Task<User>>>();
             CacheImplementationMock
-                .Setup(i => i.RetrieveAsync<User>(KEY))
+                .Setup(i => i.RetrieveAsync<User>(Key))
                 .ReturnsAsync(User.Test);
 
-            var result = await Cache.RetrieveOrStoreAsync(KEY, entityFetcherMock.Object);
+            var result = await Cache.RetrieveOrStoreAsync(Key, entityFetcherMock.Object);
 
             result.Should().Be(User.Test);
             entityFetcherMock.Verify(f => f(It.IsAny<string>()), Times.Never);
@@ -38,12 +38,12 @@ namespace FluentCaching.Tests.Integration.CacheOperations
         public async Task RetrieveOrStoreAsync_ValueIsNotInCache_CachesValueUsingEntityFetcher()
         {
             var entityFetcherMock = new Mock<Func<string, Task<User>>>();
-            entityFetcherMock.Setup(f => f(KEY)).ReturnsAsync(User.Test);
+            entityFetcherMock.Setup(f => f(Key)).ReturnsAsync(User.Test);
 
-            var result = await Cache.RetrieveOrStoreAsync(KEY, entityFetcherMock.Object);
+            var result = await Cache.RetrieveOrStoreAsync(Key, entityFetcherMock.Object);
 
             result.Should().Be(User.Test);
-            entityFetcherMock.Verify(f => f(KEY), Times.Once);
+            entityFetcherMock.Verify(f => f(Key), Times.Once);
         }
 
         [Fact]
@@ -54,13 +54,13 @@ namespace FluentCaching.Tests.Integration.CacheOperations
 
             var entityFetcherMock = new Mock<Func<string, Task<User>>>();
             entityFetcherMock
-                .Setup(f => f(KEY))
+                .Setup(f => f(Key))
                 .ReturnsAsync(User.Test);
 
-            await Cache.RetrieveOrStoreAsync(KEY, entityFetcherMock.Object);
+            await Cache.RetrieveOrStoreAsync(Key, entityFetcherMock.Object);
             
-            await Cache.RetrieveOrStoreAsync(KEY, entityFetcherMock.Object);
-            entityFetcherMock.Verify(f => f(KEY), Times.Once);
+            await Cache.RetrieveOrStoreAsync(Key, entityFetcherMock.Object);
+            entityFetcherMock.Verify(f => f(Key), Times.Once);
         }
     }
 }

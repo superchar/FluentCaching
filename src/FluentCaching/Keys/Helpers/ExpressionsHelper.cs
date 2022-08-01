@@ -20,7 +20,7 @@ namespace FluentCaching.Keys.Helpers
         {
             var body = ConvertToNullableExpression(expression.Body);
             var propertyToStringCall = Expression
-                .Call(body, nameof(object.ToString), Type.EmptyTypes);
+                .Call(body, nameof(ToString), Type.EmptyTypes);
 
             var resultNullCheck = GenerateNullCheck(body,
                 ifNotNull: propertyToStringCall);
