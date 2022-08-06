@@ -1,6 +1,5 @@
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
 using FluentAssertions;
 using FluentCaching.Keys.Builders.KeyParts;
 using FluentCaching.Keys.Builders.KeyParts.Factories;
@@ -13,13 +12,13 @@ namespace FluentCaching.Tests.Unit.Keys.Builders.KeyParts.Factories;
 
 public class KeyPartBuilderFactoryTests
 {
-    private readonly Mock<IExpressionsHelper> _expressionsHelperMock = new();
+    private readonly Mock<IExpressionsHelper> _expressionsHelperMock;
 
     private readonly KeyPartBuilderFactory _sut;
 
     public KeyPartBuilderFactoryTests()
     {
-        _expressionsHelperMock= new Mock<IExpressionsHelper>();
+        _expressionsHelperMock = new Mock<IExpressionsHelper>();
 
         _sut = new KeyPartBuilderFactory(_expressionsHelperMock.Object);
     }

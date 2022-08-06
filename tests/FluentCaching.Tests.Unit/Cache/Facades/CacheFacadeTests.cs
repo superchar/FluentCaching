@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using FluentCaching.Cache.Facades;
 using FluentCaching.Cache.Models;
@@ -76,7 +75,7 @@ public class CacheFacadeTests
         await _sut.RetrieveAsync<User>(ObjectKey);
 
         _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRetrieveStrategy<User>(
+            .Verify(_ => _.CreateRetrieveStrategy(
                     It.Is<CacheSource<User>>(s => s.ObjectKey == ObjectKey)),
                 Times.Once);
     }
@@ -98,7 +97,7 @@ public class CacheFacadeTests
         await _sut.RetrieveAsync<User>(StringKey);
 
         _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRetrieveStrategy<User>(
+            .Verify(_ => _.CreateRetrieveStrategy(
                     It.Is<CacheSource<User>>(s => StringKey.Equals(s.StringKey))),
                 Times.Once);
     }
@@ -120,7 +119,7 @@ public class CacheFacadeTests
         await _sut.RetrieveAsync<User>();
 
         _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRetrieveStrategy<User>(CacheSource<User>.Null), Times.Once);
+            .Verify(_ => _.CreateRetrieveStrategy(CacheSource<User>.Null), Times.Once);
     }
 
     [Fact]
@@ -138,7 +137,7 @@ public class CacheFacadeTests
         await _sut.RemoveAsync<User>(ObjectKey);
 
         _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRemoveStrategy<User>(
+            .Verify(_ => _.CreateRemoveStrategy(
                     It.Is<CacheSource<User>>(s => s.ObjectKey == ObjectKey)),
                 Times.Once);
     }
@@ -160,7 +159,7 @@ public class CacheFacadeTests
         await _sut.RemoveAsync<User>(StringKey);
 
         _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRemoveStrategy<User>(
+            .Verify(_ => _.CreateRemoveStrategy(
                     It.Is<CacheSource<User>>(s => StringKey.Equals(s.StringKey))),
                 Times.Once);
     }
@@ -184,7 +183,7 @@ public class CacheFacadeTests
         await _sut.RetrieveOrStoreAsync(ObjectKey, entityFetcher);
 
         _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRetrieveOrStoreStrategy<User>(
+            .Verify(_ => _.CreateRetrieveOrStoreStrategy(
                     It.Is<CacheSource<User>>(s => s.ObjectKey == ObjectKey)),
                 Times.Once);
     }
@@ -212,7 +211,7 @@ public class CacheFacadeTests
         await _sut.RetrieveOrStoreAsync(StringKey, entityFetcher);
 
         _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRetrieveOrStoreStrategy<User>(
+            .Verify(_ => _.CreateRetrieveOrStoreStrategy(
                     It.Is<CacheSource<User>>(s => StringKey.Equals(s.StringKey))),
                 Times.Once);
     }
@@ -240,7 +239,7 @@ public class CacheFacadeTests
         await _sut.RetrieveOrStoreAsync(entityFetcher);
 
         _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRetrieveOrStoreStrategy<User>(CacheSource<User>.Null), Times.Once);
+            .Verify(_ => _.CreateRetrieveOrStoreStrategy(CacheSource<User>.Null), Times.Once);
     }
 
     [Fact]

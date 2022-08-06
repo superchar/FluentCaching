@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
+using FluentCaching.Keys.Models;
 
 namespace FluentCaching.Keys.Helpers
 {
@@ -15,7 +16,10 @@ namespace FluentCaching.Keys.Helpers
 
         public PropertyAccessor[] GetProperties(Type type)
             => Cache
-                .GetOrAdd(type, _ => _.GetProperties().Select(CreatePropertyAccessor).ToArray());
+                .GetOrAdd(type, _ => _.GetProperties()
+                    .Where(p => p.GetMethod != null)
+                    .Select(CreatePropertyAccessor)
+                    .ToArray());
 
         private static PropertyAccessor CreatePropertyAccessor(PropertyInfo property)
         {

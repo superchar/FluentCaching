@@ -18,15 +18,13 @@ public class CacheStrategyFactoryTests
     private static readonly CacheSource<User> CacheSourceWithObjectKey = new(new object());
     private static readonly CacheSource<User> CacheSourceWithStringKey = new("key");
 
-    private readonly Mock<ICacheConfiguration> _cacheConfigurationMock;
-
     private readonly CacheStrategyFactory _sut;
 
     public CacheStrategyFactoryTests()
     {
-        _cacheConfigurationMock = new Mock<ICacheConfiguration>();
+        var cacheConfigurationMock = new Mock<ICacheConfiguration>();
 
-        _sut = new CacheStrategyFactory(_cacheConfigurationMock.Object);
+        _sut = new CacheStrategyFactory(cacheConfigurationMock.Object);
     }
 
     public static IEnumerable<object[]> CacheSources

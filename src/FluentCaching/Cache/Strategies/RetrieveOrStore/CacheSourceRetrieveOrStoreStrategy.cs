@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Retrieve;
 using FluentCaching.Cache.Strategies.Store;
-using FluentCaching.Configuration;
 
 namespace FluentCaching.Cache.Strategies.RetrieveOrStore;
 

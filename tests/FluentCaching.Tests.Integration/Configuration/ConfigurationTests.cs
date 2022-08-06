@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentAssertions;
-using Xunit;
 using FluentCaching.Tests.Integration.Extensions;
 using FluentCaching.Tests.Integration.Models;
+using Xunit;
 
 namespace FluentCaching.Tests.Integration.Configuration
 {

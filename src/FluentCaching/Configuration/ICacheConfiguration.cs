@@ -1,8 +1,7 @@
-﻿using FluentCaching.Cache;
+﻿using System;
+using FluentCaching.Cache;
 using FluentCaching.PolicyBuilders;
 using FluentCaching.PolicyBuilders.Keys;
-using FluentCaching.PolicyBuilders.Ttl;
-using System;
 
 namespace FluentCaching.Configuration
 {

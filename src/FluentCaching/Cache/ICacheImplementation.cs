@@ -1,5 +1,5 @@
-﻿using FluentCaching.Cache.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using FluentCaching.Cache.Models;
 
 namespace FluentCaching.Cache
 {

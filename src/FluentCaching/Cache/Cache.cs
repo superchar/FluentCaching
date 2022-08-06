@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using FluentCaching.Cache.Facades;
 
@@ -41,13 +42,13 @@ namespace FluentCaching.Cache
             => _cacheFacade.RetrieveAsync<TEntity>(key.ToString());
 
         public Task<TEntity> RetrieveAsync<TEntity>(decimal key) where TEntity : class
-            => _cacheFacade.RetrieveAsync<TEntity>(key.ToString());
+            => _cacheFacade.RetrieveAsync<TEntity>(key.ToString(CultureInfo.InvariantCulture));
 
         public Task<TEntity> RetrieveAsync<TEntity>(double key) where TEntity : class
-            => _cacheFacade.RetrieveAsync<TEntity>(key.ToString());
+            => _cacheFacade.RetrieveAsync<TEntity>(key.ToString(CultureInfo.InvariantCulture));
 
         public Task<TEntity> RetrieveAsync<TEntity>(float key) where TEntity : class
-            => _cacheFacade.RetrieveAsync<TEntity>(key.ToString());
+            => _cacheFacade.RetrieveAsync<TEntity>(key.ToString(CultureInfo.InvariantCulture));
 
         public Task<TEntity> RetrieveAsync<TEntity>(uint key) where TEntity : class
             => _cacheFacade.RetrieveAsync<TEntity>(key.ToString());
@@ -90,13 +91,13 @@ namespace FluentCaching.Cache
             => _cacheFacade.RemoveAsync<TEntity>(key.ToString());
 
         public Task RemoveAsync<TEntity>(decimal key) where TEntity : class
-            => _cacheFacade.RemoveAsync<TEntity>(key.ToString());
+            => _cacheFacade.RemoveAsync<TEntity>(key.ToString(CultureInfo.InvariantCulture));
 
         public Task RemoveAsync<TEntity>(double key) where TEntity : class
-            => _cacheFacade.RemoveAsync<TEntity>(key.ToString());
+            => _cacheFacade.RemoveAsync<TEntity>(key.ToString(CultureInfo.InvariantCulture));
 
         public Task RemoveAsync<TEntity>(float key) where TEntity : class
-            => _cacheFacade.RemoveAsync<TEntity>(key.ToString());
+            => _cacheFacade.RemoveAsync<TEntity>(key.ToString(CultureInfo.InvariantCulture));
 
         public Task RemoveAsync<TEntity>(uint key) where TEntity : class
             => _cacheFacade.RemoveAsync<TEntity>(key.ToString());

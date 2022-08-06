@@ -1,12 +1,11 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using FluentCaching.Cache;
 using FluentCaching.Cache.Builders;
 using FluentCaching.Configuration;
 using FluentCaching.PolicyBuilders;
 using FluentCaching.PolicyBuilders.Keys;
-using FluentCaching.PolicyBuilders.Ttl;
 using Moq;
-using System;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.Cache.Builders

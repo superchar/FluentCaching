@@ -22,5 +22,5 @@ public abstract class BaseParameterPropertyAccessVisitor : ExpressionVisitor
     private static bool IsParameterPropertyAccess(MemberExpression node) =>
         node.Member.MemberType == MemberTypes.Property
         && node.NodeType == ExpressionType.MemberAccess
-        && node.Expression.NodeType == ExpressionType.Parameter;
+        && node.Expression?.NodeType == ExpressionType.Parameter;
 }

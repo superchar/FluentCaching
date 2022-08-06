@@ -46,7 +46,7 @@ public class CacheSourceRetrieveOrStoreStrategyTests
     {
         SetupRetrievedUser();
         
-        var result = await _sut.RetrieveOrStoreAsync(CacheSource, _entityFetcherMock.Object);
+        await _sut.RetrieveOrStoreAsync(CacheSource, _entityFetcherMock.Object);
         
         _entityFetcherMock
             .Verify(f => f(It.IsAny<CacheSource<User>>()), Times.Never);
@@ -57,7 +57,7 @@ public class CacheSourceRetrieveOrStoreStrategyTests
     {
         SetupRetrievedUser();
         
-        var result = await _sut.RetrieveOrStoreAsync(CacheSource, _entityFetcherMock.Object);
+        await _sut.RetrieveOrStoreAsync(CacheSource, _entityFetcherMock.Object);
         
         _storeStrategyMock
             .Verify(_ => _.StoreAsync(It.IsAny<User>()), Times.Never);
@@ -66,7 +66,7 @@ public class CacheSourceRetrieveOrStoreStrategyTests
     [Fact]
     public async Task RetrieveOrStoreAsync_RetrievedValueIsNull_CallsEntityFetcher()
     {
-        var result = await _sut.RetrieveOrStoreAsync(CacheSource, _entityFetcherMock.Object);
+        await _sut.RetrieveOrStoreAsync(CacheSource, _entityFetcherMock.Object);
         
         _entityFetcherMock
             .Verify(f => f(CacheSource), Times.Once);
@@ -87,7 +87,7 @@ public class CacheSourceRetrieveOrStoreStrategyTests
     {
         var user = SetupEntityFetcherUser();
         
-        var result = await _sut.RetrieveOrStoreAsync(CacheSource, _entityFetcherMock.Object);
+        await _sut.RetrieveOrStoreAsync(CacheSource, _entityFetcherMock.Object);
         
         _storeStrategyMock
             .Verify(_ => _.StoreAsync(user), Times.Once);

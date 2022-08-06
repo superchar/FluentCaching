@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using FluentCaching.Cache.Models;
-using FluentCaching.Cache.Strategies.Remove;
 using FluentCaching.Cache.Strategies.Retrieve;
 using FluentCaching.Tests.Unit.Models;
 using Moq;

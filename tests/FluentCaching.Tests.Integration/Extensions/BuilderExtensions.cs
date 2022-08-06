@@ -1,7 +1,6 @@
 ﻿using FluentCaching.Cache;
 using FluentCaching.PolicyBuilders;
 using FluentCaching.PolicyBuilders.Keys;
-using FluentCaching.PolicyBuilders.Ttl;
 
 namespace FluentCaching.Tests.Integration.Extensions
 {
@@ -16,7 +15,7 @@ namespace FluentCaching.Tests.Integration.Extensions
         public static CacheImplementationPolicyBuilder Complete<T>(this CombinedCachingKeyPolicyBuilder<T> policyBuilder, ICacheImplementation cacheImplementation)
             where T : class
         {
-            return Complete<T>(policyBuilder)
+            return Complete(policyBuilder)
                 .And()
                 .WithCacheImplementation(cacheImplementation);
         }

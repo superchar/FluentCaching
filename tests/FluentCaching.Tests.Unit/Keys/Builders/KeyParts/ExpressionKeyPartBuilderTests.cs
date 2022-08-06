@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 using FluentAssertions;
 using FluentCaching.Keys;
 using FluentCaching.Keys.Builders.KeyParts;
@@ -95,8 +94,7 @@ public class ExpressionKeyPartBuilderTests
     private void SetupExpressionRewriteFakes()
     {
         _expressionsHelperMock
-            .Setup(_ => _.ReplaceResultTypeWithString<User, int?>(
-                It.IsAny<Expression<Func<User, int?>>>()))
+            .Setup(_ => _.ReplaceResultTypeWithString(It.IsAny<Expression<Func<User, int?>>>()))
             .Returns(_ => _.SubscriptionId == null ? null : _.SubscriptionId.ToString());
 
         _expressionsHelperMock

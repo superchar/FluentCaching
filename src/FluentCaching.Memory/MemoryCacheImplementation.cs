@@ -1,8 +1,8 @@
-﻿using FluentCaching.Cache;
-using FluentCaching.Cache.Models;
-using System;
+﻿using System;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
+using FluentCaching.Cache;
+using FluentCaching.Cache.Models;
 
 namespace FluentCaching.Memory
 {

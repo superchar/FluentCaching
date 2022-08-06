@@ -1,7 +1,6 @@
-﻿using FluentCaching.PolicyBuilders;
+﻿using System;
+using FluentCaching.PolicyBuilders;
 using FluentCaching.PolicyBuilders.Keys;
-using FluentCaching.PolicyBuilders.Ttl;
-using System;
 
 namespace FluentCaching.Cache.Builders
 {

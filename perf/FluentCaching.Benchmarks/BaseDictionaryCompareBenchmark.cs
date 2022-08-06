@@ -4,7 +4,6 @@ using FluentCaching.Cache;
 using FluentCaching.Cache.Builders;
 using FluentCaching.PolicyBuilders;
 using FluentCaching.PolicyBuilders.Keys;
-using FluentCaching.PolicyBuilders.Ttl;
 
 namespace FluentCaching.Benchmarks
 {
@@ -47,7 +46,7 @@ namespace FluentCaching.Benchmarks
 
                 _dictionary[key] = user;
 
-                var retrievedUser = _dictionary[key];
+                _ = _dictionary[key];
             }
         }
 

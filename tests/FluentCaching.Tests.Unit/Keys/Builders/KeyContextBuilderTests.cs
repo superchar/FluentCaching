@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using FluentCaching.Keys;
 using FluentCaching.Keys.Builders;
 using FluentCaching.Keys.Helpers;
+using FluentCaching.Keys.Models;
 using FluentCaching.Tests.Unit.Models;
 using Moq;
 using Xunit;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FluentCaching.Keys.Helpers
+namespace FluentCaching.Keys.Models
 {
     internal struct PropertyAccessor
     {

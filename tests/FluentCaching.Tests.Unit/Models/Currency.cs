@@ -1,5 +1,3 @@
-using System;
-
 namespace FluentCaching.Tests.Unit.Models;
 
 public class Currency

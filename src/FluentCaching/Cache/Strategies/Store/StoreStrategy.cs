@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Threading.Tasks;
 using FluentCaching.Configuration;
 

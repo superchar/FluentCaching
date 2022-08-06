@@ -1,5 +1,4 @@
 ﻿using FluentCaching.Cache.Models;
-using FluentCaching.Keys;
 using FluentCaching.Keys.Builders;
 
 namespace FluentCaching.Configuration

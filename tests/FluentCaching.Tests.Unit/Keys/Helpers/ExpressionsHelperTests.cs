@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Tests.Unit.Models;
-using System;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.Keys.Helpers

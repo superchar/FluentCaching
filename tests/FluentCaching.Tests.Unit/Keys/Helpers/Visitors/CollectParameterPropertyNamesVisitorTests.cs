@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 using FluentAssertions;
 using FluentCaching.Keys.Helpers.Visitors;
 using FluentCaching.Tests.Unit.Models;
-using Moq;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.Keys.Helpers.Visitors;
