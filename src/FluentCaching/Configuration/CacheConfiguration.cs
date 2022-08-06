@@ -10,9 +10,7 @@ namespace FluentCaching.Configuration
 {
     internal sealed class CacheConfiguration : ICacheConfiguration
     {
-        private readonly Dictionary<Type, ICacheConfigurationItem> _predefinedConfigurations
-            = //Should be thread safe when readonly (mutations present only at configuration phase)
-            new Dictionary<Type, ICacheConfigurationItem>();
+        private readonly Dictionary<Type, ICacheConfigurationItem> _predefinedConfigurations = new ();
 
         private ICacheImplementation _cacheImplementation;
 
@@ -33,15 +31,15 @@ namespace FluentCaching.Configuration
             where T : class
             => For<T>(factoryFunc(new CachingKeyPolicyBuilder<T>()).CachingOptions);
 
-        public ICacheConfigurationItem<T> GetItem<T>() where T : class =>
+        public ICacheConfigurationItem GetItem<T>() where T : class =>
             _predefinedConfigurations.TryGetValue(typeof(T), out var configurationItem)
-                ? configurationItem as CacheConfigurationItem<T>
+                ? configurationItem
                 : null;
 
         private ICacheConfiguration For<T>(CacheOptions options)
             where T : class
         {
-            _predefinedConfigurations[typeof(T)] = new CacheConfigurationItem<T>(options);
+            _predefinedConfigurations[typeof(T)] = new CacheConfigurationItem(options);
             return this;
         }
     }

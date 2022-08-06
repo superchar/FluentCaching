@@ -15,13 +15,13 @@ public class KeyPartBuilderFactoryTests
 {
     private readonly Mock<IExpressionsHelper> _expressionsHelperMock = new();
 
-    private readonly KeyPartBuilderFactory<User> _sut;
+    private readonly KeyPartBuilderFactory _sut;
 
     public KeyPartBuilderFactoryTests()
     {
         _expressionsHelperMock= new Mock<IExpressionsHelper>();
 
-        _sut = new KeyPartBuilderFactory<User>(_expressionsHelperMock.Object);
+        _sut = new KeyPartBuilderFactory(_expressionsHelperMock.Object);
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class KeyPartBuilderFactoryTests
     {
         var result = _sut.Create("test");
 
-        result.Should().BeOfType<StaticKeyPartBuilder<User>>();
+        result.Should().BeOfType<StaticKeyPartBuilder>();
     }
     
     [Fact]
@@ -42,8 +42,8 @@ public class KeyPartBuilderFactoryTests
             .Setup(_ => _.ReplaceParameterWithDictionary(It.IsAny<Expression<Func<User, string>>>()))
             .Returns(_ => _[nameof(User.Name)].ToString());
 
-        var result = _sut.Create(_ => _.Name);
+        var result = _sut.Create<User, string>(_ => _.Name);
 
-        result.Should().BeOfType<ExpressionKeyPartBuilder<User>>();
+        result.Should().BeOfType<ExpressionKeyPartBuilder>();
     }
 }

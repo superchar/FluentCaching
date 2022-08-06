@@ -14,8 +14,8 @@ internal class ObjectKeyRemoveStrategy<T> : BaseCacheStrategyWithConfiguration, 
     public Task RemoveAsync(CacheSource<T> source)
     {
         var item = GetConfigurationItem<T>();
-        var key = item.KeyBuilder.BuildFromObjectKey(source.ObjectKey);
-        return GetCacheImplementation(item)
+        var key = item.Options.KeyBuilder.BuildFromObjectKey(source.ObjectKey);
+        return GetCacheImplementation<T>(item)
             .RemoveAsync(key);
     }
 }

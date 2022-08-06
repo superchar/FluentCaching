@@ -10,25 +10,24 @@ using FluentCaching.Keys.Models;
 
 namespace FluentCaching.Keys.Builders
 {
-    internal class KeyBuilder<T> : IKeyBuilder<T>
-        where T : class
+    internal class KeyBuilder : IKeyBuilder
     {
-        private List<IKeyPartBuilder<T>> _keyPartBuilders = new();
+        private List<IKeyPartBuilder> _keyPartBuilders = new();
 
         private readonly IExpressionsHelper _expressionHelper;
-        private readonly IKeyContextBuilder<T> _keyContextBuilder;
-        private readonly IKeyPartBuilderFactory<T> _keyPartBuilderFactory;
+        private readonly IKeyContextBuilder _keyContextBuilder;
+        private readonly IKeyPartBuilderFactory _keyPartBuilderFactory;
 
         public KeyBuilder() 
-            : this(new KeyContextBuilder<T>(new ComplexKeysHelper()), 
+            : this(new KeyContextBuilder(new ComplexKeysHelper()), 
                 new ExpressionsHelper(),
-                new KeyPartBuilderFactory<T>(new ExpressionsHelper()))
+                new KeyPartBuilderFactory(new ExpressionsHelper()))
         {
         }
 
-        internal KeyBuilder(IKeyContextBuilder<T> keyContextBuilder, 
+        internal KeyBuilder(IKeyContextBuilder keyContextBuilder, 
             IExpressionsHelper expressionHelper,
-            IKeyPartBuilderFactory<T> keyPartBuilderFactory)
+            IKeyPartBuilderFactory keyPartBuilderFactory)
         {
             _keyContextBuilder = keyContextBuilder;
             _expressionHelper = expressionHelper;
@@ -40,7 +39,7 @@ namespace FluentCaching.Keys.Builders
         public void AppendStatic<TValue>(TValue value)
             => _keyPartBuilders.Add(_keyPartBuilderFactory.Create(value));
         
-        public void AppendExpression<TValue>(Expression<Func<T, TValue>> valueGetter)
+        public void AppendExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter)
         {
             foreach (var propertyName in _expressionHelper.GetParameterPropertyNames(valueGetter))
             {
@@ -72,19 +71,20 @@ namespace FluentCaching.Keys.Builders
                 throw new KeyPartMissingException();
             }
 
-            return Build(KeyContext<T>.Null);
+            return Build(KeyContext.Null);
         }
 
-        public string BuildFromCachedObject(T cachedObject)
+        public string BuildFromCachedObject(object cachedObject)
         {
             var context = _keyContextBuilder.BuildCacheContext(cachedObject);
 
             return Build(context);
         }
         
-        private string Build(KeyContext<T> context) => string.Join(string.Empty, BuildKeyParts(context));
+        private string Build(KeyContext context) 
+            => string.Join(string.Empty, BuildKeyParts(context));
 
-        private IEnumerable<string> BuildKeyParts(KeyContext<T> context)
+        private IEnumerable<string> BuildKeyParts(KeyContext context)
         {
             foreach (var builder in _keyPartBuilders)
             {

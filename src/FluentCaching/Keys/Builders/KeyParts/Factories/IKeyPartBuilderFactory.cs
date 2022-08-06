@@ -3,10 +3,9 @@ using System.Linq.Expressions;
 
 namespace FluentCaching.Keys.Builders.KeyParts.Factories;
 
-internal interface IKeyPartBuilderFactory<T>
-    where T : class
+internal interface IKeyPartBuilderFactory
 {
-    IKeyPartBuilder<T> Create<TValue>(TValue value);
+    IKeyPartBuilder Create<TValue>(TValue value);
     
-    IKeyPartBuilder<T> Create<TValue>(Expression<Func<T, TValue>> valueGetter);
+    IKeyPartBuilder Create<T, TValue>(Expression<Func<T, TValue>> valueGetter);
 }

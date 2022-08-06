@@ -28,11 +28,11 @@ public class StaticKeyPartBuilderTests
         const string keyPart = "key part";
         var builder = Create(keyPart);
 
-        var result = builder.Build(KeyContext<User>.Null);
+        var result = builder.Build(KeyContext.Null);
         result.Should().Be(keyPart);
     }
 
 
-    private static StaticKeyPartBuilder<User> Create<T>(T value) where T : class
-        => StaticKeyPartBuilder<User>.Create(value);
+    private static StaticKeyPartBuilder Create<T>(T value) where T : class
+        => StaticKeyPartBuilder.Create(value);
 }

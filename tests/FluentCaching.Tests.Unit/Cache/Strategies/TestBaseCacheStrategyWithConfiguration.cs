@@ -10,10 +10,10 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies
         {
         }
 
-        public new ICacheConfigurationItem<T> GetConfigurationItem<T>() where T : class 
+        public new ICacheConfigurationItem GetConfigurationItem<T>() where T : class 
             => base.GetConfigurationItem<T>();
 
-        public new ICacheImplementation GetCacheImplementation<T>(ICacheConfigurationItem<T> item) where T : class
-            => base.GetCacheImplementation(item);
+        public new ICacheImplementation GetCacheImplementation<T>(ICacheConfigurationItem item) where T : class
+            => base.GetCacheImplementation<T>(item);
     }
 }

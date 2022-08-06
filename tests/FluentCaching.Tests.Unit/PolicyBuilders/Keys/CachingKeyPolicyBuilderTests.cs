@@ -12,13 +12,13 @@ namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys
 {
     public class CachingKeyPolicyBuilderTests
     {
-        private readonly Mock<IKeyBuilder<User>> _keyBuilderMock;
+        private readonly Mock<IKeyBuilder> _keyBuilderMock;
 
         private readonly CachingKeyPolicyBuilder<User> _sut;
 
         public CachingKeyPolicyBuilderTests()
         {
-            _keyBuilderMock = new Mock<IKeyBuilder<User>>();
+            _keyBuilderMock = new Mock<IKeyBuilder>();
 
             _sut = new CachingKeyPolicyBuilder<User>(_keyBuilderMock.Object);
         }

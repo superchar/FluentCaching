@@ -15,13 +15,13 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
     {
         private Mock<IComplexKeysHelper> _complexKeysHelperMock;
 
-        private KeyContextBuilder<User> _sut;
+        private KeyContextBuilder _sut;
 
         public KeyContextBuilderTests()
         {
             _complexKeysHelperMock = new Mock<IComplexKeysHelper>();
 
-            _sut = new KeyContextBuilder<User>(_complexKeysHelperMock.Object);
+            _sut = new KeyContextBuilder(_complexKeysHelperMock.Object);
         }
 
         [Fact]

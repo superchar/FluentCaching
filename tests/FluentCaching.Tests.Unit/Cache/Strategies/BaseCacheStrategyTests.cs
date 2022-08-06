@@ -12,10 +12,10 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies
         private protected User TestUser { get; }
         
         private protected Mock<ICacheConfiguration> CacheConfigurationMock { get; }
-        private protected Mock<ICacheConfigurationItem<User>> ConfigurationItemMock { get; }
+        private protected Mock<ICacheConfigurationItem> ConfigurationItemMock { get; }
         private protected Mock<ICacheImplementation> GlobalCacheImplementationMock { get; }
         private protected Mock<ICacheImplementation> TypeCacheImplementationMock { get;  }
-        private protected Mock<IKeyBuilder<User>> KeyBuilderMock { get; }
+        private protected Mock<IKeyBuilder> KeyBuilderMock { get; }
 
         protected BaseCacheStrategyTests()
         {
@@ -25,11 +25,11 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies
                 Name = "User"
             };
             
-            ConfigurationItemMock = new Mock<ICacheConfigurationItem<User>>();
+            ConfigurationItemMock = new Mock<ICacheConfigurationItem>();
             CacheConfigurationMock = new Mock<ICacheConfiguration>();
             GlobalCacheImplementationMock = new Mock<ICacheImplementation>();
             TypeCacheImplementationMock = new Mock<ICacheImplementation>();
-            KeyBuilderMock = new Mock<IKeyBuilder<User>>();
+            KeyBuilderMock = new Mock<IKeyBuilder>();
             
             SetupCacheConfiguration();
         }
@@ -45,9 +45,6 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies
             ConfigurationItemMock
                 .SetupGet(_ => _.Options)
                 .Returns(options);
-            ConfigurationItemMock
-                .SetupGet(_ => _.KeyBuilder)
-                .Returns(KeyBuilderMock.Object);
             CacheConfigurationMock
                 .Setup(_ => _.GetItem<User>())
                 .Returns(ConfigurationItemMock.Object);

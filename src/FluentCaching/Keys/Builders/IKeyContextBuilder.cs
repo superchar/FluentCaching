@@ -3,15 +3,14 @@ using FluentCaching.Keys.Models;
 
 namespace FluentCaching.Keys.Builders
 {
-    internal interface IKeyContextBuilder<T>
-        where T : class
+    internal interface IKeyContextBuilder
     {
         void AddKey(string key);
     
-        KeyContext<T> BuildRetrieveContextFromObjectKey(object targetObject);
+        KeyContext BuildRetrieveContextFromObjectKey(object targetObject);
         
-        KeyContext<T> BuildRetrieveContextFromStringKey(string targetString);
+        KeyContext BuildRetrieveContextFromStringKey(string targetString);
         
-        KeyContext<T> BuildCacheContext(T cachedObject);
+        KeyContext BuildCacheContext(object cachedObject);
     }
 }

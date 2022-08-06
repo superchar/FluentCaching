@@ -32,7 +32,7 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies
         {
             CacheConfigurationMock
                 .Setup(_ => _.GetItem<User>())
-                .Returns((CacheConfigurationItem<User>)null);
+                .Returns((CacheConfigurationItem)null);
 
             _sut.Invoking(_ => _.GetConfigurationItem<User>())
                 .Should()
@@ -69,7 +69,7 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies
                 .SetupGet(_ => _.Current)
                 .Returns((ICacheImplementation)null);
             
-            _sut.Invoking(_ => _.GetCacheImplementation(ConfigurationItemMock.Object))
+            _sut.Invoking(_ => _.GetCacheImplementation<User>(ConfigurationItemMock.Object))
                 .Should().Throw<CacheImplementationNotFoundException>();
         }
 

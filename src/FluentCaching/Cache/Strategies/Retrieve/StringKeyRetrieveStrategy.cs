@@ -14,8 +14,8 @@ internal class StringKeyRetrieveStrategy<T> : BaseCacheStrategyWithConfiguration
     public Task<T> RetrieveAsync(CacheSource<T> source)
     {
         var item = GetConfigurationItem<T>();
-        var key = item.KeyBuilder.BuildFromStringKey(source.StringKey);
-        return GetCacheImplementation(item)
+        var key = item.Options.KeyBuilder.BuildFromStringKey(source.StringKey);
+        return GetCacheImplementation<T>(item)
             .RetrieveAsync<T>(key);    
     }
 }

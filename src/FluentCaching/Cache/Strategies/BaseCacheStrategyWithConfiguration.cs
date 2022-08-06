@@ -12,10 +12,10 @@ internal abstract class BaseCacheStrategyWithConfiguration
         _configuration = configuration;
     }
 
-    protected ICacheConfigurationItem<T> GetConfigurationItem<T>() where T : class =>
+    protected ICacheConfigurationItem GetConfigurationItem<T>() where T : class =>
         _configuration.GetItem<T>() ?? throw new ConfigurationNotFoundException(typeof(T));
 
-    protected ICacheImplementation GetCacheImplementation<T>(ICacheConfigurationItem<T> item) 
+    protected ICacheImplementation GetCacheImplementation<T>(ICacheConfigurationItem item) 
         where T : class =>
         item.Options.CacheImplementation ??
         _configuration.Current ??

@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Keys.Models;
 
 namespace FluentCaching.Keys.Builders
 {
-    internal class KeyContextBuilder<T> : IKeyContextBuilder<T>
-        where T : class
+    internal class KeyContextBuilder : IKeyContextBuilder
     {
-        private static readonly KeyContext<T> EmptyRetrieveContext 
+        private static readonly KeyContext EmptyRetrieveContext 
             = new (new Dictionary<string, object>());
 
         private readonly Dictionary<string, bool> _keys = new (); // Guaranteed to be thread safe when readonly (unlike hashset)
@@ -22,7 +22,7 @@ namespace FluentCaching.Keys.Builders
 
         public void AddKey(string key) => _keys[key] = true;
 
-        public KeyContext<T> BuildRetrieveContextFromObjectKey(object targetObject)
+        public KeyContext BuildRetrieveContextFromObjectKey(object targetObject)
         {
             var properties = _complexKeysHelper.GetProperties(targetObject.GetType())
                 .Where(_ => _keys.ContainsKey(_.Name))
@@ -35,10 +35,10 @@ namespace FluentCaching.Keys.Builders
 
             var retrieveContext = properties
                 .ToDictionary(p => p.Name, p => p.Get(targetObject));
-            return new KeyContext<T>(retrieveContext);
+            return new KeyContext(retrieveContext);
         }
 
-        public KeyContext<T> BuildRetrieveContextFromStringKey(string targetString)
+        public KeyContext BuildRetrieveContextFromStringKey(string targetString)
         {
             if (_keys.Count > 1)
             {
@@ -57,9 +57,9 @@ namespace FluentCaching.Keys.Builders
                 } 
             };
 
-            return new KeyContext<T>(retrieveContext);
+            return new KeyContext(retrieveContext);
         }
 
-        public KeyContext<T> BuildCacheContext(T cachedObject) => new(cachedObject);
+        public KeyContext BuildCacheContext(object cachedObject) => new(cachedObject);
     }
 }

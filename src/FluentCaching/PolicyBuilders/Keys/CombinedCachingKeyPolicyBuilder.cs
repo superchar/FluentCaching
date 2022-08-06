@@ -7,14 +7,13 @@ using FluentCaching.PolicyBuilders.Ttl;
 namespace FluentCaching.PolicyBuilders.Keys
 {
     public class CombinedCachingKeyPolicyBuilder<T>
-        where T : class
     {
         private static readonly string ClassName = typeof(T).Name;
         private static readonly string ClassFullName = typeof(T).FullName;
 
-        private readonly IKeyBuilder<T> _keyBuilder;
+        private readonly IKeyBuilder _keyBuilder;
 
-        internal CombinedCachingKeyPolicyBuilder(IKeyBuilder<T> keyBuilder)
+        internal CombinedCachingKeyPolicyBuilder(IKeyBuilder keyBuilder)
         {
             _keyBuilder = keyBuilder;
         }

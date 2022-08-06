@@ -54,7 +54,7 @@ public class ExpressionKeyPartBuilderTests
         SetupExpressionRewriteFakes();
         var builder = Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
 
-        var result = builder.Build(new KeyContext<User>(user));
+        var result = builder.Build(new KeyContext(user));
         result.Should().Be(user.SubscriptionId.ToString());
     }
 
@@ -69,7 +69,7 @@ public class ExpressionKeyPartBuilderTests
         SetupExpressionRewriteFakes();
         var builder = Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
 
-        var result = builder.Build(new KeyContext<User>(retrieveContext));
+        var result = builder.Build(new KeyContext(retrieveContext));
         result.Should().Be(subscriptionId.ToString());
     }
 
@@ -83,14 +83,14 @@ public class ExpressionKeyPartBuilderTests
         SetupExpressionRewriteFakes();
         var builder = Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
 
-        builder.Invoking(_ => _.Build(new KeyContext<User>(user)))
+        builder.Invoking(_ => _.Build(new KeyContext(user)))
             .Should()
             .Throw<KeyPartMissingException>();
     }
 
-    private static ExpressionKeyPartBuilder<User> Create<T>(Expression<Func<User, T>> valueGetter,
+    private static ExpressionKeyPartBuilder Create<T>(Expression<Func<User, T>> valueGetter,
         IExpressionsHelper expressionsHelper)
-        => ExpressionKeyPartBuilder<User>.Create(valueGetter, expressionsHelper);
+        => ExpressionKeyPartBuilder.Create(valueGetter, expressionsHelper);
 
     private void SetupExpressionRewriteFakes()
     {

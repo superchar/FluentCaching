@@ -4,8 +4,7 @@ using FluentCaching.Keys.Helpers;
 
 namespace FluentCaching.Keys.Builders.KeyParts.Factories;
 
-internal class KeyPartBuilderFactory<T> : IKeyPartBuilderFactory<T>
-    where T : class
+internal class KeyPartBuilderFactory : IKeyPartBuilderFactory
 {
     private readonly IExpressionsHelper _expressionsHelper;
 
@@ -14,9 +13,9 @@ internal class KeyPartBuilderFactory<T> : IKeyPartBuilderFactory<T>
         _expressionsHelper = expressionsHelper;
     }
 
-    public IKeyPartBuilder<T> Create<TValue>(TValue value)
-        => StaticKeyPartBuilder<T>.Create(value);
+    public IKeyPartBuilder Create<TValue>(TValue value)
+        => StaticKeyPartBuilder.Create(value);
 
-    public IKeyPartBuilder<T> Create<TValue>(Expression<Func<T, TValue>> valueGetter)
-        => ExpressionKeyPartBuilder<T>.Create(valueGetter, _expressionsHelper);
+    public IKeyPartBuilder Create<T, TValue>(Expression<Func<T, TValue>> valueGetter)
+        => ExpressionKeyPartBuilder.Create(valueGetter, _expressionsHelper);
 }

@@ -14,8 +14,8 @@ internal class StoreStrategy<T> : BaseCacheStrategyWithConfiguration, IStoreStra
     public Task StoreAsync(T cachedObject)
     {
         var item = GetConfigurationItem<T>();
-        var key = item.KeyBuilder.BuildFromCachedObject(cachedObject);
-        return GetCacheImplementation(item)
+        var key = item.Options.KeyBuilder.BuildFromCachedObject(cachedObject);
+        return GetCacheImplementation<T>(item)
             .CacheAsync(key, cachedObject, item.Options);
     }
 }

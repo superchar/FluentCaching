@@ -1,4 +1,7 @@
-﻿namespace FluentCaching.Keys.Builders
+﻿using System;
+using System.Linq.Expressions;
+
+namespace FluentCaching.Keys.Builders
 {
     internal interface IKeyBuilder
     {
@@ -9,6 +12,10 @@
         string BuildFromStaticKey();
 
         void AppendStatic<TValue>(TValue value);
+        
+        string BuildFromCachedObject(object cachedObject);
+
+        void AppendExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter);
         
     }
 }
