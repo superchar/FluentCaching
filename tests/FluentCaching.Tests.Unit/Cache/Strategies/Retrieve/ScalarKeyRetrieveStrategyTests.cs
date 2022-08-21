@@ -7,24 +7,25 @@ using Xunit;
 
 namespace FluentCaching.Tests.Unit.Cache.Strategies.Retrieve;
 
-public class StringKeyRetrieveStrategyTests : BaseCacheStrategyTests
+public class ScalarKeyRetrieveStrategyTests : BaseCacheStrategyTests
 {
-    private static readonly CacheSource<User> StringKeySource = new("key part");
+    private static readonly CacheSource<User> ScalarKeySource 
+        = CacheSource<User>.CreateScalar("key part");
 
-    private readonly StringKeyRetrieveStrategy<User> _sut;
+    private readonly ScalarKeyRetrieveStrategy<User> _sut;
 
-    public StringKeyRetrieveStrategyTests()
+    public ScalarKeyRetrieveStrategyTests()
     {
-        _sut = new StringKeyRetrieveStrategy<User>(CacheConfigurationMock.Object);
+        _sut = new ScalarKeyRetrieveStrategy<User>(CacheConfigurationMock.Object);
     }
     
     [Fact]
     public async Task RetrieveAsync_WhenCalled_CallsKeyBuilder()
     {
-        await _sut.RetrieveAsync(StringKeySource);
+        await _sut.RetrieveAsync(ScalarKeySource);
 
         KeyBuilderMock
-            .Verify(_ => _.BuildFromStringKey(StringKeySource.StringKey), Times.Once);
+            .Verify(_ => _.BuildFromScalarKey(ScalarKeySource.Key), Times.Once);
     }
 
     [Fact]
@@ -32,10 +33,10 @@ public class StringKeyRetrieveStrategyTests : BaseCacheStrategyTests
     {
         const string key = "key";
         KeyBuilderMock
-            .Setup(_ => _.BuildFromStringKey(StringKeySource.StringKey))
+            .Setup(_ => _.BuildFromScalarKey(ScalarKeySource.Key))
             .Returns(key);
             
-        await _sut.RetrieveAsync(StringKeySource);
+        await _sut.RetrieveAsync(ScalarKeySource);
 
         TypeCacheImplementationMock
             .Verify(_ => _.RetrieveAsync<User>(key), Times.Once);

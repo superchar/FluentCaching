@@ -1,7 +1,6 @@
 using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Remove;
 using FluentCaching.Cache.Strategies.Retrieve;
-using FluentCaching.Cache.Strategies.RetrieveOrStore;
 using FluentCaching.Cache.Strategies.Store;
 using FluentCaching.Configuration;
 
@@ -20,25 +19,17 @@ internal class CacheStrategyFactory : ICacheStrategyFactory
         => new StoreStrategy<T>(_cacheConfiguration);
 
     public IRetrieveStrategy<T> CreateRetrieveStrategy<T>(CacheSource<T> source) where T : class
-        => source switch
+        => source.CacheSourceType switch
         {
-            { ObjectKey: null, StringKey: null } => new StaticKeyRetrieveStrategy<T>(_cacheConfiguration),
-            { ObjectKey: null } => new StringKeyRetrieveStrategy<T>(_cacheConfiguration),
-            _ => new ObjectKeyRetrieveStrategy<T>(_cacheConfiguration)
+            CacheSourceType.Static => new StaticKeyRetrieveStrategy<T>(_cacheConfiguration),
+            CacheSourceType.Scalar => new ScalarKeyRetrieveStrategy<T>(_cacheConfiguration),
+            _ => new ComplexKeyRetrieveStrategy<T>(_cacheConfiguration)
         };
 
     public IRemoveStrategy<T> CreateRemoveStrategy<T>(CacheSource<T> source) where T : class
-        => source switch
+        => source.CacheSourceType switch
         {
-            { ObjectKey: null } => new StringKeyRemoveStrategy<T>(_cacheConfiguration),
-            _ => new ObjectKeyRemoveStrategy<T>(_cacheConfiguration)
+            CacheSourceType.Scalar => new ScalarKeyRemoveStrategy<T>(_cacheConfiguration),
+            _ => new ComplexKeyRemoveStrategy<T>(_cacheConfiguration)
         };
-
-    public IRetrieveOrStoreStrategy<T> CreateRetrieveOrStoreStrategy<T>(CacheSource<T> source) where T : class
-    {
-        var retrieveStrategy = CreateRetrieveStrategy(source);
-        var cacheStrategy = CreateStoreStrategy<T>();
-
-        return new CacheSourceRetrieveOrStoreStrategy<T>(cacheStrategy, retrieveStrategy);
-    }
 }

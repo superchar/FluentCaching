@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Keys.Models;
 
@@ -8,8 +7,7 @@ namespace FluentCaching.Keys.Builders
 {
     internal class KeyContextBuilder : IKeyContextBuilder
     {
-        private static readonly KeyContext EmptyRetrieveContext 
-            = new (new Dictionary<string, object>());
+        private static readonly KeyContext EmptyRetrieveContext = new (new Dictionary<string, object>());
 
         private readonly Dictionary<string, bool> _keys = new (); // Guaranteed to be thread safe when readonly (unlike hashset)
 
@@ -22,9 +20,9 @@ namespace FluentCaching.Keys.Builders
 
         public void AddKey(string key) => _keys[key] = true;
 
-        public KeyContext BuildRetrieveContextFromObjectKey(object targetObject)
+        public KeyContext BuildRetrieveContextFromComplexKey(object complexKey)
         {
-            var properties = _complexKeysHelper.GetProperties(targetObject.GetType())
+            var properties = _complexKeysHelper.GetProperties(complexKey.GetType())
                 .Where(_ => _keys.ContainsKey(_.Name))
                 .ToList();
 
@@ -34,11 +32,11 @@ namespace FluentCaching.Keys.Builders
             }
 
             var retrieveContext = properties
-                .ToDictionary(p => p.Name, p => p.Get(targetObject));
+                .ToDictionary(p => p.Name, p => p.Get(complexKey));
             return new KeyContext(retrieveContext);
         }
 
-        public KeyContext BuildRetrieveContextFromStringKey(string targetString)
+        public KeyContext BuildRetrieveContextFromScalarKey(object scalarKey)
         {
             if (_keys.Count > 1)
             {
@@ -53,7 +51,7 @@ namespace FluentCaching.Keys.Builders
             var retrieveContext = new Dictionary<string, object>
             {
                 {
-                    _keys.Keys.First(), targetString // First will work faster as _keys is guaranteed to have a single item
+                    _keys.Keys.First(), scalarKey // First will work faster as _keys is guaranteed to have a single item
                 } 
             };
 

@@ -7,15 +7,16 @@ using Xunit;
 
 namespace FluentCaching.Tests.Unit.Cache.Strategies.Remove
 {
-    public class ObjectKeyRemoveStrategyTests : BaseCacheStrategyTests
+    public class ComplexKeyRemoveStrategyTests : BaseCacheStrategyTests
     {
-        private static readonly CacheSource<User> ObjectKeySource = new(new object());
+        private static readonly CacheSource<User> ObjectKeySource 
+            = CacheSource<User>.CreateComplex(new object());
         
-        private readonly ObjectKeyRemoveStrategy<User> _sut;
+        private readonly ComplexKeyRemoveStrategy<User> _sut;
 
-        public ObjectKeyRemoveStrategyTests()
+        public ComplexKeyRemoveStrategyTests()
         {
-            _sut = new ObjectKeyRemoveStrategy<User>(CacheConfigurationMock.Object);
+            _sut = new ComplexKeyRemoveStrategy<User>(CacheConfigurationMock.Object);
         }
         
         [Fact]
@@ -24,7 +25,7 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies.Remove
             await _sut.RemoveAsync(ObjectKeySource);
 
             KeyBuilderMock
-                .Verify(_ => _.BuildFromObjectKey(ObjectKeySource.ObjectKey), Times.Once);
+                .Verify(_ => _.BuildFromComplexKey(ObjectKeySource.Key), Times.Once);
         }
 
         [Fact]
@@ -32,7 +33,7 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies.Remove
         {
             const string key = "key";
             KeyBuilderMock
-                .Setup(_ => _.BuildFromObjectKey(ObjectKeySource.ObjectKey))
+                .Setup(_ => _.BuildFromComplexKey(ObjectKeySource.Key))
                 .Returns(key);
             
             await _sut.RemoveAsync(ObjectKeySource);

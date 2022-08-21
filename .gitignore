@@ -24,3 +24,5 @@ project-colors.json
 testlog.manifest
 bin
 obj
+/.idea
+.idea

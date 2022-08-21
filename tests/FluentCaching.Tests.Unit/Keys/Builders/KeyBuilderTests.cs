@@ -110,23 +110,23 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
         }
 
         [Fact]
-        public void BuildFromStringKey_WhenCalled_CallsKeyContextBuilder()
+        public void BuildFromScalarKey_WhenCalled_CallsKeyContextBuilder()
         {
-            _sut.BuildFromStringKey("UserName");
+            _sut.BuildFromScalarKey("UserName");
 
             _keyContextBuilderMock
-                .Verify(_ => _.BuildRetrieveContextFromStringKey("UserName"), Times.Once);
+                .Verify(_ => _.BuildRetrieveContextFromScalarKey("UserName"), Times.Once);
         }
 
         [Fact]
-        public void BuildFromObjectKey_WhenCalled_CallsKeyContextBuilder()
+        public void BuildFromComplexKey_WhenCalled_CallsKeyContextBuilder()
         {
             var obj = new { };
 
-            _sut.BuildFromObjectKey(obj);
+            _sut.BuildFromComplexKey(obj);
 
             _keyContextBuilderMock
-                .Verify(_ => _.BuildRetrieveContextFromObjectKey(obj), Times.Once);
+                .Verify(_ => _.BuildRetrieveContextFromComplexKey(obj), Times.Once);
         }
         
         private void MockProperties(params string [] properties) =>

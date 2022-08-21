@@ -48,16 +48,16 @@ namespace FluentCaching.Keys.Builders
             _keyPartBuilders.Add(_keyPartBuilderFactory.Create(valueGetter));
         }
 
-        public string BuildFromStringKey(string stringKey)
+        public string BuildFromScalarKey(object scalarKey)
         {
-            var context = _keyContextBuilder.BuildRetrieveContextFromStringKey(stringKey);
+            var context = _keyContextBuilder.BuildRetrieveContextFromScalarKey(scalarKey);
 
             return Build(context);
         }
 
-        public string BuildFromObjectKey(object objectKey)
+        public string BuildFromComplexKey(object complexKey)
         {
-            var context = _keyContextBuilder.BuildRetrieveContextFromObjectKey(objectKey);
+            var context = _keyContextBuilder.BuildRetrieveContextFromComplexKey(complexKey);
 
             return Build(context);
             

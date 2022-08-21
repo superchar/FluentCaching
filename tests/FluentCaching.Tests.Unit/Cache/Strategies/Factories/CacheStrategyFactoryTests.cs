@@ -4,7 +4,6 @@ using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Factories;
 using FluentCaching.Cache.Strategies.Remove;
 using FluentCaching.Cache.Strategies.Retrieve;
-using FluentCaching.Cache.Strategies.RetrieveOrStore;
 using FluentCaching.Cache.Strategies.Store;
 using FluentCaching.Configuration;
 using FluentCaching.Tests.Unit.Models;
@@ -15,8 +14,10 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies.Factories;
 
 public class CacheStrategyFactoryTests
 {
-    private static readonly CacheSource<User> CacheSourceWithObjectKey = new(new object());
-    private static readonly CacheSource<User> CacheSourceWithStringKey = new("key");
+    private static readonly CacheSource<User> ComplexKeyCacheSource = 
+        CacheSource<User>.CreateComplex(new object());
+    private static readonly CacheSource<User> ScalarKeyCacheSource = 
+        CacheSource<User>.CreateScalar("key");
 
     private readonly CacheStrategyFactory _sut;
 
@@ -25,15 +26,6 @@ public class CacheStrategyFactoryTests
         var cacheConfigurationMock = new Mock<ICacheConfiguration>();
 
         _sut = new CacheStrategyFactory(cacheConfigurationMock.Object);
-    }
-
-    public static IEnumerable<object[]> CacheSources
-    {
-        get
-        {
-            yield return new object[]{ CacheSourceWithObjectKey };
-            yield return new object[]{ CacheSourceWithStringKey };
-        }
     }
 
     [Fact]
@@ -47,7 +39,7 @@ public class CacheStrategyFactoryTests
     [Fact]
     public void CreateRetrieveStrategy_CacheSourceIsNull_ReturnsStaticKeyRetrieveStrategy()
     {
-        var result = _sut.CreateRetrieveStrategy(CacheSource<User>.Null);
+        var result = _sut.CreateRetrieveStrategy(CacheSource<User>.Static);
 
         result.Should().BeOfType<StaticKeyRetrieveStrategy<User>>();
     }
@@ -55,41 +47,32 @@ public class CacheStrategyFactoryTests
     [Fact]
     public void CreateRetrieveStrategy_CacheSourceWithStringKey_ReturnsStringKeyRetrieveStrategy()
     {
-        var result = _sut.CreateRetrieveStrategy(CacheSourceWithStringKey);
+        var result = _sut.CreateRetrieveStrategy(ScalarKeyCacheSource);
 
-        result.Should().BeOfType<StringKeyRetrieveStrategy<User>>();
+        result.Should().BeOfType<ScalarKeyRetrieveStrategy<User>>();
     }
     
     [Fact]
     public void CreateRetrieveStrategy_CacheSourceWithObjectKey_ReturnsObjectKeyRetrieveStrategy()
     {
-        var result = _sut.CreateRetrieveStrategy(CacheSourceWithObjectKey);
+        var result = _sut.CreateRetrieveStrategy(ComplexKeyCacheSource);
 
-        result.Should().BeOfType<ObjectKeyRetrieveStrategy<User>>();
+        result.Should().BeOfType<ComplexKeyRetrieveStrategy<User>>();
     }
     
     [Fact]
     public void CreateRemoveStrategy_CacheSourceWithStringKey_ReturnsStringKeyRemoveStrategy()
     {
-        var result = _sut.CreateRemoveStrategy(CacheSourceWithStringKey);
+        var result = _sut.CreateRemoveStrategy(ScalarKeyCacheSource);
 
-        result.Should().BeOfType<StringKeyRemoveStrategy<User>>();
+        result.Should().BeOfType<ScalarKeyRemoveStrategy<User>>();
     }
     
     [Fact]
     public void CreateRemoveStrategy_CacheSourceWithObjectKey_ReturnsStringKeyRemoveStrategy()
     {
-        var result = _sut.CreateRemoveStrategy(CacheSourceWithObjectKey);
+        var result = _sut.CreateRemoveStrategy(ComplexKeyCacheSource);
 
-        result.Should().BeOfType<ObjectKeyRemoveStrategy<User>>();
-    }
-    
-    [Theory]
-    [MemberData(nameof(CacheSources))]
-    public void CreateRetrieveOrStoreStrategy_WhenCalled_ReturnsCacheSourceRetrieveOrStoreStrategy(CacheSource<User> cacheSource)
-    {
-        var result = _sut.CreateRetrieveOrStoreStrategy(cacheSource);
-
-        result.Should().BeOfType<CacheSourceRetrieveOrStoreStrategy<User>>();
+        result.Should().BeOfType<ComplexKeyRemoveStrategy<User>>();
     }
 }

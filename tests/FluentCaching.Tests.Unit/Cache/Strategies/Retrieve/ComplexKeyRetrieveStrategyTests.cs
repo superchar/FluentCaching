@@ -7,24 +7,25 @@ using Xunit;
 
 namespace FluentCaching.Tests.Unit.Cache.Strategies.Retrieve;
 
-public class ObjectKeyRetrieveStrategyTests : BaseCacheStrategyTests
+public class ComplexKeyRetrieveStrategyTests : BaseCacheStrategyTests
 {
-    private static readonly CacheSource<User> ObjectKeySource = new(new object());
+    private static readonly CacheSource<User> ComplexKeySource 
+        = CacheSource<User>.CreateComplex(new object());
     
-    private readonly ObjectKeyRetrieveStrategy<User> _sut;
+    private readonly ComplexKeyRetrieveStrategy<User> _sut;
 
-    public ObjectKeyRetrieveStrategyTests()
+    public ComplexKeyRetrieveStrategyTests()
     {
-        _sut = new ObjectKeyRetrieveStrategy<User>(CacheConfigurationMock.Object);
+        _sut = new ComplexKeyRetrieveStrategy<User>(CacheConfigurationMock.Object);
     }
     
     [Fact]
     public async Task RetrieveAsync_WhenCalled_CallsKeyBuilder()
     {
-        await _sut.RetrieveAsync(ObjectKeySource);
+        await _sut.RetrieveAsync(ComplexKeySource);
 
         KeyBuilderMock
-            .Verify(_ => _.BuildFromObjectKey(ObjectKeySource.ObjectKey), Times.Once);
+            .Verify(_ => _.BuildFromComplexKey(ComplexKeySource.Key), Times.Once);
     }
 
     [Fact]
@@ -32,10 +33,10 @@ public class ObjectKeyRetrieveStrategyTests : BaseCacheStrategyTests
     {
         const string key = "key";
         KeyBuilderMock
-            .Setup(_ => _.BuildFromObjectKey(ObjectKeySource.ObjectKey))
+            .Setup(_ => _.BuildFromComplexKey(ComplexKeySource.Key))
             .Returns(key);
             
-        await _sut.RetrieveAsync(ObjectKeySource);
+        await _sut.RetrieveAsync(ComplexKeySource);
 
         TypeCacheImplementationMock
             .Verify(_ => _.RetrieveAsync<User>(key), Times.Once);

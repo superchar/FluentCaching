@@ -3,29 +3,19 @@ namespace FluentCaching.Cache.Models;
 public struct CacheSource<T>
     where T : class
 {
-    public static CacheSource<T> Null = new(null, null);
+    public static CacheSource<T> Static = new(null, CacheSourceType.Static);
 
-    public CacheSource(object objectKey) : this(objectKey, null)
-    {
-    }
-    
-    public CacheSource(string stringKey) : this(null, stringKey)
-    {
-    }
-    
-    private CacheSource(object objectKey, string stringKey)
+    private CacheSource(object key, CacheSourceType cacheSourceType)
     { 
-        ObjectKey = objectKey;
-        StringKey = stringKey;
+        Key = key;
+        CacheSourceType = cacheSourceType;
     }
 
-    public void Deconstruct(out string stringKey, out object objectKey)
-    {
-        stringKey = StringKey;
-        objectKey = ObjectKey;
-    }
+    public static CacheSource<T> CreateScalar(object key) => new(key, CacheSourceType.Scalar);
     
-    public object ObjectKey { get; }
+    public static CacheSource<T> CreateComplex(object key) => new(key, CacheSourceType.Complex);
 
-    public string StringKey { get; }
+    public object Key { get; }
+    
+    public CacheSourceType CacheSourceType { get; }
 }

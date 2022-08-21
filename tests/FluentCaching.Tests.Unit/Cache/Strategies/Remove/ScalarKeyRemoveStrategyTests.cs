@@ -7,15 +7,16 @@ using Xunit;
 
 namespace FluentCaching.Tests.Unit.Cache.Strategies.Remove;
 
-public class StringKeyRemoveStrategyTests : BaseCacheStrategyTests
+public class ScalarKeyRemoveStrategyTests : BaseCacheStrategyTests
 {
-    private static readonly CacheSource<User> StringKeySource = new("key part");
+    private static readonly CacheSource<User> StringKeySource =
+        CacheSource<User>.CreateScalar("key part");
 
-    private readonly StringKeyRemoveStrategy<User> _sut;
+    private readonly ScalarKeyRemoveStrategy<User> _sut;
 
-    public StringKeyRemoveStrategyTests()
+    public ScalarKeyRemoveStrategyTests()
     {
-        _sut = new StringKeyRemoveStrategy<User>(CacheConfigurationMock.Object);
+        _sut = new ScalarKeyRemoveStrategy<User>(CacheConfigurationMock.Object);
     }
     
     [Fact]
@@ -24,7 +25,7 @@ public class StringKeyRemoveStrategyTests : BaseCacheStrategyTests
         await _sut.RemoveAsync(StringKeySource);
 
         KeyBuilderMock
-            .Verify(_ => _.BuildFromStringKey(StringKeySource.StringKey), Times.Once);
+            .Verify(_ => _.BuildFromScalarKey(StringKeySource.Key), Times.Once);
     }
 
     [Fact]
@@ -32,7 +33,7 @@ public class StringKeyRemoveStrategyTests : BaseCacheStrategyTests
     {
         const string key = "key";
         KeyBuilderMock
-            .Setup(_ => _.BuildFromStringKey(StringKeySource.StringKey))
+            .Setup(_ => _.BuildFromScalarKey(StringKeySource.Key))
             .Returns(key);
             
         await _sut.RemoveAsync(StringKeySource);

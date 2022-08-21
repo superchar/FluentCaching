@@ -5,7 +5,6 @@ using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Factories;
 using FluentCaching.Cache.Strategies.Remove;
 using FluentCaching.Cache.Strategies.Retrieve;
-using FluentCaching.Cache.Strategies.RetrieveOrStore;
 using FluentCaching.Cache.Strategies.Store;
 using FluentCaching.Tests.Unit.Models;
 using Moq;
@@ -16,13 +15,12 @@ namespace FluentCaching.Tests.Unit.Cache.Facades;
 public class CacheFacadeTests
 {
     private static readonly User CachedObject = new();
-    private static readonly object ObjectKey = new();
-    private static readonly string StringKey = "key";
+    private static readonly object ComplexKey = new();
+    private static readonly string ScalarKey = "key";
 
     private readonly Mock<IStoreStrategy<User>> _storeStrategyMock;
     private readonly Mock<IRetrieveStrategy<User>> _retrieveStrategyMock;
     private readonly Mock<IRemoveStrategy<User>> _removeStrategyMock;
-    private readonly Mock<IRetrieveOrStoreStrategy<User>> _retrieveOrStoreStrategyMock;
     private readonly Mock<ICacheStrategyFactory> _cacheStrategyFactoryMock;
 
     private readonly CacheFacade _sut;
@@ -33,7 +31,6 @@ public class CacheFacadeTests
         _storeStrategyMock = new Mock<IStoreStrategy<User>>();
         _retrieveStrategyMock = new Mock<IRetrieveStrategy<User>>();
         _removeStrategyMock = new Mock<IRemoveStrategy<User>>();
-        _retrieveOrStoreStrategyMock = new Mock<IRetrieveOrStoreStrategy<User>>();
 
         _cacheStrategyFactoryMock
             .Setup(_ => _.CreateStoreStrategy<User>())
@@ -44,9 +41,6 @@ public class CacheFacadeTests
         _cacheStrategyFactoryMock
             .Setup(_ => _.CreateRemoveStrategy(It.IsAny<CacheSource<User>>()))
             .Returns(_removeStrategyMock.Object);
-        _cacheStrategyFactoryMock
-            .Setup(_ => _.CreateRetrieveOrStoreStrategy(It.IsAny<CacheSource<User>>()))
-            .Returns(_retrieveOrStoreStrategyMock.Object);
 
         _sut = new CacheFacade(_cacheStrategyFactoryMock.Object);
     }
@@ -70,188 +64,108 @@ public class CacheFacadeTests
     }
 
     [Fact]
-    public async Task RetrieveAsync_ObjectKey_CallsCacheStrategyFactory()
+    public async Task RetrieveComplexAsync_ObjectKey_CallsCacheStrategyFactory()
     {
-        await _sut.RetrieveAsync<User>(ObjectKey);
+        await _sut.RetrieveComplexAsync<User>(ComplexKey);
 
         _cacheStrategyFactoryMock
             .Verify(_ => _.CreateRetrieveStrategy(
-                    It.Is<CacheSource<User>>(s => s.ObjectKey == ObjectKey)),
+                    It.Is<CacheSource<User>>(s => s.Key == ComplexKey)),
                 Times.Once);
     }
 
     [Fact]
-    public async Task RetrieveAsync_ObjectKey_CallsRetrieveStrategy()
+    public async Task RetrieveComplexAsync_ObjectKey_CallsRetrieveStrategy()
     {
-        await _sut.RetrieveAsync<User>(ObjectKey);
+        await _sut.RetrieveComplexAsync<User>(ComplexKey);
 
         _retrieveStrategyMock
             .Verify(_ =>
-                    _.RetrieveAsync(It.Is<CacheSource<User>>(s => s.ObjectKey == ObjectKey)),
+                    _.RetrieveAsync(It.Is<CacheSource<User>>(s => s.Key == ComplexKey)),
                 Times.Once);
     }
 
     [Fact]
-    public async Task RetrieveAsync_StringKey_CallsCacheStrategyFactory()
+    public async Task RetrieveScalarAsync_StringKey_CallsCacheStrategyFactory()
     {
-        await _sut.RetrieveAsync<User>(StringKey);
+        await _sut.RetrieveScalarAsync<User>(ScalarKey);
 
         _cacheStrategyFactoryMock
             .Verify(_ => _.CreateRetrieveStrategy(
-                    It.Is<CacheSource<User>>(s => StringKey.Equals(s.StringKey))),
+                    It.Is<CacheSource<User>>(s => ScalarKey.Equals(s.Key))),
                 Times.Once);
     }
 
     [Fact]
-    public async Task RetrieveAsync_StringKey_CallsRetrieveStrategy()
+    public async Task RetrieveScalarAsync_StringKey_CallsRetrieveStrategy()
     {
-        await _sut.RetrieveAsync<User>(StringKey);
+        await _sut.RetrieveScalarAsync<User>(ScalarKey);
 
         _retrieveStrategyMock
             .Verify(_ =>
-                    _.RetrieveAsync(It.Is<CacheSource<User>>(s => StringKey.Equals(s.StringKey))),
+                    _.RetrieveAsync(It.Is<CacheSource<User>>(s => ScalarKey.Equals(s.Key))),
                 Times.Once);
     }
 
     [Fact]
-    public async Task RetrieveAsync_StaticKey_CallsCacheStrategyFactory()
+    public async Task RetrieveStaticAsync_StaticKey_CallsCacheStrategyFactory()
     {
-        await _sut.RetrieveAsync<User>();
+        await _sut.RetrieveStaticAsync<User>();
 
         _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRetrieveStrategy(CacheSource<User>.Null), Times.Once);
+            .Verify(_ => _.CreateRetrieveStrategy(CacheSource<User>.Static), Times.Once);
     }
 
     [Fact]
-    public async Task RetrieveAsync_StaticKey_CallsRetrieveStrategy()
+    public async Task RetrieveStaticAsync_StaticKey_CallsRetrieveStrategy()
     {
-        await _sut.RetrieveAsync<User>();
+        await _sut.RetrieveStaticAsync<User>();
 
         _retrieveStrategyMock
-            .Verify(_ => _.RetrieveAsync(CacheSource<User>.Null), Times.Once);
+            .Verify(_ => _.RetrieveAsync(CacheSource<User>.Static), Times.Once);
     }
 
     [Fact]
-    public async Task RemoveAsync_ObjectKey_CallsCacheStrategyFactory()
+    public async Task RemoveComplexAsync_ObjectKey_CallsCacheStrategyFactory()
     {
-        await _sut.RemoveAsync<User>(ObjectKey);
+        await _sut.RemoveComplexAsync<User>(ComplexKey);
 
         _cacheStrategyFactoryMock
             .Verify(_ => _.CreateRemoveStrategy(
-                    It.Is<CacheSource<User>>(s => s.ObjectKey == ObjectKey)),
+                    It.Is<CacheSource<User>>(s => s.Key == ComplexKey)),
                 Times.Once);
     }
 
     [Fact]
-    public async Task RemoveAsync_ObjectKey_CallsRemoveStrategy()
+    public async Task RemoveComplexAsync_ObjectKey_CallsRemoveStrategy()
     {
-        await _sut.RemoveAsync<User>(ObjectKey);
+        await _sut.RemoveComplexAsync<User>(ComplexKey);
 
         _removeStrategyMock
             .Verify(_ =>
-                    _.RemoveAsync(It.Is<CacheSource<User>>(s => s.ObjectKey == ObjectKey)),
+                    _.RemoveAsync(It.Is<CacheSource<User>>(s => s.Key == ComplexKey)),
                 Times.Once);
     }
 
     [Fact]
-    public async Task RemoveAsync_StringKey_CallsCacheStrategyFactory()
+    public async Task RemoveScalarAsync_StringKey_CallsCacheStrategyFactory()
     {
-        await _sut.RemoveAsync<User>(StringKey);
+        await _sut.RemoveScalarAsync<User>(ScalarKey);
 
         _cacheStrategyFactoryMock
             .Verify(_ => _.CreateRemoveStrategy(
-                    It.Is<CacheSource<User>>(s => StringKey.Equals(s.StringKey))),
+                    It.Is<CacheSource<User>>(s => ScalarKey.Equals(s.Key))),
                 Times.Once);
     }
 
     [Fact]
-    public async Task RemoveAsync_StringKey_CallsRemoveStrategy()
+    public async Task RemoveScalarAsync_StringKey_CallsRemoveStrategy()
     {
-        await _sut.RemoveAsync<User>(StringKey);
+        await _sut.RemoveScalarAsync<User>(ScalarKey);
 
         _removeStrategyMock
             .Verify(_ =>
-                    _.RemoveAsync(It.Is<CacheSource<User>>(s => StringKey.Equals(s.StringKey))),
-                Times.Once);
-    }
-
-    [Fact]
-    public async Task RetrieveOrStoreAsync_ObjectKey_CallsCacheStrategyFactory()
-    {
-        var entityFetcher = new Mock<Func<object, Task<User>>>().Object;
-
-        await _sut.RetrieveOrStoreAsync(ObjectKey, entityFetcher);
-
-        _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRetrieveOrStoreStrategy(
-                    It.Is<CacheSource<User>>(s => s.ObjectKey == ObjectKey)),
-                Times.Once);
-    }
-
-    [Fact]
-    public async Task RetrieveOrStoreAsync_ObjectKey_CallsRetrieveStrategy()
-    {
-        var entityFetcher = new Mock<Func<object, Task<User>>>().Object;
-
-        await _sut.RetrieveOrStoreAsync(ObjectKey, entityFetcher);
-
-        _retrieveOrStoreStrategyMock
-            .Verify(_ =>
-                    _.RetrieveOrStoreAsync(
-                        It.Is<CacheSource<User>>(s => s.ObjectKey == ObjectKey),
-                        It.IsAny<Func<CacheSource<User>, Task<User>>>()),
-                Times.Once);
-    }
-
-    [Fact]
-    public async Task RetrieveOrStoreAsync_StringKey_CallsCacheStrategyFactory()
-    {
-        var entityFetcher = new Mock<Func<string, Task<User>>>().Object;
-
-        await _sut.RetrieveOrStoreAsync(StringKey, entityFetcher);
-
-        _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRetrieveOrStoreStrategy(
-                    It.Is<CacheSource<User>>(s => StringKey.Equals(s.StringKey))),
-                Times.Once);
-    }
-
-    [Fact]
-    public async Task RetrieveOrStoreAsync_StringKey_CallsRetrieveStrategy()
-    {
-        var entityFetcher = new Mock<Func<string, Task<User>>>().Object;
-
-        await _sut.RetrieveOrStoreAsync(StringKey, entityFetcher);
-
-        _retrieveOrStoreStrategyMock
-            .Verify(_ =>
-                    _.RetrieveOrStoreAsync(
-                        It.Is<CacheSource<User>>(s => StringKey.Equals(s.StringKey)),
-                        It.IsAny<Func<CacheSource<User>, Task<User>>>()),
-                Times.Once);
-    }
-
-    [Fact]
-    public async Task RetrieveOrStoreAsync_StaticKey_CallsCacheStrategyFactory()
-    {
-        var entityFetcher = new Mock<Func<Task<User>>>().Object;
-
-        await _sut.RetrieveOrStoreAsync(entityFetcher);
-
-        _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRetrieveOrStoreStrategy(CacheSource<User>.Null), Times.Once);
-    }
-
-    [Fact]
-    public async Task RetrieveOrStoreAsync_StaticKey_CallsRetrieveStrategy()
-    {
-        var entityFetcher = new Mock<Func<Task<User>>>().Object;
-
-        await _sut.RetrieveOrStoreAsync(entityFetcher);
-
-        _retrieveOrStoreStrategyMock
-            .Verify(_ => _.RetrieveOrStoreAsync(
-                    CacheSource<User>.Null, It.IsAny<Func<CacheSource<User>, Task<User>>>()),
+                    _.RemoveAsync(It.Is<CacheSource<User>>(s => ScalarKey.Equals(s.Key))),
                 Times.Once);
     }
 }
