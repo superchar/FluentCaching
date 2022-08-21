@@ -34,13 +34,6 @@ await cache.RemoveAsync<User>(userId);
 
 ```
 
-**Use get or add cache operation**
-```csharp
-var userId = 42;
-
-var result = await cache.RetrieveOrStoreAsync<User>(userId, id => _userService.GetUserById(id));
-```
-
 **Multi property configuration is supported with the same set of features**
 ```csharp
 var cache = new CacheBuilder()
