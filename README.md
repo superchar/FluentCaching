@@ -6,7 +6,7 @@ Instead of writing boilerplate code to support caching, just configure caching p
 ```csharp
 
 var cache = new CacheBuilder()
-.For<User>(u => u.UseAsKey("user").CombinedWith(u => u.Id) // alternatively UseAsKey(u => "user" + u.Id)
+.For<User>(u => u.UseAsKey("user").CombinedWith(u => u.Id) // alternatively UseAsKey(u => $"user{u.Id}")
                 .And().WithTtlOf(2).Minutes.And(10).Seconds
                 .And().SlidingExpiration())
 .Build();
