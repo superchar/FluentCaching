@@ -42,6 +42,7 @@ namespace FluentCaching.Cache
 
         Task RemoveAsync<TEntity>(object key) where TEntity : class;
 
+        Task RemoveAsync<TEntity>() where TEntity : class;
 
         #endregion
 

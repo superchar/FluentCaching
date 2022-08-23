@@ -118,6 +118,9 @@ namespace FluentCaching.Cache
         public Task RemoveAsync<TEntity>(object key) where TEntity : class
             => _cacheFacade.RemoveComplexAsync<TEntity>(key);
 
+        public Task RemoveAsync<TEntity>() where TEntity : class
+            => _cacheFacade.RemoveStaticAsync<TEntity>();
+
         #endregion
     }
 }

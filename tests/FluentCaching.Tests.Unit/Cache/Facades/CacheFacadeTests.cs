@@ -168,4 +168,22 @@ public class CacheFacadeTests
                     _.RemoveAsync(It.Is<CacheSource<User>>(s => ScalarKey.Equals(s.Key))),
                 Times.Once);
     }
+    
+    [Fact]
+    public async Task RemoveStaticAsync_StaticKey_CallsCacheStrategyFactory()
+    {
+        await _sut.RemoveStaticAsync<User>();
+
+        _cacheStrategyFactoryMock
+            .Verify(_ => _.CreateRemoveStrategy(CacheSource<User>.Static), Times.Once);
+    }
+
+    [Fact]
+    public async Task RemoveStaticAsync_StaticKey_CallsRemoveStrategy()
+    {
+        await _sut.RemoveStaticAsync<User>();
+
+        _removeStrategyMock
+            .Verify(_ => _.RemoveAsync(CacheSource<User>.Static), Times.Once);
+    }
 }

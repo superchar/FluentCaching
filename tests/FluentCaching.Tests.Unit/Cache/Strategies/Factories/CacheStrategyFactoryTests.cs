@@ -37,7 +37,7 @@ public class CacheStrategyFactoryTests
     }
 
     [Fact]
-    public void CreateRetrieveStrategy_CacheSourceIsNull_ReturnsStaticKeyRetrieveStrategy()
+    public void CreateRetrieveStrategy_CacheSourceIsStatic_ReturnsStaticKeyRetrieveStrategy()
     {
         var result = _sut.CreateRetrieveStrategy(CacheSource<User>.Static);
 
@@ -45,7 +45,7 @@ public class CacheStrategyFactoryTests
     }
     
     [Fact]
-    public void CreateRetrieveStrategy_CacheSourceWithStringKey_ReturnsStringKeyRetrieveStrategy()
+    public void CreateRetrieveStrategy_CacheSourceIsScalar_ReturnsScalarKeyRetrieveStrategy()
     {
         var result = _sut.CreateRetrieveStrategy(ScalarKeyCacheSource);
 
@@ -53,7 +53,7 @@ public class CacheStrategyFactoryTests
     }
     
     [Fact]
-    public void CreateRetrieveStrategy_CacheSourceWithObjectKey_ReturnsObjectKeyRetrieveStrategy()
+    public void CreateRetrieveStrategy_CacheSourceIsComplex_ReturnsComplexKeyRetrieveStrategy()
     {
         var result = _sut.CreateRetrieveStrategy(ComplexKeyCacheSource);
 
@@ -61,7 +61,15 @@ public class CacheStrategyFactoryTests
     }
     
     [Fact]
-    public void CreateRemoveStrategy_CacheSourceWithStringKey_ReturnsStringKeyRemoveStrategy()
+    public void CreateRemoveStrategy_CacheSourceIsStatic_ReturnsScalarKeyRemoveStrategy()
+    {
+        var result = _sut.CreateRemoveStrategy(CacheSource<User>.Static);
+
+        result.Should().BeOfType<StaticKeyRemoveStrategy<User>>();
+    }
+    
+    [Fact]
+    public void CreateRemoveStrategy_CacheSourceIsScalar_ReturnsScalarKeyRemoveStrategy()
     {
         var result = _sut.CreateRemoveStrategy(ScalarKeyCacheSource);
 
@@ -69,7 +77,7 @@ public class CacheStrategyFactoryTests
     }
     
     [Fact]
-    public void CreateRemoveStrategy_CacheSourceWithObjectKey_ReturnsStringKeyRemoveStrategy()
+    public void CreateRemoveStrategy_CacheSourceIsComplex_ReturnsComplexKeyRemoveStrategy()
     {
         var result = _sut.CreateRemoveStrategy(ComplexKeyCacheSource);
 

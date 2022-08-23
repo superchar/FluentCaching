@@ -30,6 +30,7 @@ internal class CacheStrategyFactory : ICacheStrategyFactory
         => source.CacheSourceType switch
         {
             CacheSourceType.Scalar => new ScalarKeyRemoveStrategy<T>(_cacheConfiguration),
+            CacheSourceType.Static => new StaticKeyRemoveStrategy<T>(_cacheConfiguration),
             _ => new ComplexKeyRemoveStrategy<T>(_cacheConfiguration)
         };
 }

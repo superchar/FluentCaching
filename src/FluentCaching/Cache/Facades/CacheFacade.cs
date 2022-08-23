@@ -32,6 +32,9 @@ namespace FluentCaching.Cache.Facades
 
         public Task RemoveScalarAsync<T>(object scalarKey) where T : class
             => RemoveAsync(CacheSource<T>.CreateScalar(scalarKey));
+
+        public Task RemoveStaticAsync<T>() where T : class
+            => RemoveAsync(CacheSource<T>.Static);
         
         private Task<T> RetrieveAsync<T>(CacheSource<T> source) where T : class
             => _cacheStrategyFactory

@@ -16,5 +16,7 @@ namespace FluentCaching.Cache.Facades
         Task RemoveComplexAsync<T>(object objectKey) where T : class;
 
         Task RemoveScalarAsync<T>(object scalarKey) where T : class;
+        
+        Task RemoveStaticAsync<T>() where T : class;
     }
 }
