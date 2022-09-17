@@ -6,7 +6,7 @@ namespace FluentCaching.DistributedCache
     {
         public static IApplicationBuilder UseFluentCaching(this IApplicationBuilder builder)
         {
-            ServiceActivator.Initialize(builder.ApplicationServices);
+            ServiceLocator.Initialize(builder.ApplicationServices);
 
             return builder;
         }

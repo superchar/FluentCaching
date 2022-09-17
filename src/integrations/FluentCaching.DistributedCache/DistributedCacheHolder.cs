@@ -16,7 +16,7 @@ namespace FluentCaching.DistributedCache
     
         public DistributedCacheHolder()
         {
-            _serviceScope = ServiceActivator.CreateScope();
+            _serviceScope = ServiceLocator.CreateScope();
             DistributedCache = _serviceScope.ServiceProvider.GetService<IDistributedCache>();
         }
     

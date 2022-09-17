@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FluentCaching.DistributedCache
 {
-    public static class ServiceActivator
+    public static class ServiceLocator
     {
         private static IServiceProvider _serviceProvider;
 
