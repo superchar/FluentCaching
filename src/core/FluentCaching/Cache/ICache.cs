@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace FluentCaching.Cache
 {
@@ -39,6 +40,8 @@ namespace FluentCaching.Cache
         Task RemoveAsync<TEntity>(ulong key) where TEntity : class;
         
         Task RemoveAsync<TEntity>(ushort key) where TEntity : class;
+        
+        Task RemoveAsync<TEntity>(Guid key) where TEntity : class;
 
         Task RemoveAsync<TEntity>(object key) where TEntity : class;
 
@@ -79,6 +82,8 @@ namespace FluentCaching.Cache
         Task<TEntity> RetrieveAsync<TEntity>(ushort key) where TEntity : class;
 
         Task<TEntity> RetrieveAsync<TEntity>() where TEntity : class;
+        
+        Task<TEntity> RetrieveAsync<TEntity>(Guid key) where TEntity : class;
 
         #endregion
     }

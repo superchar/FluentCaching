@@ -1,8 +1,14 @@
-﻿namespace FluentCaching.Samples.AspNetCore.Models;
-
-public class Cart
+﻿namespace FluentCaching.Samples.AspNetCore.Models
 {
-    public Guid Id { get; set; }
-    
-    public List<CartItem> Items { get; set; }
+    public class Cart
+    {
+        public Cart(Guid id)
+        {
+            Id = id;
+        }
+        public Guid Id { get; }
+
+        public List<CartItem> Items { get; } = new ();
+    }
 }
+

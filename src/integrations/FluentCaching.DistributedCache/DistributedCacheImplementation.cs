@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentCaching.Cache;
 using FluentCaching.Cache.Models;
@@ -24,7 +25,8 @@ namespace FluentCaching.DistributedCache
             using var holder = GetDistributedCacheHolder();
             var resultBytes = await holder.DistributedCache.GetAsync(key);
 
-            return JsonSerializer.Deserialize<T>(resultBytes);
+            return resultBytes  == null 
+                ? default : JsonSerializer.Deserialize<T>(resultBytes);
         }
 
         public async Task CacheAsync<T>(string key, T targetObject, CacheOptions options)
@@ -41,15 +43,23 @@ namespace FluentCaching.DistributedCache
         }
 
         private static DistributedCacheEntryOptions GetDistributedCacheEntryOptions(CacheOptions cacheOptions)
-            => cacheOptions.ExpirationType == ExpirationType.Absolute
-                ? new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = cacheOptions.Ttl
-                }
-                : new DistributedCacheEntryOptions
-                {
-                    SlidingExpiration = cacheOptions.Ttl
-                };
+        {
+            var options = new DistributedCacheEntryOptions();
+            if (cacheOptions.Ttl == TimeSpan.MaxValue)
+            {
+                return options;
+            }
+            if (cacheOptions.ExpirationType == ExpirationType.Absolute)
+            {
+                options.AbsoluteExpirationRelativeToNow = cacheOptions.Ttl;
+            }
+            else
+            {
+                options.SlidingExpiration = cacheOptions.Ttl;
+            }
+
+            return options;
+        }
 
         private DistributedCacheHolder GetDistributedCacheHolder()
             => _distributedCache == null

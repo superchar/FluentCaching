@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using FluentCaching.Cache.Facades;
 
 namespace FluentCaching.Cache
@@ -65,6 +66,9 @@ namespace FluentCaching.Cache
 
         public Task<TEntity> RetrieveAsync<TEntity>(string key) where TEntity : class
             => _cacheFacade.RetrieveScalarAsync<TEntity>(key);
+        
+        public Task<TEntity> RetrieveAsync<TEntity>(Guid key) where TEntity : class
+            => _cacheFacade.RetrieveScalarAsync<TEntity>(key);
 
         public Task<TEntity> RetrieveAsync<TEntity>() where TEntity : class
             => _cacheFacade.RetrieveStaticAsync<TEntity>();
@@ -113,6 +117,9 @@ namespace FluentCaching.Cache
             => _cacheFacade.RemoveScalarAsync<TEntity>(key);
 
         public Task RemoveAsync<TEntity>(string key) where TEntity : class
+            => _cacheFacade.RemoveScalarAsync<TEntity>(key);
+        
+        public Task RemoveAsync<TEntity>(Guid key) where TEntity : class
             => _cacheFacade.RemoveScalarAsync<TEntity>(key);
 
         public Task RemoveAsync<TEntity>(object key) where TEntity : class
