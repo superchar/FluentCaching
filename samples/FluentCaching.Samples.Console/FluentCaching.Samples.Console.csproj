@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\FluentCaching.Memory\FluentCaching.Memory.csproj" />
-      <ProjectReference Include="..\..\src\FluentCaching\FluentCaching.csproj" />
+      <ProjectReference Include="..\..\src\core\FluentCaching\FluentCaching.csproj" />
+      <ProjectReference Include="..\..\src\integrations\FluentCaching.Memory\FluentCaching.Memory.csproj" />
     </ItemGroup>
 
 </Project>
