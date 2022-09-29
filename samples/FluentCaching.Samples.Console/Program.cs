@@ -44,7 +44,7 @@ namespace FluentCaching.Samples.Console
                 .For<FactorialSource>(_
                     => _.UseAsKey(s => $"Factorial:{s.Factorial}")
                         .And().WithInfiniteTtl()
-                        .And().WithInMemoryCache())
+                        .And().UseInMemoryCache())
                 .Build();
     }
 

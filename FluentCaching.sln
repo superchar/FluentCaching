@@ -23,7 +23,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching", "src\core\F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.Memory", "src\integrations\FluentCaching.Memory\FluentCaching.Memory.csproj", "{503796AE-7B53-4237-8E71-7C8C2C0C0DA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.AspNetCore", "src\integrations\FluentCaching.AspNetCore\FluentCaching.AspNetCore.csproj", "{CE25D050-6665-46E1-932F-F229791127B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.DependencyInjectionExtensions", "src\integrations\FluentCaching.DependencyInjectionExtensions\FluentCaching.DependencyInjectionExtensions.csproj", "{CE25D050-6665-46E1-932F-F229791127B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.DistributedCache", "src\integrations\FluentCaching.DistributedCache\FluentCaching.DistributedCache.csproj", "{A1D0F62B-CF18-4B92-85F8-AA16EA54C2EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{CE25D050-6665-46E1-932F-F229791127B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE25D050-6665-46E1-932F-F229791127B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE25D050-6665-46E1-932F-F229791127B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1D0F62B-CF18-4B92-85F8-AA16EA54C2EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1D0F62B-CF18-4B92-85F8-AA16EA54C2EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1D0F62B-CF18-4B92-85F8-AA16EA54C2EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1D0F62B-CF18-4B92-85F8-AA16EA54C2EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{A0B4719B-87F0-458D-9CEA-6068F799B464} = {9FABB0E2-11F7-469F-B010-53C8640E854E}
 		{503796AE-7B53-4237-8E71-7C8C2C0C0DA4} = {CEF65BDC-93B4-48F8-B3DE-6CF25076DCEA}
 		{CE25D050-6665-46E1-932F-F229791127B6} = {CEF65BDC-93B4-48F8-B3DE-6CF25076DCEA}
+		{A1D0F62B-CF18-4B92-85F8-AA16EA54C2EF} = {CEF65BDC-93B4-48F8-B3DE-6CF25076DCEA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55371403-799A-463F-B02A-E98EF1536BF2}

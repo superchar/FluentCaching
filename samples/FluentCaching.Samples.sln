@@ -2,9 +2,15 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.Samples.Console", "FluentCaching.Samples.Console\FluentCaching.Samples.Console.csproj", "{2B57CA0F-600C-4E63-9C57-77D6477F1C90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching", "..\src\FluentCaching\FluentCaching.csproj", "{331AF7BC-8FC8-40C8-BA45-F43BB33541AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching", "..\src\core\FluentCaching\FluentCaching.csproj", "{829F7084-B63E-44F3-90B6-CA025E2C2EE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.Memory", "..\src\FluentCaching.Memory\FluentCaching.Memory.csproj", "{D95C02D5-48A4-4587-B9D7-4CD667E97780}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.Memory", "..\src\integrations\FluentCaching.Memory\FluentCaching.Memory.csproj", "{34DCC261-83EA-4027-9EB5-ABB5F419FD91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.Samples.AspNetCore", "FluentCaching.Samples.AspNetCore\FluentCaching.Samples.AspNetCore.csproj", "{71B5529A-C2E2-443C-A66E-DDAEAB9B0A7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.DependencyInjectionExtensions", "..\src\integrations\FluentCaching.DependencyInjectionExtensions\FluentCaching.DependencyInjectionExtensions.csproj", "{CBCD4EAE-CD11-4CB0-83CF-4C08B6E13076}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.DistributedCache", "..\src\integrations\FluentCaching.DistributedCache\FluentCaching.DistributedCache.csproj", "{036F6996-8F53-43F2-876E-E2F22C201901}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,13 +22,25 @@ Global
 		{2B57CA0F-600C-4E63-9C57-77D6477F1C90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B57CA0F-600C-4E63-9C57-77D6477F1C90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B57CA0F-600C-4E63-9C57-77D6477F1C90}.Release|Any CPU.Build.0 = Release|Any CPU
-		{331AF7BC-8FC8-40C8-BA45-F43BB33541AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{331AF7BC-8FC8-40C8-BA45-F43BB33541AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{331AF7BC-8FC8-40C8-BA45-F43BB33541AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{331AF7BC-8FC8-40C8-BA45-F43BB33541AC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D95C02D5-48A4-4587-B9D7-4CD667E97780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D95C02D5-48A4-4587-B9D7-4CD667E97780}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D95C02D5-48A4-4587-B9D7-4CD667E97780}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D95C02D5-48A4-4587-B9D7-4CD667E97780}.Release|Any CPU.Build.0 = Release|Any CPU
+		{829F7084-B63E-44F3-90B6-CA025E2C2EE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{829F7084-B63E-44F3-90B6-CA025E2C2EE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{829F7084-B63E-44F3-90B6-CA025E2C2EE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{829F7084-B63E-44F3-90B6-CA025E2C2EE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34DCC261-83EA-4027-9EB5-ABB5F419FD91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34DCC261-83EA-4027-9EB5-ABB5F419FD91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34DCC261-83EA-4027-9EB5-ABB5F419FD91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34DCC261-83EA-4027-9EB5-ABB5F419FD91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71B5529A-C2E2-443C-A66E-DDAEAB9B0A7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71B5529A-C2E2-443C-A66E-DDAEAB9B0A7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71B5529A-C2E2-443C-A66E-DDAEAB9B0A7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71B5529A-C2E2-443C-A66E-DDAEAB9B0A7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBCD4EAE-CD11-4CB0-83CF-4C08B6E13076}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBCD4EAE-CD11-4CB0-83CF-4C08B6E13076}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBCD4EAE-CD11-4CB0-83CF-4C08B6E13076}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBCD4EAE-CD11-4CB0-83CF-4C08B6E13076}.Release|Any CPU.Build.0 = Release|Any CPU
+		{036F6996-8F53-43F2-876E-E2F22C201901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{036F6996-8F53-43F2-876E-E2F22C201901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{036F6996-8F53-43F2-876E-E2F22C201901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{036F6996-8F53-43F2-876E-E2F22C201901}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

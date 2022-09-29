@@ -51,10 +51,10 @@ await cache.RetrieveAsync<User>(userKey);
 var cache = new CacheBuilder()
 .For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
                 .And().WithTtlOf(2).Minutes.And(10).Seconds
-                .And().SlidingExpiration().WithInMemoryCache())
+                .And().SlidingExpiration().UseInMemoryCache())
 .For<Order>(o => o.UseAsKey(o => o.Date).CombinedWith("order")
                 .And().WithTtlOf(5).Minutes
-                .And().SlidingExpiration().WithRedisCache())
+                .And().SlidingExpiration().UseDistributedCache())
 .Build();
 
 ```
