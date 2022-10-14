@@ -15,6 +15,6 @@
             return _ttlPolicyBuilder;
         }
 
-        public ExpirationTypePolicyBuilder And() => _ttlPolicyBuilder.Build();
+        public ExpirationTypePolicyBuilder With() => _ttlPolicyBuilder.Build();
     }
 }

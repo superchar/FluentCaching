@@ -22,9 +22,9 @@ namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Ttl
         [InlineData(0)]
         [InlineData(42)]
         [InlineData(ushort.MaxValue)]
-        public void WithTtlOf_HappyPath_ReturnsTtlTypeBuilder(ushort ttl)
+        public void SetExpirationTimeoutTo_HappyPath_ReturnsTtlTypeBuilder(ushort ttl)
         {
-            var result = _sut.WithTtlOf(ttl);
+            var result = _sut.SetExpirationTimeoutTo(ttl);
 
             result.Should().NotBeNull();
         }
@@ -32,7 +32,7 @@ namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Ttl
         [Fact]
         public void WithInfiniteTtl_HappyPath_ReturnsAndBuilderWithMaxValueTtl()
         {
-            var result = _sut.WithInfiniteTtl();
+            var result = _sut.SetInfiniteExpirationTimeout();
 
             result.Should().NotBeNull();
             var cacheOptions = result.And()?.CachingOptions;

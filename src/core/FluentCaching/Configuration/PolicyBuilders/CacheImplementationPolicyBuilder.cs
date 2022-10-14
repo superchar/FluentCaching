@@ -6,18 +6,16 @@ namespace FluentCaching.Configuration.PolicyBuilders
 {
     public class CacheImplementationPolicyBuilder
     {
-        private readonly CacheOptions _currentOptions;
-
         public CacheImplementationPolicyBuilder(CacheOptions currentOptions)
         {
-            _currentOptions = currentOptions;
+            CachingOptions = currentOptions;
         }
 
-        public CacheOptions CachingOptions => _currentOptions;
+        public CacheOptions CachingOptions { get; }
 
-        public CacheImplementationPolicyBuilder WithCacheImplementation(ICacheImplementation cacheImplementation)
+        public CacheImplementationPolicyBuilder StoreIn(ICacheImplementation cacheImplementation)
         {
-            _currentOptions.CacheImplementation = cacheImplementation
+            CachingOptions.CacheImplementation = cacheImplementation
                 ?? throw new ArgumentNullException(nameof(cacheImplementation), "Cache implementation cannot be null");
             return this;
         }

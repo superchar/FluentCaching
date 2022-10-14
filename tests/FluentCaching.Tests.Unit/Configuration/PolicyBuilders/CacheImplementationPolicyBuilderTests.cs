@@ -22,18 +22,18 @@ namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders
         }
 
         [Fact]
-        public void WithCacheImplementation_CacheImplementationIsNull_ThrowsException()
+        public void StoreIn_CacheImplementationIsNull_ThrowsException()
         {
-            _sut.Invoking(s => s.WithCacheImplementation(null)).Should()
+            _sut.Invoking(s => s.StoreIn(null)).Should()
                 .Throw<ArgumentNullException>().WithMessage("Cache implementation cannot be null (Parameter 'cacheImplementation')");
         }
 
         [Fact]
-        public void WithCacheImplementation_CacheImplementationIsNotNull_SetsCacheImplementation()
+        public void StoreIn_CacheImplementationIsNotNull_SetsCacheImplementation()
         {
             var cacheImplementationMock = new Mock<ICacheImplementation>();
 
-            _sut.WithCacheImplementation(cacheImplementationMock.Object);
+            _sut.StoreIn(cacheImplementationMock.Object);
 
             _cacheOptions.CacheImplementation.Should().NotBeNull();
         }

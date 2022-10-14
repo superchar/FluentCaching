@@ -11,8 +11,6 @@ namespace FluentCaching.Configuration.PolicyBuilders.Ttl
             _cacheOptions = currentOptions;
         }
 
-        public CacheOptions CachingOptions => _cacheOptions;
-
         public AndPolicyBuilder<CacheImplementationPolicyBuilder> AbsoluteExpiration() 
             => ExpirationType(Cache.Models.ExpirationType.Absolute);
 

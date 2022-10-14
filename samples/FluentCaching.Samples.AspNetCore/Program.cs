@@ -16,10 +16,10 @@ builder.Services.AddStackExchangeRedisCache(options =>
 });
 
 builder.Services.AddFluentCaching(cacheBuilder => cacheBuilder
-    .For<Cart>(_ => _.UseAsKey(c => $"card-{c.Id}").And().WithTtlOf(5).Minutes
-        .And().SlidingExpiration().And().UseInMemoryCache())
-    .For<UserCheckoutStatistics>(_ => _.UseAsKey("checkout statistics-").CombinedWith(s => s.UserId)
-        .And().WithInfiniteTtl().And().UseDistributedCache()));
+    .For<Cart>(_ => _.UseAsKey(c => $"card-{c.Id}").And().SetExpirationTimeoutTo(5).Minutes
+        .With().SlidingExpiration().And().StoreInMemory())
+    .For<UserCheckoutStatistics>(_ => _.UseClassNameAsKey().CombinedWith(s => s.UserId)
+        .And().SetInfiniteExpirationTimeout().And().StoreInDistributedCache()));
 
 var app = builder.Build();
 

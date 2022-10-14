@@ -38,13 +38,13 @@ namespace FluentCaching.Samples.Console
             
             return result;
         }
-        
+
         private static ICache BuildCache() =>
             new CacheBuilder()
                 .For<FactorialSource>(_
                     => _.UseAsKey(s => $"Factorial:{s.Factorial}")
-                        .And().WithInfiniteTtl()
-                        .And().UseInMemoryCache())
+                        .And().SetInfiniteExpirationTimeout()
+                        .And().StoreInMemory())
                 .Build();
     }
 

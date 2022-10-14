@@ -9,7 +9,7 @@ namespace FluentCaching.Tests.Integration.Extensions
         public static AndPolicyBuilder<CacheImplementationPolicyBuilder> Complete<T>(this CombinedCachingKeyPolicyBuilder<T> policyBuilder)
             where T : class
         {
-            return policyBuilder.And().WithTtlOf(5).Seconds.And().SlidingExpiration();
+            return policyBuilder.And().SetExpirationTimeoutTo(5).Seconds.With().SlidingExpiration();
         }
 
         public static CacheImplementationPolicyBuilder Complete<T>(this CombinedCachingKeyPolicyBuilder<T> policyBuilder, ICacheImplementation cacheImplementation)
@@ -17,7 +17,7 @@ namespace FluentCaching.Tests.Integration.Extensions
         {
             return Complete(policyBuilder)
                 .And()
-                .WithCacheImplementation(cacheImplementation);
+                .StoreIn(cacheImplementation);
         }
     }
 }

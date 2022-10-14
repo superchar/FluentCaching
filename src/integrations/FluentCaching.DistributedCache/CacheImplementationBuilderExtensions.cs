@@ -5,11 +5,11 @@ namespace FluentCaching.DistributedCache;
 
 public static class CacheImplementationBuilderExtensions
 {
-    public static CacheImplementationPolicyBuilder UseDistributedCache(
+    public static CacheImplementationPolicyBuilder StoreInDistributedCache(
         this CacheImplementationPolicyBuilder cacheImplementationPolicyBuilder) =>
-        cacheImplementationPolicyBuilder.WithCacheImplementation(new DistributedCacheImplementation());
+        cacheImplementationPolicyBuilder.StoreIn(new DistributedCacheImplementation());
     
-    public static CacheImplementationPolicyBuilder UseDistributedCache(
+    public static CacheImplementationPolicyBuilder StoreInDistributedCache(
         this CacheImplementationPolicyBuilder cacheImplementationPolicyBuilder, IDistributedCache distributedCache) =>
-        cacheImplementationPolicyBuilder.WithCacheImplementation(new DistributedCacheImplementation(distributedCache));
+        cacheImplementationPolicyBuilder.StoreIn(new DistributedCacheImplementation(distributedCache));
 }

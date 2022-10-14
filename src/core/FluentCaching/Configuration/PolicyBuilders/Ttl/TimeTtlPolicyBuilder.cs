@@ -5,7 +5,7 @@ namespace FluentCaching.Configuration.PolicyBuilders.Ttl
 {
     public class TimeTtlPolicyBuilder
     {
-        private CacheOptions _currentOptions;
+        private readonly CacheOptions _currentOptions;
 
         private ushort _currentValue;
 

@@ -13,9 +13,9 @@ namespace FluentCaching.Configuration.PolicyBuilders.Ttl
             _currentOptions.KeyBuilder = keyBuilder;
         }
 
-        public TimeTtlPolicyBuilder WithTtlOf(ushort value) => new (_currentOptions, value);
+        public TimeTtlPolicyBuilder SetExpirationTimeoutTo(ushort value) => new (_currentOptions, value);
 
-        public AndPolicyBuilder<CacheImplementationPolicyBuilder> WithInfiniteTtl()
+        public AndPolicyBuilder<CacheImplementationPolicyBuilder> SetInfiniteExpirationTimeout()
         {
             _currentOptions.Ttl = TimeSpan.MaxValue;
             return new AndPolicyBuilder<CacheImplementationPolicyBuilder>(new CacheImplementationPolicyBuilder(_currentOptions));

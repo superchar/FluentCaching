@@ -7,8 +7,8 @@ Instead of writing boilerplate code to support caching, just configure caching p
 
 var cache = new CacheBuilder()
 .For<User>(u => u.UseAsKey("user").CombinedWith(u => u.Id) // alternatively UseAsKey(u => $"user{u.Id}")
-                .And().WithTtlOf(2).Minutes.And(10).Seconds
-                .And().SlidingExpiration())
+                .And().SetExpirationTimeoutTo(2).Minutes.And(10).Seconds
+                .With().SlidingExpiration())
 .Build();
 ```
 **Add object to cache**
@@ -38,8 +38,8 @@ await cache.RemoveAsync<User>(userId);
 ```csharp
 var cache = new CacheBuilder()
 .For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName) // alternatively UseAsKey(u => u.FirstName + u.LastName)
-                .And().WithTtlOf(2).Minutes.And(10).Seconds
-                .And().SlidingExpiration())
+                .And().SetExpirationTimeoutTo(2).Minutes.And(10).Seconds
+                .With().SlidingExpiration())
 .Build();
 
 var userKey = new {FirstName = "John", LastName = "Doe"}; // may be any class with corresponding properties
@@ -50,11 +50,11 @@ await cache.RetrieveAsync<User>(userKey);
 ```csharp
 var cache = new CacheBuilder()
 .For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
-                .And().WithTtlOf(2).Minutes.And(10).Seconds
-                .And().SlidingExpiration().UseInMemoryCache())
+                .And().SetExpirationTimeoutTo(2).Minutes.And(10).Seconds
+                .With().AbsoluteExpiration().And().StoreInMemory())
 .For<Order>(o => o.UseAsKey(o => o.Date).CombinedWith("order")
-                .And().WithTtlOf(5).Minutes
-                .And().SlidingExpiration().UseDistributedCache())
+                .And().SetInfiniteExpirationTimeout()
+                .And().StoreInDistributedCache())
 .Build();
 
 ```

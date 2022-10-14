@@ -22,8 +22,8 @@ namespace FluentCaching.Benchmarks
 
         protected override AndPolicyBuilder<CacheImplementationPolicyBuilder> Configure(CachingKeyPolicyBuilder<User> policyBuilder) => policyBuilder
             .UseAsKey("user").CombinedWith(u => u.Id)
-            .And().WithTtlOf(5).Seconds
-            .And().SlidingExpiration();
+            .And().SetExpirationTimeoutTo(5).Seconds
+            .With().SlidingExpiration();
 
         protected override string GetDictionaryKey(User user) => $"user{user.Id}";
     }

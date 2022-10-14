@@ -20,13 +20,14 @@ namespace FluentCaching.Benchmarks
             }
         }
 
-        protected override AndPolicyBuilder<CacheImplementationPolicyBuilder> Configure(CachingKeyPolicyBuilder<User> policyBuilder) =>
+        protected override AndPolicyBuilder<CacheImplementationPolicyBuilder> Configure(
+            CachingKeyPolicyBuilder<User> policyBuilder) =>
             policyBuilder.UseAsKey("user")
                 .CombinedWith(_ => _.Id)
                 .CombinedWith(_ => _.FirstName)
                 .CombinedWith(_ => _.LastName)
-                .And().WithTtlOf(5).Seconds
-                .And().SlidingExpiration();
+                .And().SetExpirationTimeoutTo(5).Seconds
+                .With().SlidingExpiration();
 
         protected override string GetDictionaryKey(User user) => $"user{user.Id}{user.FirstName}{user.LastName}";
     }

@@ -4,8 +4,8 @@ namespace FluentCaching.Memory
 {
     public static class CacheImplementationBuilderExtensions
     {
-        public static CacheImplementationPolicyBuilder UseInMemoryCache(
+        public static CacheImplementationPolicyBuilder StoreInMemory(
             this CacheImplementationPolicyBuilder cacheImplementationPolicyBuilder) =>
-            cacheImplementationPolicyBuilder.WithCacheImplementation(new MemoryCacheImplementation());
+            cacheImplementationPolicyBuilder.StoreIn(new MemoryCacheImplementation());
     }
 }
