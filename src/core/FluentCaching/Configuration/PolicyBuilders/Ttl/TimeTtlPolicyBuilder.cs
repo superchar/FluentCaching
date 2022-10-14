@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentCaching.Cache.Models;
 
-namespace FluentCaching.PolicyBuilders.Ttl
+namespace FluentCaching.Configuration.PolicyBuilders.Ttl
 {
     public class TimeTtlPolicyBuilder
     {

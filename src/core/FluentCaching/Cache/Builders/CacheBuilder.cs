@@ -2,8 +2,8 @@
 using FluentCaching.Cache.Facades;
 using FluentCaching.Cache.Strategies.Factories;
 using FluentCaching.Configuration;
-using FluentCaching.PolicyBuilders;
-using FluentCaching.PolicyBuilders.Keys;
+using FluentCaching.Configuration.PolicyBuilders;
+using FluentCaching.Configuration.PolicyBuilders.Keys;
 
 namespace FluentCaching.Cache.Builders
 {

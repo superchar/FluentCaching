@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using FluentCaching.Cache.Models;
-using FluentCaching.PolicyBuilders.Ttl;
+using FluentCaching.Configuration.PolicyBuilders.Ttl;
 using Xunit;
 
-namespace FluentCaching.Tests.Unit.PolicyBuilders.Ttl
+namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Ttl
 {
     public class ExpirationTypePolicyBuilderTests
     {

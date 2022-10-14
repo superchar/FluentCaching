@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq.Expressions;
 using FluentAssertions;
+using FluentCaching.Configuration.PolicyBuilders.Keys;
 using FluentCaching.Keys.Builders;
-using FluentCaching.PolicyBuilders.Keys;
 using FluentCaching.Tests.Unit.Models;
 using Moq;
 using Xunit;
 
-namespace FluentCaching.Tests.Unit.PolicyBuilders.Keys
+namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Keys
 {
     public class CachingKeyPolicyBuilderTests
     {

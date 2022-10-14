@@ -1,4 +1,4 @@
-﻿namespace FluentCaching.PolicyBuilders
+﻿namespace FluentCaching.Configuration.PolicyBuilders
 {
     public class AndPolicyBuilder<TValue>
     {

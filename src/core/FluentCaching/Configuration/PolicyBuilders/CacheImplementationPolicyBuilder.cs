@@ -2,7 +2,7 @@
 using FluentCaching.Cache;
 using FluentCaching.Cache.Models;
 
-namespace FluentCaching.PolicyBuilders
+namespace FluentCaching.Configuration.PolicyBuilders
 {
     public class CacheImplementationPolicyBuilder
     {

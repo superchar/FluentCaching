@@ -1,4 +1,4 @@
-﻿using FluentCaching.PolicyBuilders;
+﻿using FluentCaching.Configuration.PolicyBuilders;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace FluentCaching.DistributedCache;

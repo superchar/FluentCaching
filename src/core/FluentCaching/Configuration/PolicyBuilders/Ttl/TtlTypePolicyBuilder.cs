@@ -2,7 +2,7 @@
 using FluentCaching.Cache.Models;
 using FluentCaching.Keys.Builders;
 
-namespace FluentCaching.PolicyBuilders.Ttl
+namespace FluentCaching.Configuration.PolicyBuilders.Ttl
 {
     public class TtlTypePolicyBuilder
     {

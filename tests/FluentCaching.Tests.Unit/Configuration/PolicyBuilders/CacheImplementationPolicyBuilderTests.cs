@@ -2,11 +2,11 @@
 using FluentAssertions;
 using FluentCaching.Cache;
 using FluentCaching.Cache.Models;
-using FluentCaching.PolicyBuilders;
+using FluentCaching.Configuration.PolicyBuilders;
 using Moq;
 using Xunit;
 
-namespace FluentCaching.Tests.Unit.PolicyBuilders
+namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders
 {
     public class CacheImplementationPolicyBuilderTests
     {

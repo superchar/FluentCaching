@@ -1,4 +1,4 @@
-﻿using FluentCaching.PolicyBuilders;
+﻿using FluentCaching.Configuration.PolicyBuilders;
 
 namespace FluentCaching.Memory
 {

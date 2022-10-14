@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
-using FluentCaching.PolicyBuilders;
-using FluentCaching.PolicyBuilders.Keys;
+using FluentCaching.Configuration.PolicyBuilders;
+using FluentCaching.Configuration.PolicyBuilders.Keys;
 
 namespace FluentCaching.Benchmarks
 {

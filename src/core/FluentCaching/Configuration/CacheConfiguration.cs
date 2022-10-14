@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using FluentCaching.Cache;
 using FluentCaching.Cache.Models;
-using FluentCaching.PolicyBuilders;
-using FluentCaching.PolicyBuilders.Keys;
+using FluentCaching.Configuration.PolicyBuilders;
+using FluentCaching.Configuration.PolicyBuilders.Keys;
 
 namespace FluentCaching.Configuration
 {

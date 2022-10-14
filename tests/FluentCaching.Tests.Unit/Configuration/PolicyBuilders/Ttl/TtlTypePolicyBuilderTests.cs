@@ -1,11 +1,11 @@
 ﻿using System;
 using FluentAssertions;
+using FluentCaching.Configuration.PolicyBuilders.Ttl;
 using FluentCaching.Keys.Builders;
-using FluentCaching.PolicyBuilders.Ttl;
 using Moq;
 using Xunit;
 
-namespace FluentCaching.Tests.Unit.PolicyBuilders.Ttl
+namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Ttl
 {
     public class TtlTypePolicyBuilderTests
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
+using FluentCaching.Configuration.PolicyBuilders.Ttl;
 using FluentCaching.Keys.Builders;
-using FluentCaching.PolicyBuilders.Ttl;
 
-namespace FluentCaching.PolicyBuilders.Keys
+namespace FluentCaching.Configuration.PolicyBuilders.Keys
 {
     public class CombinedCachingKeyPolicyBuilder<T>
     {

@@ -2,8 +2,8 @@
 using BenchmarkDotNet.Attributes;
 using FluentCaching.Cache;
 using FluentCaching.Cache.Builders;
-using FluentCaching.PolicyBuilders;
-using FluentCaching.PolicyBuilders.Keys;
+using FluentCaching.Configuration.PolicyBuilders;
+using FluentCaching.Configuration.PolicyBuilders.Keys;
 
 namespace FluentCaching.Benchmarks
 {

@@ -3,8 +3,8 @@ using FluentAssertions;
 using FluentCaching.Cache;
 using FluentCaching.Cache.Builders;
 using FluentCaching.Configuration;
-using FluentCaching.PolicyBuilders;
-using FluentCaching.PolicyBuilders.Keys;
+using FluentCaching.Configuration.PolicyBuilders;
+using FluentCaching.Configuration.PolicyBuilders.Keys;
 using Moq;
 using Xunit;
 

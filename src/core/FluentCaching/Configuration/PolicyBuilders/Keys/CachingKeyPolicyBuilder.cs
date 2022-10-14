@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using FluentCaching.Keys.Builders;
 
-namespace FluentCaching.PolicyBuilders.Keys
+namespace FluentCaching.Configuration.PolicyBuilders.Keys
 {
     public class CachingKeyPolicyBuilder<T>
     {
