@@ -9,13 +9,36 @@ namespace FluentCaching.Tests.Integration.Configuration
     public class ConfigurationTests : BaseTest
     {
         [Fact]
-        public void ForOfT_NotAPropertyExpression_DoesNotThrowException()
+        public void ForOfT_ConstantExpression_DoesNotThrowException()
         {
-            Action forOfUser = () =>
-                CacheBuilder
-                    .For<User>(_ => _.UseAsKey(u => 1 + 1).Complete());
+            CacheBuilder.For<User>(_ => _.UseAsKey(_ => 1 + 1).Complete());
 
-            forOfUser.Should().NotThrow();
+            CacheBuilder.Invoking(_ => _.Build()).Should().NotThrow();
+        }
+        
+        [Fact]
+        public void ForOfT_Closure_DoesNotThrowException()
+        {
+            var value = new Random().Next();
+            CacheBuilder.For<User>(_ => _.UseAsKey(u => u.Id + value).Complete());
+            
+            CacheBuilder.Invoking(_ => _.Build()).Should().NotThrow();
+        }
+        
+        [Fact]
+        public void ForOfT_NestedStructProperty_DoesNotThrowException()
+        {
+            CacheBuilder.For<User>(_ => _.UseAsKey(u => u.Address.Street).Complete());
+            
+            CacheBuilder.Invoking(_ => _.Build()).Should().NotThrow();
+        }
+        
+        [Fact]
+        public void ForOfT_NestedClassProperty_DoesNotThrowException()
+        {
+            CacheBuilder.For<User>(_ => _.UseAsKey(u => u.LastOrder.Id).Complete());
+            
+            CacheBuilder.Invoking(_ => _.Build()).Should().NotThrow();
         }
     }
 }

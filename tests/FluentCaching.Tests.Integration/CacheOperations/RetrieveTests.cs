@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentCaching.Configuration.Exceptions;
 using FluentCaching.Tests.Integration.Models;
-using Moq;
 using Xunit;
 
 namespace FluentCaching.Tests.Integration.CacheOperations
@@ -11,22 +10,21 @@ namespace FluentCaching.Tests.Integration.CacheOperations
     public class RetrieveTests : CacheOperationBaseTest
     {
         [Fact]
-        public async Task RetrieveAsync_CalledWithKey_CallsRetrieveInImplementation()
+        public async Task RetrieveAsync_ConfigurationExists_RetrievesObjectFromCache()
         {
-            await Cache.RetrieveAsync<User>(Key);
+            var user = new User();
+            CacheImplementation.Dictionary[Key] = user;
 
-            CacheImplementationMock
-                   .Verify(i => i.RetrieveAsync<User>(Key), Times.Once);
+            var result = await Cache.RetrieveAsync<User>(Key);
+
+            result.Should().Be(user);
         }
 
         [Fact]
-        public async Task RetrieveAsync_MissingConfiguration_ThrowsException()
+        public async Task RetrieveAsync_ConfigurationDoesNotExist_ThrowsException()
         {
-            Func<Task<Order>> retrieveAsync = async () => await Cache.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" });
-
-            await retrieveAsync.Should().ThrowAsync<ConfigurationNotFoundException>();
-            CacheImplementationMock
-                .Verify(i => i.RetrieveAsync<Order>(It.IsAny<string>()), Times.Never);
+            await Cache.Invoking(c => c.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" }))
+                .Should().ThrowAsync<ConfigurationNotFoundException>();
         }
     }
 }

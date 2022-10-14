@@ -12,6 +12,10 @@
 
         public override string ToString() => $"{FirstName}_{LastName}";
 
+        public Address Address { get; set; }
+
+        public Order LastOrder { get; set; }
+
         public User Clone()
         {
             return (User)MemberwiseClone();

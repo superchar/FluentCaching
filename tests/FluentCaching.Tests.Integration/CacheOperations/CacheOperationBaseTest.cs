@@ -8,7 +8,7 @@ namespace FluentCaching.Tests.Integration.CacheOperations
     {
         protected const string Key = "user";
 
-        public CacheOperationBaseTest()
+        protected CacheOperationBaseTest()
         {
             Cache = CacheBuilder
                 .For<User>(u => u.UseAsKey(Key).Complete())

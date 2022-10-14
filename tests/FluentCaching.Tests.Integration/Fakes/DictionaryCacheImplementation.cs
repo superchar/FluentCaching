@@ -7,7 +7,7 @@ namespace FluentCaching.Tests.Integration.Fakes
 {
     public class DictionaryCacheImplementation : ICacheImplementation
     {
-        public Dictionary<string, object> Dictionary { get; set; } = new Dictionary<string, object>();
+        public Dictionary<string, object> Dictionary { get; } = new Dictionary<string, object>();
 
         public Task<T> RetrieveAsync<T>(string key)
         {

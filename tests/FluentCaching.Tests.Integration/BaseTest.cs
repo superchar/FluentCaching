@@ -1,6 +1,5 @@
-﻿using FluentCaching.Cache;
-using FluentCaching.Cache.Builders;
-using Moq;
+﻿using FluentCaching.Cache.Builders;
+using FluentCaching.Tests.Integration.Fakes;
 
 namespace FluentCaching.Tests.Integration
 {
@@ -8,11 +7,11 @@ namespace FluentCaching.Tests.Integration
     {
         protected BaseTest()
         {
-            CacheBuilder.SetGenericCache(CacheImplementationMock.Object);
+            CacheBuilder.SetGenericCache(CacheImplementation);
         }
 
-        protected ICacheBuilder CacheBuilder { get; set; } = new CacheBuilder();
+        protected ICacheBuilder CacheBuilder { get; } = new CacheBuilder();
 
-        protected Mock<ICacheImplementation> CacheImplementationMock { get; set; } = new Mock<ICacheImplementation>();
+        protected DictionaryCacheImplementation CacheImplementation { get; } = new DictionaryCacheImplementation();
     }
 }

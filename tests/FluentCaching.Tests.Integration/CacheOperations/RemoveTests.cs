@@ -11,21 +11,20 @@ namespace FluentCaching.Tests.Integration.CacheOperations
     public class RemoveTests : CacheOperationBaseTest
     {
         [Fact]
-        public async Task RemoveAsync_MissingConfiguration_ThrowsException()
+        public async Task RemoveAsync_ConfigurationExists_RemovesObjectFromCache()
         {
-
-            Func<Task<Order>> retrieveAsync = async () => await Cache.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" });
-
-            await retrieveAsync.Should().ThrowAsync<ConfigurationNotFoundException>();
-        }
-
-        [Fact]
-        public async Task RemoveAsync_CalledWithKey_CallsRemoveInImplementation()
-        {
+            CacheImplementation.Dictionary[Key] = new User();
+            
             await Cache.RemoveAsync<User>(Key);
 
-            CacheImplementationMock
-                .Verify(i => i.RemoveAsync(Key), Times.Once);
+            CacheImplementation.Dictionary.ContainsKey(Key).Should().BeFalse();
+        }
+        
+        [Fact]
+        public async Task RemoveAsync_ConfigurationDoesNotExist_ThrowsException()
+        {
+            await Cache.Invoking(c => c.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" }))
+                .Should().ThrowAsync<ConfigurationNotFoundException>();
         }
     }
 }
