@@ -2,7 +2,7 @@
 using FluentCaching.Tests.Integration.Extensions;
 using FluentCaching.Tests.Integration.Models;
 
-namespace FluentCaching.Tests.Integration.CacheOperations
+namespace FluentCaching.Tests.Integration.Cache
 {
     public class CacheOperationBaseTest : BaseTest
     {

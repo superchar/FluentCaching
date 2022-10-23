@@ -1,13 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentAssertions;
-using FluentCaching.Cache.Models;
 using FluentCaching.Configuration.Exceptions;
 using FluentCaching.Tests.Integration.Models;
-using Moq;
 using Xunit;
 
-namespace FluentCaching.Tests.Integration.CacheOperations
+namespace FluentCaching.Tests.Integration.Cache
 {
     public class CacheTests : CacheOperationBaseTest
     {

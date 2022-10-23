@@ -18,9 +18,29 @@ public abstract class BaseParameterPropertyAccessVisitor : ExpressionVisitor
 
         return (propertyInfo.Name, propertyInfo.PropertyType);
     }
-    
+
     private static bool IsParameterPropertyAccess(MemberExpression node) =>
         node.Member.MemberType == MemberTypes.Property
         && node.NodeType == ExpressionType.MemberAccess
-        && node.Expression?.NodeType == ExpressionType.Parameter;
+        && ComesFromParameter(node)
+        && !IsNullableValueAccess(node);
+
+    private static bool ComesFromParameter(Expression expression)
+    {
+        if (expression.NodeType == ExpressionType.Parameter)
+        {
+            return true;
+        }
+
+        if (expression is not MemberExpression memberExpression
+            || memberExpression.Member.MemberType != MemberTypes.Property)
+        {
+            return false;
+        }
+
+        return ComesFromParameter(memberExpression.Expression);
+    }
+
+    private static bool IsNullableValueAccess(MemberExpression node)
+        => node.Member.Name == "Value" && Nullable.GetUnderlyingType(node.Member.DeclaringType) != null;
 }
