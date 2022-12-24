@@ -13,15 +13,15 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
 {
     public class KeyContextBuilderTests
     {
-        private Mock<IComplexKeysHelper> _complexKeysHelperMock;
+        private Mock<IExpressionsHelper> _expressionHelperMock;
 
         private KeyContextBuilder _sut;
 
         public KeyContextBuilderTests()
         {
-            _complexKeysHelperMock = new Mock<IComplexKeysHelper>();
+            _expressionHelperMock = new Mock<IExpressionsHelper>();
 
-            _sut = new KeyContextBuilder(_complexKeysHelperMock.Object);
+            _sut = new KeyContextBuilder(_expressionHelperMock.Object);
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
         {
             _sut.BuildRetrieveContextFromComplexKey(new object());
 
-            _complexKeysHelperMock
+            _expressionHelperMock
                 .Verify(_ => _.GetProperties(typeof(object)), Times.Once);
         }
 
@@ -132,7 +132,7 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
                 .Select(n => new PropertyAccessor(n, _ => _))
                 .ToArray();
             
-            _complexKeysHelperMock
+            _expressionHelperMock
                 .Setup(_ => _.GetProperties(key.GetType()))
                 .Returns(properties);
         }

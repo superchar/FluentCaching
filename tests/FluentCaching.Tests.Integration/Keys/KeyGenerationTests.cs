@@ -213,6 +213,20 @@ namespace FluentCaching.Tests.Integration.Keys
             await cache.RemoveAsync<User>(new { OrderId = 4, Id = 9 });
             CacheImplementation.Dictionary.Should().BeEmpty();
         }
+        
+        [Fact]
+        public async Task StructRetrieveKey_CanRetrieveWithStructKey()
+        {
+            CacheBuilder.For<User>(_ =>
+                _.UseAsKey(u => u.LastOrder.OrderId + u.Id).Complete());
+            _user.LastOrder.OrderId = 4;
+            _user.Id = 9;
+
+            var cache = await CacheAsync(_user);
+
+            var result = await cache.RetrieveAsync<User>(new UserStructKey(4, 9));
+            result.Should().Be(_user);
+        }
 
         [Fact]
         public void MultipleNestedPropertiesWithTheSameName_ShouldThrowException()

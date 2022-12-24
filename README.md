@@ -42,7 +42,7 @@ var cache = new CacheBuilder()
                 .With().SlidingExpiration())
 .Build();
 
-var userKey = new {FirstName = "John", LastName = "Doe"}; // may be any class with corresponding properties
+var userKey = new {FirstName = "John", LastName = "Doe"}; // may be any class or struct with corresponding properties
 await cache.RetrieveAsync<User>(userKey);
 ```
 

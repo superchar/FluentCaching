@@ -21,7 +21,7 @@ namespace FluentCaching.Keys.Builders
         private readonly IKeyPartBuilderFactory _keyPartBuilderFactory;
 
         public KeyBuilder() 
-            : this(new KeyContextBuilder(new ComplexKeysHelper()), 
+            : this(new KeyContextBuilder(new ExpressionsHelper()), 
                 new ExpressionsHelper(),
                 new KeyPartBuilderFactory(new ExpressionsHelper()))
         {

@@ -12,11 +12,11 @@ namespace FluentCaching.Keys.Builders
 
         private readonly Dictionary<string, bool> _keys = new (); // Guaranteed to be thread safe when readonly (unlike hashset)
 
-        private readonly IComplexKeysHelper _complexKeysHelper;
+        private readonly IExpressionsHelper _expressionsHelper;
         
-        public KeyContextBuilder(IComplexKeysHelper complexKeysHelper)
+        public KeyContextBuilder(IExpressionsHelper expressionsHelper)
         {
-            _complexKeysHelper = complexKeysHelper;
+            _expressionsHelper = expressionsHelper;
         }
 
         public void AddKey(string key)
@@ -32,7 +32,7 @@ namespace FluentCaching.Keys.Builders
 
         public KeyContext BuildRetrieveContextFromComplexKey(object complexKey)
         {
-            var properties = _complexKeysHelper.GetProperties(complexKey.GetType())
+            var properties = _expressionsHelper.GetProperties(complexKey.GetType())
                 .Where(_ => _keys.ContainsKey(_.Name))
                 .ToList();
 

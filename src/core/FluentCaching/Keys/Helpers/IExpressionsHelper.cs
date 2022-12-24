@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
+using FluentCaching.Keys.Models;
 
 namespace FluentCaching.Keys.Helpers
 {
@@ -13,6 +15,6 @@ namespace FluentCaching.Keys.Helpers
         Expression<Func<Dictionary<string, object>, string>> ReplaceParameterWithDictionary<T>(
             Expression<Func<T, string>> expression);
 
-
+        PropertyAccessor[] GetProperties(Type type);
     }
 }
