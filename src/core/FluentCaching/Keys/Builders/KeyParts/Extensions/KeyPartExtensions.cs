@@ -1,3 +1,5 @@
+using FluentCaching.Keys.Exceptions;
+
 namespace FluentCaching.Keys.Builders.KeyParts.Extensions;
 
 public static class KeyPartExtensions

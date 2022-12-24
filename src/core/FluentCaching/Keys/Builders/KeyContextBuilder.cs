@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using FluentCaching.Keys.Exceptions;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Keys.Models;
 
@@ -18,7 +19,16 @@ namespace FluentCaching.Keys.Builders
             _complexKeysHelper = complexKeysHelper;
         }
 
-        public void AddKey(string key) => _keys[key] = true;
+        public void AddKey(string key)
+        {
+            if (_keys.ContainsKey(key))
+            {
+                throw new KeyPartException(
+                    $"Property name duplicates are not supported. Duplicated property name - {key}.");
+            }
+            
+            _keys[key] = true;
+        }
 
         public KeyContext BuildRetrieveContextFromComplexKey(object complexKey)
         {

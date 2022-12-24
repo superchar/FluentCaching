@@ -2,6 +2,7 @@ using System;
 using FluentAssertions;
 using FluentCaching.Keys;
 using FluentCaching.Keys.Builders.KeyParts.Extensions;
+using FluentCaching.Keys.Exceptions;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.Keys.Builders.KeyParts.Extensions;

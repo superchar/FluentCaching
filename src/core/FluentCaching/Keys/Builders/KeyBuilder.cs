@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using FluentCaching.Keys.Builders.KeyParts;
 using FluentCaching.Keys.Builders.KeyParts.Factories;
+using FluentCaching.Keys.Exceptions;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Keys.Models;
 
@@ -11,7 +12,9 @@ namespace FluentCaching.Keys.Builders
 {
     internal class KeyBuilder : IKeyBuilder
     {
-        private List<IKeyPartBuilder> _keyPartBuilders = new();
+        private const string KeyPartSeparator = ":";
+        
+        private readonly List<IKeyPartBuilder> _keyPartBuilders = new();
 
         private readonly IExpressionsHelper _expressionHelper;
         private readonly IKeyContextBuilder _keyContextBuilder;
@@ -85,9 +88,13 @@ namespace FluentCaching.Keys.Builders
 
         private IEnumerable<string> BuildKeyParts(KeyContext context)
         {
-            foreach (var builder in _keyPartBuilders)
+            for (var i = 0; i < _keyPartBuilders.Count; i++)
             {
-                yield return builder.Build(context);
+                yield return _keyPartBuilders[i].Build(context);
+                if (i < _keyPartBuilders.Count - 1)
+                {
+                    yield return KeyPartSeparator;
+                }
             }
         }
     }

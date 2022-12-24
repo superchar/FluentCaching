@@ -5,6 +5,7 @@ using FluentCaching.Keys;
 using FluentCaching.Keys.Builders;
 using FluentCaching.Keys.Builders.KeyParts;
 using FluentCaching.Keys.Builders.KeyParts.Factories;
+using FluentCaching.Keys.Exceptions;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Keys.Models;
 using FluentCaching.Tests.Unit.Models;

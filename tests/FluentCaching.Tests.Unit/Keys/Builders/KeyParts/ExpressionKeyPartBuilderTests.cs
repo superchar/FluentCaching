@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using FluentAssertions;
 using FluentCaching.Keys;
 using FluentCaching.Keys.Builders.KeyParts;
+using FluentCaching.Keys.Exceptions;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Keys.Models;
 using FluentCaching.Tests.Unit.Models;

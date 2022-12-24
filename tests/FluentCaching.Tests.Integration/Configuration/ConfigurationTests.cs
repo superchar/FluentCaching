@@ -36,7 +36,7 @@ namespace FluentCaching.Tests.Integration.Configuration
         [Fact]
         public void ForOfT_NestedClassProperty_DoesNotThrowException()
         {
-            CacheBuilder.For<User>(_ => _.UseAsKey(u => u.LastOrder.Id).Complete());
+            CacheBuilder.For<User>(_ => _.UseAsKey(u => u.LastOrder.OrderId).Complete());
             
             CacheBuilder.Invoking(_ => _.Build()).Should().NotThrow();
         }
