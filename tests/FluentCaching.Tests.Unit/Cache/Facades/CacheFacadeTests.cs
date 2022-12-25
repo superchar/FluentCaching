@@ -13,10 +13,11 @@ using Xunit;
 namespace FluentCaching.Tests.Unit.Cache.Facades;
 
 public class CacheFacadeTests
-{
+{    
+    private const string ScalarKey = "key";
+
     private static readonly User CachedObject = new();
     private static readonly object ComplexKey = new();
-    private static readonly string ScalarKey = "key";
 
     private readonly Mock<IStoreStrategy<User>> _storeStrategyMock;
     private readonly Mock<IRetrieveStrategy<User>> _retrieveStrategyMock;

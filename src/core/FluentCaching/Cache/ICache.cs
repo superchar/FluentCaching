@@ -9,7 +9,7 @@ namespace FluentCaching.Cache
         
         Task CacheAsync<TEntity>(TEntity targetObject) where TEntity : class;
 
-        #endregion StoreAsync
+        #endregion CacheAsync
 
         #region RemoveAsync
 
