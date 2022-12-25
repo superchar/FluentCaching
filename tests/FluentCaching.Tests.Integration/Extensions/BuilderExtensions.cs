@@ -11,13 +11,5 @@ namespace FluentCaching.Tests.Integration.Extensions
         {
             return policyBuilder.And().SetExpirationTimeoutTo(5).Seconds.With().SlidingExpiration();
         }
-
-        public static CacheImplementationPolicyBuilder Complete<T>(this CombinedCachingKeyPolicyBuilder<T> policyBuilder, ICacheImplementation cacheImplementation)
-            where T : class
-        {
-            return Complete(policyBuilder)
-                .And()
-                .StoreIn(cacheImplementation);
-        }
     }
 }

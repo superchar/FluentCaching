@@ -1,25 +1,73 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
+using FluentCaching.Cache;
 using FluentCaching.Configuration.Exceptions;
+using FluentCaching.Tests.Integration.Extensions;
 using FluentCaching.Tests.Integration.Models;
 using Xunit;
 
 namespace FluentCaching.Tests.Integration.Cache
 {
-    public class CacheTests : CacheOperationBaseTest
+    public class CacheTests : BaseTest
     {
-        [Fact]
-        public async Task CacheAsync_ConfigurationExists_CachesObject()
+        private const string Key = "user";
+        
+        private readonly ICache _cache;
+
+        public CacheTests()
         {
-            await Cache.CacheAsync(User.Test);
+            _cache = CacheBuilder
+                .For<User>(u => u.UseAsKey(Key).Complete())
+                .Build();
+        }
+        
+        [Fact]
+        public async Task CacheConfiguredObject_CachesObject()
+        {
+            await _cache.CacheAsync(User.Test);
 
             CacheImplementation.Dictionary.ContainsKey(Key).Should().BeTrue();
         }
 
         [Fact]
-        public async Task RetrieveAsync_ConfigurationDoesNotExist_ThrowsException()
+        public async Task CacheNonConfiguredObject_ThrowsException()
         {
-            await Cache.Invoking(c => c.CacheAsync(Order.Test))
+            await _cache.Invoking(c => c.CacheAsync(Order.Test))
+                .Should().ThrowAsync<ConfigurationNotFoundException>();
+        }
+        
+        [Fact]
+        public async Task RemoveConfiguredObject_RemovesObjectFromCache()
+        {
+            CacheImplementation.Dictionary[Key] = new User();
+            
+            await _cache.RemoveAsync<User>(Key);
+
+            CacheImplementation.Dictionary.ContainsKey(Key).Should().BeFalse();
+        }
+        
+        [Fact]
+        public async Task RemoveNotConfiguredObject_ThrowsException()
+        {
+            await _cache.Invoking(c => c.RemoveAsync<Order>(new { Id = 1, LastName = "Test" }))
+                .Should().ThrowAsync<ConfigurationNotFoundException>();
+        }
+        
+        [Fact]
+        public async Task RetrieveConfiguredObject_RetrievesObjectFromCache()
+        {
+            var user = new User();
+            CacheImplementation.Dictionary[Key] = user;
+
+            var result = await _cache.RetrieveAsync<User>(Key);
+
+            result.Should().Be(user);
+        }
+
+        [Fact]
+        public async Task RetrieveNotConfiguredObject_ThrowsException()
+        {
+            await _cache.Invoking(c => c.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" }))
                 .Should().ThrowAsync<ConfigurationNotFoundException>();
         }
     }

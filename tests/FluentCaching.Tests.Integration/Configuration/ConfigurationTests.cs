@@ -9,7 +9,7 @@ namespace FluentCaching.Tests.Integration.Configuration
     public class ConfigurationTests : BaseTest
     {
         [Fact]
-        public void ForOfT_ConstantExpression_DoesNotThrowException()
+        public void ConstantExpressionConfiguration_DoesNotThrowException()
         {
             CacheBuilder.For<User>(_ => _.UseAsKey(_ => 1 + 1).Complete());
 
@@ -17,7 +17,7 @@ namespace FluentCaching.Tests.Integration.Configuration
         }
         
         [Fact]
-        public void ForOfT_Closure_DoesNotThrowException()
+        public void ClosureConfiguration_DoesNotThrowException()
         {
             var value = new Random().Next();
             CacheBuilder.For<User>(_ => _.UseAsKey(u => u.Id + value).Complete());
@@ -26,7 +26,7 @@ namespace FluentCaching.Tests.Integration.Configuration
         }
         
         [Fact]
-        public void ForOfT_NestedStructProperty_DoesNotThrowException()
+        public void NestedStructPropertyConfiguration_DoesNotThrowException()
         {
             CacheBuilder.For<User>(_ => _.UseAsKey(u => u.Address.Street).Complete());
             
@@ -34,7 +34,7 @@ namespace FluentCaching.Tests.Integration.Configuration
         }
         
         [Fact]
-        public void ForOfT_NestedClassProperty_DoesNotThrowException()
+        public void NestedClassPropertyConfiguration_DoesNotThrowException()
         {
             CacheBuilder.For<User>(_ => _.UseAsKey(u => u.LastOrder.OrderId).Complete());
             

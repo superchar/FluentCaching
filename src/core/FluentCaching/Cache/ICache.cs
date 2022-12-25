@@ -5,7 +5,7 @@ namespace FluentCaching.Cache
 {
     public interface ICache
     {
-        #region StoreAsync 
+        #region CacheAsync 
         
         Task CacheAsync<TEntity>(TEntity targetObject) where TEntity : class;
 
