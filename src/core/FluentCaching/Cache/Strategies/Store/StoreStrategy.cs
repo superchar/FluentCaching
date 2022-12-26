@@ -10,7 +10,7 @@ internal class StoreStrategy<T> : BaseCacheStrategyWithConfiguration, IStoreStra
     {
     }
 
-    public Task StoreAsync(T cachedObject)
+    public ValueTask StoreAsync(T cachedObject)
     {
         var item = GetConfigurationItem<T>();
         var key = item.Options.KeyBuilder.BuildFromCachedObject(cachedObject);

@@ -82,20 +82,20 @@ namespace FluentCaching.Keys.Builders
 
             return Build(context);
         }
-        
-        private string Build(KeyContext context) 
-            => string.Join(string.Empty, BuildKeyParts(context));
 
-        private IEnumerable<string> BuildKeyParts(KeyContext context)
+        private string Build(KeyContext context)
         {
+            using var keyStringBuilder = new KeyStringBuilder();
             for (var i = 0; i < _keyPartBuilders.Count; i++)
             {
-                yield return _keyPartBuilders[i].Build(context);
+                keyStringBuilder.Append(_keyPartBuilders[i].Build(context));
                 if (i < _keyPartBuilders.Count - 1)
                 {
-                    yield return KeyPartSeparator;
+                    keyStringBuilder.Append(KeyPartSeparator);
                 }
             }
+
+            return keyStringBuilder.ToString();
         }
     }
 }

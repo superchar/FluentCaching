@@ -9,21 +9,21 @@ namespace FluentCaching.Benchmarks
     {
         private readonly IDictionary<string, object> _dictionary = new Dictionary<string, object>();
 
-        public Task<T> RetrieveAsync<T>(string key)
+        public ValueTask<T> RetrieveAsync<T>(string key)
         {
-            return Task.FromResult((T)_dictionary[key]);
+            return new ValueTask<T>((T)_dictionary[key]);
         }
 
-        public Task CacheAsync<T>(string key, T targetObject, CacheOptions options)
+        public ValueTask CacheAsync<T>(string key, T targetObject, CacheOptions options)
         {
             _dictionary[key] = targetObject;
-            return Task.CompletedTask;
+            return new ValueTask();
         }
 
-        public Task RemoveAsync(string key)
+        public ValueTask RemoveAsync(string key)
         {
             _dictionary.Remove(key);
-            return Task.CompletedTask;
+            return new ValueTask();
         }
 
     }

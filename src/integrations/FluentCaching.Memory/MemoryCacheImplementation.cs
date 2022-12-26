@@ -10,15 +10,15 @@ namespace FluentCaching.Memory
     {
         private static readonly ObjectCache Cache = MemoryCache.Default;
 
-        public Task<T> RetrieveAsync<T>(string key)
+        public ValueTask<T> RetrieveAsync<T>(string key)
         {
-            return Cache.Contains(key) ? Task.FromResult((T)Cache[key]) : Task.FromResult(default(T));
+            return Cache.Contains(key) ? new ValueTask<T>((T)Cache[key]) : new ValueTask<T>(default(T));
         }
 
-        public Task CacheAsync<T>(string key, T targetObject, CacheOptions options)
+        public ValueTask CacheAsync<T>(string key, T targetObject, CacheOptions options)
         {
             Cache.Set(key, targetObject, CreatePolicy(options));
-            return Task.CompletedTask;
+            return default;
         }
 
         private static CacheItemPolicy CreatePolicy(CacheOptions options) =>
@@ -32,10 +32,10 @@ namespace FluentCaching.Memory
                     AbsoluteExpiration = options.Ttl != TimeSpan.MaxValue ? DateTimeOffset.UtcNow.Add(options.Ttl) : ObjectCache.InfiniteAbsoluteExpiration
                 };
 
-        public Task RemoveAsync(string key)
+        public ValueTask RemoveAsync(string key)
         {
             Cache.Remove(key);
-            return Task.CompletedTask;
+            return default;
         }
     }
 }

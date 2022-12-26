@@ -11,7 +11,7 @@ internal class ScalarKeyRetrieveStrategy<T> : BaseCacheStrategyWithConfiguration
     {
     }
     
-    public Task<T> RetrieveAsync(CacheSource<T> source)
+    public ValueTask<T> RetrieveAsync(CacheSource<T> source)
     {
         var item = GetConfigurationItem<T>();
         var key = item.Options.KeyBuilder.BuildFromScalarKey(source.Key);

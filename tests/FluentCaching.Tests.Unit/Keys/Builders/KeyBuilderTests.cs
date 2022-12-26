@@ -77,10 +77,14 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
             {
                 Name = "John"
             };
+            var context = new KeyContext(user);
             _keyContextBuilderMock
                 .Setup(_ => _.BuildCacheContext(user))
-                .Returns(new KeyContext(user));
+                .Returns(context);
             var keyPartBuilderMock = new Mock<IKeyPartBuilder>();
+            keyPartBuilderMock
+                .Setup(k => k.Build(context))
+                .Returns("Key part");
             _keyPartBuilderFactoryMock
                 .Setup(_ => _.Create("user"))
                 .Returns(keyPartBuilderMock.Object);

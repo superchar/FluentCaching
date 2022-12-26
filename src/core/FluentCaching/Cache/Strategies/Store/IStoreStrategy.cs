@@ -5,5 +5,5 @@ namespace FluentCaching.Cache.Strategies.Store;
 public interface IStoreStrategy<T>
     where T : class
 {
-    Task StoreAsync(T cachedObject);
+    ValueTask StoreAsync(T cachedObject);
 }

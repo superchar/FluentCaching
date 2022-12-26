@@ -32,7 +32,7 @@ namespace FluentCaching.Tests.Integration.Cache
         [Fact]
         public async Task CacheNonConfiguredObject_ThrowsException()
         {
-            await _cache.Invoking(c => c.CacheAsync(Order.Test))
+            await _cache.Invoking(c => c.CacheAsync(Order.Test).AsTask())
                 .Should().ThrowAsync<ConfigurationNotFoundException>();
         }
         
@@ -49,7 +49,7 @@ namespace FluentCaching.Tests.Integration.Cache
         [Fact]
         public async Task RemoveNotConfiguredObject_ThrowsException()
         {
-            await _cache.Invoking(c => c.RemoveAsync<Order>(new { Id = 1, LastName = "Test" }))
+            await _cache.Invoking(c => c.RemoveAsync<Order>(new { Id = 1, LastName = "Test" }).AsTask())
                 .Should().ThrowAsync<ConfigurationNotFoundException>();
         }
         
@@ -67,7 +67,7 @@ namespace FluentCaching.Tests.Integration.Cache
         [Fact]
         public async Task RetrieveNotConfiguredObject_ThrowsException()
         {
-            await _cache.Invoking(c => c.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" }))
+            await _cache.Invoking(c => c.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" }).AsTask())
                 .Should().ThrowAsync<ConfigurationNotFoundException>();
         }
     }

@@ -5,10 +5,10 @@ namespace FluentCaching.Cache
 {
     public interface ICacheImplementation
     {
-        Task<T> RetrieveAsync<T>(string key);
+        ValueTask<T> RetrieveAsync<T>(string key);
 
-        Task CacheAsync<T>(string key, T targetObject, CacheOptions options);
+        ValueTask CacheAsync<T>(string key, T targetObject, CacheOptions options);
 
-        Task RemoveAsync(string key);
+        ValueTask RemoveAsync(string key);
     }
 }

@@ -6,5 +6,5 @@ namespace FluentCaching.Cache.Strategies.Retrieve;
 internal interface IRetrieveStrategy<T>
     where T : class
 {
-    Task<T> RetrieveAsync(CacheSource<T> source);
+    ValueTask<T> RetrieveAsync(CacheSource<T> source);
 }

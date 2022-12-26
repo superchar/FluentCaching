@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using FluentCaching.Configuration.PolicyBuilders;
 using FluentCaching.Configuration.PolicyBuilders.Keys;

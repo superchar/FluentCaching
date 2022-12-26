@@ -20,7 +20,7 @@ namespace FluentCaching.DistributedCache
             _distributedCache = distributedCache;
         }
 
-        public async Task<T> RetrieveAsync<T>(string key)
+        public async ValueTask<T> RetrieveAsync<T>(string key)
         {
             using var holder = GetDistributedCacheHolder();
             var resultBytes = await holder.DistributedCache.GetAsync(key);
@@ -29,17 +29,17 @@ namespace FluentCaching.DistributedCache
                 ? default : JsonSerializer.Deserialize<T>(resultBytes);
         }
 
-        public async Task CacheAsync<T>(string key, T targetObject, CacheOptions options)
+        public async ValueTask CacheAsync<T>(string key, T targetObject, CacheOptions options)
         {
             using var holder = GetDistributedCacheHolder();
             var resultBytes = JsonSerializer.SerializeToUtf8Bytes(targetObject);
             await holder.DistributedCache.SetAsync(key, resultBytes, GetDistributedCacheEntryOptions(options));
         }
 
-        public Task RemoveAsync(string key)
+        public async ValueTask RemoveAsync(string key)
         {
             using var holder = GetDistributedCacheHolder();
-            return holder.DistributedCache.RemoveAsync(key);
+            await holder.DistributedCache.RemoveAsync(key);
         }
 
         private static DistributedCacheEntryOptions GetDistributedCacheEntryOptions(CacheOptions cacheOptions)

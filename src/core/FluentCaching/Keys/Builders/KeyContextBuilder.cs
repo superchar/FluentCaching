@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentCaching.Keys.Exceptions;
+using FluentCaching.Keys.Extensions;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Keys.Models;
 
@@ -48,24 +49,23 @@ namespace FluentCaching.Keys.Builders
 
         public KeyContext BuildRetrieveContextFromScalarKey(object scalarKey)
         {
-            if (_keys.Count > 1)
+            switch (_keys.Count)
             {
-                throw new KeyPartMissingException();
-            }
-
-            if (!_keys.Any())
-            {
-                return EmptyRetrieveContext;
-            }
-
-            var retrieveContext = new Dictionary<string, object>
-            {
+                case > 1:
+                    throw new KeyPartMissingException();
+                case 0:
+                    return EmptyRetrieveContext;
+                default:
                 {
-                    _keys.Keys.First(), scalarKey // First will work faster as _keys is guaranteed to have a single item
-                } 
-            };
-
-            return new KeyContext(retrieveContext);
+                    var retrieveContext = new Dictionary<string, object>
+                    {
+                        {
+                            _keys.FirstKey(), scalarKey
+                        } 
+                    };
+                    return new KeyContext(retrieveContext);
+                }
+            }
         }
 
         public KeyContext BuildCacheContext(object cachedObject) => new(cachedObject);

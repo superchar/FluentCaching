@@ -9,21 +9,21 @@ namespace FluentCaching.Tests.Integration.Fakes
     {
         public Dictionary<string, object> Dictionary { get; } = new Dictionary<string, object>();
 
-        public Task<T> RetrieveAsync<T>(string key)
+        public ValueTask<T> RetrieveAsync<T>(string key)
         {
-            return Task.FromResult((T)Dictionary.GetValueOrDefault(key));
+            return new ValueTask<T>((T)Dictionary.GetValueOrDefault(key));
         }
 
-        public Task RemoveAsync(string key)
+        public ValueTask RemoveAsync(string key)
         {
             Dictionary.Remove(key);
-            return Task.CompletedTask;
+            return default;
         }
 
-        public Task CacheAsync<T>(string key, T targetObject, CacheOptions options)
+        public ValueTask CacheAsync<T>(string key, T targetObject, CacheOptions options)
         {
             Dictionary[key] = targetObject;
-            return Task.CompletedTask;
+            return default;
         }
     }
 }

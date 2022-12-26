@@ -12,7 +12,7 @@ internal class StaticKeyRemoveStrategy<T> : BaseCacheStrategyWithConfiguration, 
     {
     }
     
-    public Task RemoveAsync(CacheSource<T> source)
+    public ValueTask RemoveAsync(CacheSource<T> source)
     {
         var item = GetConfigurationItem<T>();
         var key = item.Options.KeyBuilder.BuildFromStaticKey();

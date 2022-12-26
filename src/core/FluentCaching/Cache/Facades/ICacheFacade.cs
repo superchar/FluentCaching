@@ -1,22 +1,21 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace FluentCaching.Cache.Facades
 {
     internal interface ICacheFacade 
     {
-        Task CacheAsync<T>(T targetObject) where T : class;
+        ValueTask CacheAsync<T>(T targetObject) where T : class;
         
-        Task<T> RetrieveComplexAsync<T>(object complexKey) where T : class;
+        ValueTask<T> RetrieveComplexAsync<T>(object complexKey) where T : class;
 
-        Task<T> RetrieveScalarAsync<T>(object stringKey) where T : class;
+        ValueTask<T> RetrieveScalarAsync<T>(object stringKey) where T : class;
 
-        Task<T> RetrieveStaticAsync<T>() where T : class;
+        ValueTask<T> RetrieveStaticAsync<T>() where T : class;
         
-        Task RemoveComplexAsync<T>(object objectKey) where T : class;
+        ValueTask RemoveComplexAsync<T>(object objectKey) where T : class;
 
-        Task RemoveScalarAsync<T>(object scalarKey) where T : class;
+        ValueTask RemoveScalarAsync<T>(object scalarKey) where T : class;
         
-        Task RemoveStaticAsync<T>() where T : class;
+        ValueTask RemoveStaticAsync<T>() where T : class;
     }
 }
