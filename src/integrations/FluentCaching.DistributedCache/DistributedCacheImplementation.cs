@@ -25,8 +25,9 @@ namespace FluentCaching.DistributedCache
             using var holder = GetDistributedCacheHolder();
             var resultBytes = await holder.DistributedCache.GetAsync(key);
 
-            return resultBytes  == null 
-                ? default : JsonSerializer.Deserialize<T>(resultBytes);
+            return (resultBytes == null || resultBytes.Length == 0)
+                ? default
+                : JsonSerializer.Deserialize<T>(resultBytes);
         }
 
         public async ValueTask CacheAsync<T>(string key, T targetObject, CacheOptions options)
