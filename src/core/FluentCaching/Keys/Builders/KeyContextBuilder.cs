@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using FluentCaching.Keys.Exceptions;
 using FluentCaching.Keys.Extensions;
 using FluentCaching.Keys.Helpers;
@@ -33,18 +32,21 @@ namespace FluentCaching.Keys.Builders
 
         public KeyContext BuildRetrieveContextFromComplexKey(object complexKey)
         {
-            var properties = _expressionsHelper.GetProperties(complexKey.GetType())
-                .Where(_ => _keys.ContainsKey(_.Name))
-                .ToList();
-
-            if (properties.Count != _keys.Count)
+            var properties = _expressionsHelper.GetProperties(complexKey.GetType());
+            var contextDictionary = new Dictionary<string, object>(properties.Length);
+            foreach (var property in properties)
             {
-                throw new KeyPartMissingException();
+                if (!_keys.ContainsKey(property.Name))
+                {
+                    continue;
+                }
+
+                contextDictionary[property.Name] = property.Get(complexKey);
             }
 
-            var retrieveContext = properties
-                .ToDictionary(p => p.Name, p => p.Get(complexKey));
-            return new KeyContext(retrieveContext);
+            return contextDictionary.Count == _keys.Count
+                ? new KeyContext(contextDictionary)
+                : throw new KeyPartMissingException();
         }
 
         public KeyContext BuildRetrieveContextFromScalarKey(object scalarKey)
