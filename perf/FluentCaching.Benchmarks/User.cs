@@ -1,12 +1,11 @@
-﻿namespace FluentCaching.Benchmarks
+﻿namespace FluentCaching.Benchmarks;
+
+public class User
 {
-    public class User
-    {
-        public string FirstName { get; set; }
+    public string FirstName { get; init; }
 
-        public string LastName { get; set; }
+    public string LastName { get; init; }
 
-        public int Id { get; set; }
+    public int Id { get; init; }
 
-    }
 }

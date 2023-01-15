@@ -3,121 +3,120 @@ using FluentCaching.Keys.Helpers;
 using FluentCaching.Tests.Unit.Models;
 using Xunit;
 
-namespace FluentCaching.Tests.Unit.Keys.Helpers
+namespace FluentCaching.Tests.Unit.Keys.Helpers;
+
+public class ExpressionsHelperTests
 {
-    public class ExpressionsHelperTests
+    private readonly ExpressionsHelper _sut = new ();
+
+    [Fact]
+    public void GetProperty_ExpressionIsNotSingleProperty_DoesNotThrowException()
     {
-        private readonly ExpressionsHelper _sut = new ();
+        _sut.Invoking(s => s.GetParameterPropertyNames<User, string>(u => "test"))
+            .Should().NotThrow();
+    }
 
-        [Fact]
-        public void GetProperty_ExpressionIsNotSingleProperty_DoesNotThrowException()
+    [Fact]
+    public void GetProperty_ExpressionWithMultipleProperties_ReturnsPropertyNames()
+    {
+        var result = _sut.GetParameterPropertyNames<User, int>(u => u.Id + u.SubscriptionId.Value);
+
+        var expectedProperties = new[] { nameof(User.Id), nameof(User.SubscriptionId) };
+        result.Should().BeEquivalentTo(expectedProperties);
+    }
+
+    [Fact]
+    public void RewriteWithSafeToString_PropertyIsPrimitiveType_AddsToString()
+    {
+        var user = new User
         {
-            _sut.Invoking(s => s.GetParameterPropertyNames<User, string>(u => "test"))
-                .Should().NotThrow();
-        }
+            Id = 42
+        };
 
-        [Fact]
-        public void GetProperty_ExpressionWithMultipleProperties_ReturnsPropertyNames()
-        {
-            var result = _sut.GetParameterPropertyNames<User, int>(u => u.Id + u.SubscriptionId.Value);
+        var resultExpression = _sut.ReplaceResultTypeWithString<User, int>(_ => _.Id);
 
-            var expectedProperties = new[] { nameof(User.Id), nameof(User.SubscriptionId) };
-            result.Should().BeEquivalentTo(expectedProperties);
-        }
-
-        [Fact]
-        public void RewriteWithSafeToString_PropertyIsPrimitiveType_AddsToString()
-        {
-            var user = new User
-            {
-                Id = 42
-            };
-
-            var resultExpression = _sut.ReplaceResultTypeWithString<User, int>(_ => _.Id);
-
-            var compiledExpression = resultExpression.Compile();
-            var result = compiledExpression(user);
-            result.Should().Be("42");
-        }
+        var compiledExpression = resultExpression.Compile();
+        var result = compiledExpression(user);
+        result.Should().Be("42");
+    }
         
-        [Fact]
-        public void RewriteWithSafeToString_PropertyIsNullablePrimitiveType_AddsToString()
+    [Fact]
+    public void RewriteWithSafeToString_PropertyIsNullablePrimitiveType_AddsToString()
+    {
+        var user = new User
         {
-            var user = new User
-            {
-                SubscriptionId = 42
-            };
+            SubscriptionId = 42
+        };
 
-            var resultExpression = _sut.ReplaceResultTypeWithString<User, int?>(_ => _.SubscriptionId);
+        var resultExpression = _sut.ReplaceResultTypeWithString<User, int?>(_ => _.SubscriptionId);
 
-            var compiledExpression = resultExpression.Compile();
-            var result = compiledExpression(user);
-            result.Should().Be("42");
-        }
+        var compiledExpression = resultExpression.Compile();
+        var result = compiledExpression(user);
+        result.Should().Be("42");
+    }
         
-        [Fact]
-        public void RewriteWithSafeToString_PropertyIsReferenceType_AddsToString()
+    [Fact]
+    public void RewriteWithSafeToString_PropertyIsReferenceType_AddsToString()
+    {
+        var user = new User
         {
-            var user = new User
-            {
-                Currency = new Currency("USD")
-            };
+            Currency = new Currency("USD")
+        };
 
-            var resultExpression = _sut.ReplaceResultTypeWithString<User, Currency>(_ => _.Currency);
+        var resultExpression = _sut.ReplaceResultTypeWithString<User, Currency>(_ => _.Currency);
 
-            var compiledExpression = resultExpression.Compile();
-            var result = compiledExpression(user);
-            result.Should().Be("USD");
-        }
+        var compiledExpression = resultExpression.Compile();
+        var result = compiledExpression(user);
+        result.Should().Be("USD");
+    }
         
-        [Fact]
-        public void RewriteWithSafeToString_CachedObjectIsNull_AddsNullCheck()
-        {
-            var resultExpression = _sut.ReplaceResultTypeWithString<User, int>(_ => _.Id);
+    [Fact]
+    public void RewriteWithSafeToString_CachedObjectIsNull_AddsNullCheck()
+    {
+        var resultExpression = _sut.ReplaceResultTypeWithString<User, int>(_ => _.Id);
 
-            var compiledExpression = resultExpression.Compile();
-            var result = compiledExpression(null);
-            result.Should().BeNull();
-        }
+        var compiledExpression = resultExpression.Compile();
+        var result = compiledExpression(null);
+        result.Should().BeNull();
+    }
         
-        [Fact]
-        public void RewriteWithSafeToString_NullablePrimitiveTypePropertyIsNull_AddsNullCheck()
-        {
-            var resultExpression = _sut.ReplaceResultTypeWithString<User, int?>(_ => _.SubscriptionId);
+    [Fact]
+    public void RewriteWithSafeToString_NullablePrimitiveTypePropertyIsNull_AddsNullCheck()
+    {
+        var resultExpression = _sut.ReplaceResultTypeWithString<User, int?>(_ => _.SubscriptionId);
 
-            var compiledExpression = resultExpression.Compile();
-            var result = compiledExpression(new User());
-            result.Should().BeNull();
-        }
+        var compiledExpression = resultExpression.Compile();
+        var result = compiledExpression(new User());
+        result.Should().BeNull();
+    }
         
-        [Fact]
-        public void RewriteWithSafeToString_ReferenceTypePropertyIsNull_AddsNullCheck()
-        {
-            var resultExpression = _sut.ReplaceResultTypeWithString<User, Currency>(_ => _.Currency);
+    [Fact]
+    public void RewriteWithSafeToString_ReferenceTypePropertyIsNull_AddsNullCheck()
+    {
+        var resultExpression = _sut.ReplaceResultTypeWithString<User, Currency>(_ => _.Currency);
 
-            var compiledExpression = resultExpression.Compile();
-            var result = compiledExpression(new User());
-            result.Should().BeNull();
-        }
+        var compiledExpression = resultExpression.Compile();
+        var result = compiledExpression(new User());
+        result.Should().BeNull();
+    }
         
-        [Fact]
-        public void GetProperties_TypeHasNoProperties_ReturnsEmptyArray()
-        {
-            var result = _sut.GetProperties(typeof(TypeWithoutProperties));
+    [Fact]
+    public void GetProperties_TypeHasNoProperties_ReturnsEmptyArray()
+    {
+        var result = _sut.GetProperties(typeof(TypeWithoutProperties));
 
-            result.Should().BeEmpty();
-        }
+        result.Should().BeEmpty();
+    }
 
-        [Fact]
-        public void GetProperties_TypeHasProperties_ReturnsPropertiesArray()
-        {
-            var result = _sut.GetProperties(typeof(User));
+    [Fact]
+    public void GetProperties_TypeHasProperties_ReturnsPropertiesArray()
+    {
+        var result = _sut.GetProperties(typeof(User));
 
-            result.Should().HaveCount(4);
-            result.Should().Contain(e => e.Name == nameof(User.Name))
-                .And.Contain(e => e.Name == nameof(User.Id))
-                .And.Contain(e => e.Name == nameof(User.Currency))
-                .And.Contain(e => e.Name == nameof(User.SubscriptionId));
-        }
+        result.Should().HaveCount(4);
+        result.Should().Contain(e => e.Name == nameof(User.Name))
+            .And.Contain(e => e.Name == nameof(User.Id))
+            .And.Contain(e => e.Name == nameof(User.Currency))
+            .And.Contain(e => e.Name == nameof(User.SubscriptionId));
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace FluentCaching.Cache.Models
+﻿namespace FluentCaching.Cache.Models;
+
+public enum ExpirationType
 {
-    public enum ExpirationType
-    {
-        Absolute, Sliding
-    }
+    Absolute, Sliding
 }

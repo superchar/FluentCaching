@@ -38,6 +38,7 @@ public abstract class BaseParameterPropertyAccessVisitor : ExpressionVisitor
             return false;
         }
 
+        // ReSharper disable once TailRecursiveCall
         return ComesFromParameter(memberExpression.Expression);
     }
 

@@ -1,14 +1,13 @@
-﻿namespace FluentCaching.Configuration.PolicyBuilders
+﻿namespace FluentCaching.Configuration.PolicyBuilders;
+
+public class AndPolicyBuilder<TValue>
 {
-    public class AndPolicyBuilder<TValue>
+    private readonly TValue _value;
+
+    public AndPolicyBuilder(TValue value)
     {
-        private readonly TValue _value;
-
-        public AndPolicyBuilder(TValue value)
-        {
-            _value = value;
-        }
-
-        public TValue And() => _value;
+        _value = value;
     }
+
+    public TValue And() => _value;
 }

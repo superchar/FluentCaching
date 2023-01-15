@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using FluentCaching.Cache.Facades;
 using FluentCaching.Cache.Models;

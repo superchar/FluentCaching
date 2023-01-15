@@ -3,18 +3,17 @@ using FluentCaching.Cache.Models;
 using FluentCaching.Configuration.PolicyBuilders;
 using Xunit;
 
-namespace FluentCaching.Memory.Tests.Unit
+namespace FluentCaching.Memory.Tests.Unit;
+
+public class CacheImplementationBuilderExtensionsTests 
 {
-    public class CacheImplementationBuilderExtensionsTests 
+    [Fact]
+    public void StoreInMemory_WhenCalled_ReturnsCacheImplementationPolicyBuilder()
     {
-        [Fact]
-        public void StoreInMemory_WhenCalled_ReturnsCacheImplementationPolicyBuilder()
-        {
-            var builder = new CacheImplementationPolicyBuilder(new CacheOptions());
+        var builder = new CacheImplementationPolicyBuilder(new CacheOptions());
 
-            var result = builder.StoreInMemory();
+        var result = builder.StoreInMemory();
 
-            result.Should().NotBeNull();
-        }
+        result.Should().NotBeNull();
     }
 }

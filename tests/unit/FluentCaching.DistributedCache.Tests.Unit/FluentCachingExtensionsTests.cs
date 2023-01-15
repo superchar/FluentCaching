@@ -3,18 +3,17 @@ using Microsoft.AspNetCore.Builder;
 using Moq;
 using Xunit;
 
-namespace FluentCaching.DistributedCache.Tests.Unit
+namespace FluentCaching.DistributedCache.Tests.Unit;
+
+public class FluentCachingExtensionsTests
 {
-    public class FluentCachingExtensionsTests
+    [Fact]
+    public void UseFluentCaching_WhenCalled_ReturnsIApplicationBuilder()
     {
-        [Fact]
-        public void UseFluentCaching_WhenCalled_RetunsIApplicationBuilder()
-        {
-            var applicationBuilderMock = new Mock<IApplicationBuilder>();
+        var applicationBuilderMock = new Mock<IApplicationBuilder>();
 
-            var result = applicationBuilderMock.Object.UseFluentCaching();
+        var result = applicationBuilderMock.Object.UseFluentCaching();
 
-            result.Should().NotBeNull();
-        }
+        result.Should().NotBeNull();
     }
 }
