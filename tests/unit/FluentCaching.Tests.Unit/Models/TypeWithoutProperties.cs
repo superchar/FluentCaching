@@ -1,6 +1,5 @@
-﻿namespace FluentCaching.Tests.Unit.Models
+﻿namespace FluentCaching.Tests.Unit.Models;
+
+internal class TypeWithoutProperties
 {
-    internal class TypeWithoutProperties
-    {
-    }
 }

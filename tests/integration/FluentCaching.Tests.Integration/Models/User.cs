@@ -1,24 +1,19 @@
-﻿namespace FluentCaching.Tests.Integration.Models
+﻿namespace FluentCaching.Tests.Integration.Models;
+
+public class User
 {
-    public class User
-    {
-        public static User Test { get; } = new User { FirstName = "John", Id = 1, LastName = "Doe" };
+    public static User Test { get; } = new () { FirstName = "John", Id = 1, LastName = "Doe" };
 
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string FirstName { get; set; }
+    public string FirstName { get; set; }
 
-        public string LastName { get; set; }
+    public string LastName { get; set; }
 
-        public override string ToString() => $"{FirstName}_{LastName}";
+    public override string ToString() => $"{FirstName}_{LastName}";
 
-        public Address Address { get; set; }
+    public Address Address { get; set; }
 
-        public Order LastOrder { get; set; }
-
-        public User Clone()
-        {
-            return (User)MemberwiseClone();
-        }
-    }
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
+    public Order LastOrder { get; set; }
 }

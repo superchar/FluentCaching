@@ -8,94 +8,93 @@ using FluentCaching.Keys.Exceptions;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Keys.Models;
 
-namespace FluentCaching.Keys.Builders
+namespace FluentCaching.Keys.Builders;
+
+internal class KeyBuilder : IKeyBuilder
 {
-    internal class KeyBuilder : IKeyBuilder
+    private const string KeyPartSeparator = ":";
+        
+    private readonly List<IKeyPartBuilder> _keyPartBuilders = new();
+
+    private readonly IExpressionsHelper _expressionHelper;
+    private readonly IKeyContextBuilder _keyContextBuilder;
+    private readonly IKeyPartBuilderFactory _keyPartBuilderFactory;
+
+    public KeyBuilder() 
+        : this(new KeyContextBuilder(new ExpressionsHelper()), 
+            new ExpressionsHelper(),
+            new KeyPartBuilderFactory(new ExpressionsHelper()))
     {
-        private const string KeyPartSeparator = ":";
+    }
+
+    internal KeyBuilder(IKeyContextBuilder keyContextBuilder, 
+        IExpressionsHelper expressionHelper,
+        IKeyPartBuilderFactory keyPartBuilderFactory)
+    {
+        _keyContextBuilder = keyContextBuilder;
+        _expressionHelper = expressionHelper;
+        _keyPartBuilderFactory = keyPartBuilderFactory;
+    }
+
+    private bool HasDynamicParts => _keyPartBuilders.Any(_ => _.IsDynamic);
         
-        private readonly List<IKeyPartBuilder> _keyPartBuilders = new();
-
-        private readonly IExpressionsHelper _expressionHelper;
-        private readonly IKeyContextBuilder _keyContextBuilder;
-        private readonly IKeyPartBuilderFactory _keyPartBuilderFactory;
-
-        public KeyBuilder() 
-            : this(new KeyContextBuilder(new ExpressionsHelper()), 
-                new ExpressionsHelper(),
-                new KeyPartBuilderFactory(new ExpressionsHelper()))
+    public void AppendStatic<TValue>(TValue value)
+        => _keyPartBuilders.Add(_keyPartBuilderFactory.Create(value));
+        
+    public void AppendExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter)
+    {
+        foreach (var propertyName in _expressionHelper.GetParameterPropertyNames(valueGetter))
         {
+            _keyContextBuilder.AddKey(propertyName);
         }
-
-        internal KeyBuilder(IKeyContextBuilder keyContextBuilder, 
-            IExpressionsHelper expressionHelper,
-            IKeyPartBuilderFactory keyPartBuilderFactory)
-        {
-            _keyContextBuilder = keyContextBuilder;
-            _expressionHelper = expressionHelper;
-            _keyPartBuilderFactory = keyPartBuilderFactory;
-        }
-
-        private bool HasDynamicParts => _keyPartBuilders.Any(_ => _.IsDynamic);
-        
-        public void AppendStatic<TValue>(TValue value)
-            => _keyPartBuilders.Add(_keyPartBuilderFactory.Create(value));
-        
-        public void AppendExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter)
-        {
-            foreach (var propertyName in _expressionHelper.GetParameterPropertyNames(valueGetter))
-            {
-                _keyContextBuilder.AddKey(propertyName);
-            }
             
-            _keyPartBuilders.Add(_keyPartBuilderFactory.Create(valueGetter));
-        }
+        _keyPartBuilders.Add(_keyPartBuilderFactory.Create(valueGetter));
+    }
 
-        public string BuildFromScalarKey(object scalarKey)
-        {
-            var context = _keyContextBuilder.BuildRetrieveContextFromScalarKey(scalarKey);
+    public string BuildFromScalarKey(object scalarKey)
+    {
+        var context = _keyContextBuilder.BuildRetrieveContextFromScalarKey(scalarKey);
 
-            return Build(context);
-        }
+        return Build(context);
+    }
 
-        public string BuildFromComplexKey(object complexKey)
-        {
-            var context = _keyContextBuilder.BuildRetrieveContextFromComplexKey(complexKey);
+    public string BuildFromComplexKey(object complexKey)
+    {
+        var context = _keyContextBuilder.BuildRetrieveContextFromComplexKey(complexKey);
 
-            return Build(context);
+        return Build(context);
             
+    }
+
+    public string BuildFromStaticKey()
+    {
+        if (HasDynamicParts)
+        {
+            throw new KeyPartMissingException();
         }
 
-        public string BuildFromStaticKey()
+        return Build(KeyContext.Null);
+    }
+
+    public string BuildFromCachedObject(object cachedObject)
+    {
+        var context = _keyContextBuilder.BuildCacheContext(cachedObject);
+
+        return Build(context);
+    }
+
+    private string Build(KeyContext context)
+    {
+        using var keyStringBuilder = new KeyStringBuilder();
+        for (var i = 0; i < _keyPartBuilders.Count; i++)
         {
-            if (HasDynamicParts)
+            keyStringBuilder.Append(_keyPartBuilders[i].Build(context));
+            if (i < _keyPartBuilders.Count - 1)
             {
-                throw new KeyPartMissingException();
+                keyStringBuilder.Append(KeyPartSeparator);
             }
-
-            return Build(KeyContext.Null);
         }
 
-        public string BuildFromCachedObject(object cachedObject)
-        {
-            var context = _keyContextBuilder.BuildCacheContext(cachedObject);
-
-            return Build(context);
-        }
-
-        private string Build(KeyContext context)
-        {
-            using var keyStringBuilder = new KeyStringBuilder();
-            for (var i = 0; i < _keyPartBuilders.Count; i++)
-            {
-                keyStringBuilder.Append(_keyPartBuilders[i].Build(context));
-                if (i < _keyPartBuilders.Count - 1)
-                {
-                    keyStringBuilder.Append(KeyPartSeparator);
-                }
-            }
-
-            return keyStringBuilder.ToString();
-        }
+        return keyStringBuilder.ToString();
     }
 }

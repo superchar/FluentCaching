@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Threading.Tasks;
 using BenchmarkDotNet.Running;
 
-namespace FluentCaching.Benchmarks
+namespace FluentCaching.Benchmarks;
+
+public static class Program
 {
-    internal class Program
+    internal static void Main()
     {
-        internal static async Task Main(string[] args)
-        {
-            BenchmarkRunner.Run<SimpleKeyBenchmark>();
-            Console.ReadKey();
-        }
+        BenchmarkRunner.Run<SimpleKeyBenchmark>();
+        Console.ReadKey();
     }
 }

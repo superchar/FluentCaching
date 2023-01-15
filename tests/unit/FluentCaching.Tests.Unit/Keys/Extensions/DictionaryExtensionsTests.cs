@@ -3,22 +3,21 @@ using FluentAssertions;
 using FluentCaching.Keys.Extensions;
 using Xunit;
 
-namespace FluentCaching.Tests.Unit.Keys.Extensions
+namespace FluentCaching.Tests.Unit.Keys.Extensions;
+
+public class DictionaryExtensionsTests
 {
-    public class DictionaryExtensionsTests
+    [Fact]
+    public void FirstKey_WhenCalled_ReturnsFirstKey()
     {
-        [Fact]
-        public void FirstKey_WhenCalled_ReturnsFirstKey()
+        var dictionary = new Dictionary<string, string>
         {
-            var dictionary = new Dictionary<string, string>
-            {
-                { "first key", "first value" },
-                { "second key", "second value" }
-            };
+            { "first key", "first value" },
+            { "second key", "second value" }
+        };
 
-            var key = dictionary.FirstKey();
+        var key = dictionary.FirstKey();
 
-            key.Should().Be("first key");
-        }
+        key.Should().Be("first key");
     }
 }

@@ -6,36 +6,35 @@ using FluentCaching.Configuration.PolicyBuilders;
 using Moq;
 using Xunit;
 
-namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders
+namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders;
+
+public class CacheImplementationPolicyBuilderTests
 {
-    public class CacheImplementationPolicyBuilderTests
+    private readonly CacheOptions _cacheOptions;
+
+    private readonly CacheImplementationPolicyBuilder _sut;
+
+    public CacheImplementationPolicyBuilderTests()
     {
-        private readonly CacheOptions _cacheOptions;
+        _cacheOptions = new CacheOptions();
 
-        private readonly CacheImplementationPolicyBuilder _sut;
+        _sut = new CacheImplementationPolicyBuilder(_cacheOptions);
+    }
 
-        public CacheImplementationPolicyBuilderTests()
-        {
-            _cacheOptions = new CacheOptions();
+    [Fact]
+    public void StoreIn_CacheImplementationIsNull_ThrowsException()
+    {
+        _sut.Invoking(s => s.StoreIn(null)).Should()
+            .Throw<ArgumentNullException>().WithMessage("Cache implementation cannot be null (Parameter 'cacheImplementation')");
+    }
 
-            _sut = new CacheImplementationPolicyBuilder(_cacheOptions);
-        }
+    [Fact]
+    public void StoreIn_CacheImplementationIsNotNull_SetsCacheImplementation()
+    {
+        var cacheImplementationMock = new Mock<ICacheImplementation>();
 
-        [Fact]
-        public void StoreIn_CacheImplementationIsNull_ThrowsException()
-        {
-            _sut.Invoking(s => s.StoreIn(null)).Should()
-                .Throw<ArgumentNullException>().WithMessage("Cache implementation cannot be null (Parameter 'cacheImplementation')");
-        }
+        _sut.StoreIn(cacheImplementationMock.Object);
 
-        [Fact]
-        public void StoreIn_CacheImplementationIsNotNull_SetsCacheImplementation()
-        {
-            var cacheImplementationMock = new Mock<ICacheImplementation>();
-
-            _sut.StoreIn(cacheImplementationMock.Object);
-
-            _cacheOptions.CacheImplementation.Should().NotBeNull();
-        }
+        _cacheOptions.CacheImplementation.Should().NotBeNull();
     }
 }

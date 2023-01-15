@@ -1,70 +1,69 @@
 ﻿using System;
 using FluentCaching.Cache.Models;
 
-namespace FluentCaching.Configuration.PolicyBuilders.Ttl
+namespace FluentCaching.Configuration.PolicyBuilders.Ttl;
+
+public class TimeTtlPolicyBuilder
 {
-    public class TimeTtlPolicyBuilder
+    private readonly CacheOptions _currentOptions;
+
+    private ushort _currentValue;
+
+    private ushort _seconds;
+
+    private ushort _minutes;
+
+    private ushort _hours;
+
+    private ushort _days;
+
+    public TimeTtlPolicyBuilder(CacheOptions currentOptions, ushort currentValue)
     {
-        private readonly CacheOptions _currentOptions;
+        _currentOptions = currentOptions;
+        _currentValue = currentValue;
+    }
 
-        private ushort _currentValue;
-
-        private ushort _seconds;
-
-        private ushort _minutes;
-
-        private ushort _hours;
-
-        private ushort _days;
-
-        public TimeTtlPolicyBuilder(CacheOptions currentOptions, ushort currentValue)
+    public TimeTtlValuePolicyBuilder Seconds
+    {
+        get
         {
-            _currentOptions = currentOptions;
-            _currentValue = currentValue;
+            _seconds = _currentValue;
+            return new TimeTtlValuePolicyBuilder(this);
         }
+    }
 
-        public TimeTtlValuePolicyBuilder Seconds
+    public TimeTtlValuePolicyBuilder Minutes
+    {
+        get
         {
-            get
-            {
-                _seconds = _currentValue;
-                return new TimeTtlValuePolicyBuilder(this);
-            }
+            _minutes = _currentValue;
+            return new TimeTtlValuePolicyBuilder(this);
         }
+    }
 
-        public TimeTtlValuePolicyBuilder Minutes
+    public TimeTtlValuePolicyBuilder Hours
+    {
+        get
         {
-            get
-            {
-                _minutes = _currentValue;
-                return new TimeTtlValuePolicyBuilder(this);
-            }
+            _hours = _currentValue;
+            return new TimeTtlValuePolicyBuilder(this);
         }
+    }
 
-        public TimeTtlValuePolicyBuilder Hours
+    public TimeTtlValuePolicyBuilder Days
+    {
+        get
         {
-            get
-            {
-                _hours = _currentValue;
-                return new TimeTtlValuePolicyBuilder(this);
-            }
+            _days = _currentValue;
+            return new TimeTtlValuePolicyBuilder(this);
         }
+    }
 
-        public TimeTtlValuePolicyBuilder Days
-        {
-            get
-            {
-                _days = _currentValue;
-                return new TimeTtlValuePolicyBuilder(this);
-            }
-        }
+    internal void SetCurrentValue(ushort value) => _currentValue = value;
 
-        internal void SetCurrentValue(ushort value) => _currentValue = value;
-
-        internal ExpirationTypePolicyBuilder Build()
-        {
-            _currentOptions.Ttl = new TimeSpan(_days, _hours, _minutes, _seconds);
-            return new ExpirationTypePolicyBuilder(_currentOptions);
-        }
+    internal ExpirationTypePolicyBuilder Build()
+    {
+        _currentOptions.Ttl = new TimeSpan(_days, _hours, _minutes, _seconds);
+        return new ExpirationTypePolicyBuilder(_currentOptions);
     }
 }

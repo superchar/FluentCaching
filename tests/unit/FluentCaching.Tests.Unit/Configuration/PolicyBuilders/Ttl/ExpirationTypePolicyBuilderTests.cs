@@ -3,37 +3,36 @@ using FluentCaching.Cache.Models;
 using FluentCaching.Configuration.PolicyBuilders.Ttl;
 using Xunit;
 
-namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Ttl
+namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Ttl;
+
+public class ExpirationTypePolicyBuilderTests
 {
-    public class ExpirationTypePolicyBuilderTests
+    private readonly CacheOptions _cacheOptions;
+
+    private readonly ExpirationTypePolicyBuilder _sut;
+
+    public ExpirationTypePolicyBuilderTests()
     {
-        private readonly CacheOptions _cacheOptions;
+        _cacheOptions = new CacheOptions();
 
-        private readonly ExpirationTypePolicyBuilder _sut;
+        _sut = new ExpirationTypePolicyBuilder(_cacheOptions);
+    }
 
-        public ExpirationTypePolicyBuilderTests()
-        {
-            _cacheOptions = new CacheOptions();
+    [Fact]
+    public void AbsoluteExpiration_HappyPath_SetsAbsoluteExpirationType()
+    {
+        var result = _sut.AbsoluteExpiration();
 
-            _sut = new ExpirationTypePolicyBuilder(_cacheOptions);
-        }
+        result.Should().NotBeNull();  
+        _cacheOptions.ExpirationType.Should().Be(ExpirationType.Absolute);
+    }
 
-        [Fact]
-        public void AbsoluteExpiration_HappyPath_SetsAbsoluteExpirationType()
-        {
-            var result = _sut.AbsoluteExpiration();
+    [Fact]
+    public void SlidingExpiration_HappyPath_SetsSlidingExpirationType()
+    {
+        var result = _sut.SlidingExpiration();
 
-            result.Should().NotBeNull();  
-            _cacheOptions.ExpirationType.Should().Be(ExpirationType.Absolute);
-        }
-
-        [Fact]
-        public void SlidingExpiration_HappyPath_SetsSlidingExpirationType()
-        {
-            var result = _sut.SlidingExpiration();
-
-            result.Should().NotBeNull();
-            _cacheOptions.ExpirationType.Should().Be(ExpirationType.Sliding);
-        }
+        result.Should().NotBeNull();
+        _cacheOptions.ExpirationType.Should().Be(ExpirationType.Sliding);
     }
 }

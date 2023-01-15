@@ -8,60 +8,59 @@ using FluentCaching.Configuration.PolicyBuilders.Keys;
 using Moq;
 using Xunit;
 
-namespace FluentCaching.Tests.Unit.Cache.Builders
+namespace FluentCaching.Tests.Unit.Cache.Builders;
+
+public class CacheBuilderTests
 {
-    public class CacheBuilderTests
+    private readonly Mock<ICacheConfiguration> _cacheConfigurationMock;
+
+    private readonly CacheBuilder _sut;
+
+    public CacheBuilderTests()
     {
-        private readonly Mock<ICacheConfiguration> _cacheConfigurationMock;
+        _cacheConfigurationMock = new Mock<ICacheConfiguration>();
 
-        private readonly CacheBuilder _sut;
+        _sut = new CacheBuilder(_cacheConfigurationMock.Object);
+    }
 
-        public CacheBuilderTests()
-        {
-            _cacheConfigurationMock = new Mock<ICacheConfiguration>();
+    [Fact]
+    public void Build_HappyPath_ReturnsCacheObject()
+    {
+        var result = _sut.Build();
 
-            _sut = new CacheBuilder(_cacheConfigurationMock.Object);
-        }
+        result.Should().NotBeNull();
+    }
 
-        [Fact]
-        public void Build_HappyPath_ReturnsCacheObject()
-        {
-            var result = _sut.Build();
+    [Fact]
+    public void For_SpecificCacheHappyPath_CallsCorrespondingMethodInConfiguration() 
+    {
+        var factoryFuncMock = new Mock<Func<CachingKeyPolicyBuilder<string>, CacheImplementationPolicyBuilder>>();
 
-            result.Should().NotBeNull();
-        }
+        _sut.For(factoryFuncMock.Object);
 
-        [Fact]
-        public void For_SpecificCacheHappyPath_CallsCorrespondingMethodInConfiguration() 
-        {
-            var factoryFuncMock = new Mock<Func<CachingKeyPolicyBuilder<string>, CacheImplementationPolicyBuilder>>();
+        _cacheConfigurationMock
+            .Verify(c => c.For(It.IsAny<Func<CachingKeyPolicyBuilder<string>, CacheImplementationPolicyBuilder>>()), Times.Once);
+    }
 
-            _sut.For(factoryFuncMock.Object);
+    [Fact]
+    public void For_GenericCacheHappyPath_CallsCorrespondingMethodInConfiguration() 
+    {
+        var factoryFuncMock = new Mock<Func<CachingKeyPolicyBuilder<string>, AndPolicyBuilder<CacheImplementationPolicyBuilder>>>();
 
-            _cacheConfigurationMock
-                .Verify(c => c.For(It.IsAny<Func<CachingKeyPolicyBuilder<string>, CacheImplementationPolicyBuilder>>()), Times.Once);
-        }
+        _sut.For(factoryFuncMock.Object);
 
-        [Fact]
-        public void For_GenericCacheHappyPath_CallsCorrespondingMethodInConfiguration() 
-        {
-            var factoryFuncMock = new Mock<Func<CachingKeyPolicyBuilder<string>, AndPolicyBuilder<CacheImplementationPolicyBuilder>>>();
+        _cacheConfigurationMock
+            .Verify(c => c.For(It.IsAny<Func<CachingKeyPolicyBuilder<string>, AndPolicyBuilder<CacheImplementationPolicyBuilder>>>()), Times.Once);
+    }
 
-            _sut.For(factoryFuncMock.Object);
+    [Fact]
+    public void SetGenericCache_HappyPath_CallsCorrespondingMethodInConfiguration() 
+    {
+        var genericCacheImplementationMock = new Mock<ICacheImplementation>();
 
-            _cacheConfigurationMock
-                .Verify(c => c.For(It.IsAny<Func<CachingKeyPolicyBuilder<string>, AndPolicyBuilder<CacheImplementationPolicyBuilder>>>()), Times.Once);
-        }
+        _sut.SetGenericCache(genericCacheImplementationMock.Object);
 
-        [Fact]
-        public void SetGenericCache_HappyPath_CallsCorrespondingMethodInConfiguration() 
-        {
-            var genericCacheImplementationMock = new Mock<ICacheImplementation>();
-
-            _sut.SetGenericCache(genericCacheImplementationMock.Object);
-
-            _cacheConfigurationMock
-                .Verify(c => c.SetGenericCache(It.IsAny<ICacheImplementation>()), Times.Once);
-        }
+        _cacheConfigurationMock
+            .Verify(c => c.SetGenericCache(It.IsAny<ICacheImplementation>()), Times.Once);
     }
 }

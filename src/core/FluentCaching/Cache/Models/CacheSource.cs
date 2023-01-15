@@ -3,7 +3,7 @@ namespace FluentCaching.Cache.Models;
 public struct CacheSource<T>
     where T : class
 {
-    public static CacheSource<T> Static = new(null, CacheSourceType.Static);
+    public static readonly CacheSource<T> Static = new(null, CacheSourceType.Static);
 
     private CacheSource(object key, CacheSourceType cacheSourceType)
     { 
