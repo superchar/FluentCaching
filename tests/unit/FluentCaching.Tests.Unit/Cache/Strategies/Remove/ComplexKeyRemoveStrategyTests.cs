@@ -10,7 +10,7 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies.Remove
     public class ComplexKeyRemoveStrategyTests : BaseCacheStrategyTests
     {
         private static readonly CacheSource<User> ObjectKeySource 
-            = CacheSource<User>.CreateComplex(new object());
+            = CacheSource<User>.Create(new object());
         
         private readonly ComplexKeyRemoveStrategy<User> _sut;
 

@@ -33,6 +33,14 @@ public class StaticKeyPartBuilderTests
         result.Should().Be(keyPart);
     }
 
+    [Fact]
+    public void IsDynamic_WhenCalled_ReturnsFalse()
+    {
+        const string keyPart = "key part";
+        var builder = Create(keyPart);
+
+        builder.IsDynamic.Should().BeFalse();
+    }
 
     private static StaticKeyPartBuilder Create<T>(T value) where T : class
         => StaticKeyPartBuilder.Create(value);

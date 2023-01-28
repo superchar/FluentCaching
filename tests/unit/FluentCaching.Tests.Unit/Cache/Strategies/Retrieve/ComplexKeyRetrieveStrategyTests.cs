@@ -10,7 +10,7 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies.Retrieve;
 public class ComplexKeyRetrieveStrategyTests : BaseCacheStrategyTests
 {
     private static readonly CacheSource<User> ComplexKeySource 
-        = CacheSource<User>.CreateComplex(new object());
+        = CacheSource<User>.Create(new object());
     
     private readonly ComplexKeyRetrieveStrategy<User> _sut;
 

@@ -25,13 +25,6 @@ namespace FluentCaching.Configuration.PolicyBuilders.Keys
             _keyBuilder.AppendExpression(valueGetter);
             return new CombinedCachingKeyPolicyBuilder<T>(_keyBuilder);
         }
-        
-        public CombinedCachingKeyPolicyBuilder<TExternal> UseAsKey<TExternal, TValue>
-            (Expression<Func<TExternal, TValue>> valueGetter)
-        {
-            _keyBuilder.AppendExpression(valueGetter);
-            return new CombinedCachingKeyPolicyBuilder<TExternal>(_keyBuilder);
-        }
 
         public CombinedCachingKeyPolicyBuilder<T> UseAsKey<TValue>(TValue value)
         {

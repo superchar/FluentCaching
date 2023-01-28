@@ -10,7 +10,7 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies.Retrieve;
 public class ScalarKeyRetrieveStrategyTests : BaseCacheStrategyTests
 {
     private static readonly CacheSource<User> ScalarKeySource 
-        = CacheSource<User>.CreateScalar("key part");
+        = CacheSource<User>.Create("key part");
 
     private readonly ScalarKeyRetrieveStrategy<User> _sut;
 

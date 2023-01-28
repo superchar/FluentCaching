@@ -15,9 +15,9 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies.Factories;
 public class CacheStrategyFactoryTests
 {
     private static readonly CacheSource<User> ComplexKeyCacheSource = 
-        CacheSource<User>.CreateComplex(new object());
+        CacheSource<User>.Create(new object());
     private static readonly CacheSource<User> ScalarKeyCacheSource = 
-        CacheSource<User>.CreateScalar("key");
+        CacheSource<User>.Create("key");
 
     private readonly CacheStrategyFactory _sut;
 
@@ -39,7 +39,7 @@ public class CacheStrategyFactoryTests
     [Fact]
     public void CreateRetrieveStrategy_CacheSourceIsStatic_ReturnsStaticKeyRetrieveStrategy()
     {
-        var result = _sut.CreateRetrieveStrategy(CacheSource<User>.Static);
+        var result = _sut.CreateRetrieveStrategy(CacheSource<User>.Create(null));
 
         result.Should().BeOfType<StaticKeyRetrieveStrategy<User>>();
     }
@@ -63,7 +63,7 @@ public class CacheStrategyFactoryTests
     [Fact]
     public void CreateRemoveStrategy_CacheSourceIsStatic_ReturnsScalarKeyRemoveStrategy()
     {
-        var result = _sut.CreateRemoveStrategy(CacheSource<User>.Static);
+        var result = _sut.CreateRemoveStrategy(CacheSource<User>.Create(null));
 
         result.Should().BeOfType<StaticKeyRemoveStrategy<User>>();
     }

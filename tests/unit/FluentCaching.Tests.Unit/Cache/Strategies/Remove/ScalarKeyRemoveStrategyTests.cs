@@ -10,7 +10,7 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies.Remove;
 public class ScalarKeyRemoveStrategyTests : BaseCacheStrategyTests
 {
     private static readonly CacheSource<User> StringKeySource =
-        CacheSource<User>.CreateScalar("key part");
+        CacheSource<User>.Create("key part");
 
     private readonly ScalarKeyRemoveStrategy<User> _sut;
 

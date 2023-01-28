@@ -19,7 +19,7 @@ public class StaticKeyRemoveStrategyTests : BaseCacheStrategyTests
     [Fact]
     public async Task RemoveAsync_WhenCalled_CallsKeyBuilder()
     {
-        await _sut.RemoveAsync(CacheSource<User>.Static);
+        await _sut.RemoveAsync(CacheSource<User>.Create(null));
 
         KeyBuilderMock
             .Verify(_ => _.BuildFromStaticKey(), Times.Once);
@@ -33,7 +33,7 @@ public class StaticKeyRemoveStrategyTests : BaseCacheStrategyTests
             .Setup(_ => _.BuildFromStaticKey())
             .Returns(key);
             
-        await _sut.RemoveAsync(CacheSource<User>.Static);
+        await _sut.RemoveAsync(CacheSource<User>.Create(null));
 
         TypeCacheImplementationMock
             .Verify(_ => _.RemoveAsync(key), Times.Once);

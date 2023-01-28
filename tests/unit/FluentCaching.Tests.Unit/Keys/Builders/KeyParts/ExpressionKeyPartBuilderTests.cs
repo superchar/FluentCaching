@@ -87,6 +87,15 @@ public class ExpressionKeyPartBuilderTests
             .Should()
             .Throw<KeyPartMissingException>();
     }
+    
+    [Fact]
+    public void IsDynamic_WhenCalled_ReturnsTrue()
+    {
+        SetupExpressionRewriteFakes();
+        var builder = Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
+
+        builder.IsDynamic.Should().BeTrue();
+    }
 
     private static ExpressionKeyPartBuilder Create<T>(Expression<Func<User, T>> valueGetter,
         IExpressionsHelper expressionsHelper)
