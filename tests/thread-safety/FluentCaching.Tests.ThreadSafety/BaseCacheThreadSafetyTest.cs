@@ -10,7 +10,7 @@ namespace FluentCaching.Tests.ThreadSafety
         protected abstract ICacheImplementation CacheImplementation { get; }
 
         [Fact]
-        public async Task SimpleyKeyTypeWithTheSameKey()
+        public async Task ScalarKeyTypeWithTheSameKey()
         {
             const int id = 42;
             var cache = new CacheBuilder()
@@ -21,10 +21,9 @@ namespace FluentCaching.Tests.ThreadSafety
 
             var users = GenerateUsers(_ => (id, "Some Name"));
             var autoResetEvent = new AutoResetEvent(false);
+            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users, CreateScalarKey);
 
-            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users);
-
-            await RunCacheOperations(users, cache, (users.Count / 2, users.Count),
+            await RunCacheOperations(users, cache, (users.Count / 2, users.Count), CreateScalarKey,
                 afterCacheCallback: () =>
                 {
                     autoResetEvent.Set();
@@ -46,7 +45,7 @@ namespace FluentCaching.Tests.ThreadSafety
         }
         
         [Fact]
-        public async Task SimpleyKeyTypeWithTheDifferentKey()
+        public async Task ScalarKeyTypeWithTheDifferentKey()
         {
             var cache = new CacheBuilder()
                 .For<User>(_ => _.UseAsKey(u => u.Id).And()
@@ -58,9 +57,9 @@ namespace FluentCaching.Tests.ThreadSafety
             var targetUser = users.GetRandomItem();
             var autoResetEvent = new AutoResetEvent(false);
 
-            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users);
+            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users, CreateScalarKey);
 
-            await RunCacheOperations(users, cache, (users.Count / 2, users.Count),
+            await RunCacheOperations(users, cache, (users.Count / 2, users.Count), CreateScalarKey,
                 afterCacheCallback: () =>
                 {
                     autoResetEvent.Set();
@@ -68,7 +67,7 @@ namespace FluentCaching.Tests.ThreadSafety
                 },
                 afterRetrieveCallback: async () =>
                 {
-                    var user = await cache.RetrieveAsync<User>(targetUser.Id);
+                    var user = await cache.RetrieveAsync<User>(CreateScalarKey(targetUser));
                     user.Should().NotBeNull();
                     autoResetEvent.Set();
                 },
@@ -84,19 +83,19 @@ namespace FluentCaching.Tests.ThreadSafety
         [Fact]
         public async Task ComplexKeyTypeWithTheSameKey()
         {
-            var key = new {Id = 42, Name = "Some name"};
+            var key = new {Id = 42, Name = "Some Name"};
             var cache = new CacheBuilder()
                 .For<User>(_ => _.UseAsKey(u => $"{u.Id}-{u.Name}").And()
                     .SetInfiniteExpirationTimeout().And()
                     .StoreIn(CacheImplementation))
                 .Build();
 
-            var users = GenerateUsers(_ => (42, "Some Name"));
+            var users = GenerateUsers(_ => (key.Id, key.Name));
             var autoResetEvent = new AutoResetEvent(false);
 
-            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users);
+            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users, CreateComplexKey);
 
-            await RunCacheOperations(users, cache, (users.Count / 2, users.Count),
+            await RunCacheOperations(users, cache, (users.Count / 2, users.Count), CreateComplexKey,
                 afterCacheCallback: () =>
                 {
                     autoResetEvent.Set();
@@ -116,19 +115,62 @@ namespace FluentCaching.Tests.ThreadSafety
                     removedUser.Should().BeNull();
                 });
         }
+        
+        [Fact]
+        public async Task ComplexKeyTypeWithTheDifferentKey()
+        {
+            var cache = new CacheBuilder()
+                .For<User>(_ => _.UseAsKey(u => $"{u.Id}-{u.Name}").And()
+                    .SetInfiniteExpirationTimeout().And()
+                    .StoreIn(CacheImplementation))
+                .Build();
 
-        private static Task RunBackgroundСacheOperations(WaitHandle autoResetEvent, ICache cache,
-            IReadOnlyList<User> users)
-            => Task.Run(() => RunCacheOperations(users, cache, (0, users.Count / 2),
+            var users = GenerateUsers(index => (index, $"Some name {index}"));
+            var targetUser = users.GetRandomItem();
+            var autoResetEvent = new AutoResetEvent(false);
+
+            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users, CreateComplexKey);
+
+            await RunCacheOperations(users, cache, (users.Count / 2, users.Count), CreateComplexKey,
+                afterCacheCallback: () =>
+                {
+                    autoResetEvent.Set();
+                    return Task.CompletedTask;
+                },
+                afterRetrieveCallback: async () =>
+                {
+                    var user = await cache.RetrieveAsync<User>(CreateComplexKey(targetUser));
+                    user.Should().NotBeNull();
+                    autoResetEvent.Set();
+                },
+                afterRemoveCallback: async () =>
+                {
+                    autoResetEvent.Set();
+                    await backgroudTask;
+                    var removedUser = await cache.RetrieveAsync<User>(CreateComplexKey(targetUser));
+                    removedUser.Should().BeNull();
+                });
+        }
+
+        private static object CreateScalarKey(User user) => user.Id;
+
+        private static object CreateComplexKey(User user) => new { user.Id, user.Name };
+        
+        private static Task RunBackgroundСacheOperations(WaitHandle autoResetEvent, 
+            ICache cache,
+            IReadOnlyList<User> users,
+            Func<User, object> createKeyFunc)
+            => Task.Run(() => RunCacheOperations(users, cache, (0, users.Count / 2), createKeyFunc, 
                     _ => Task.FromResult(autoResetEvent.WaitOne())));
 
         private static Task RunCacheOperations(IReadOnlyList<User> users,
             ICache cache,
             (int Start, int End ) processingRange,
+            Func<User, object> createKeyFunc,
             Func<Task> afterCacheCallback,
             Func<Task> afterRetrieveCallback,
             Func<Task> afterRemoveCallback)
-            => RunCacheOperations(users, cache, processingRange,
+            => RunCacheOperations(users, cache, processingRange, createKeyFunc,
                 operationType => operationType switch
                 {
                     CacheOperationType.Cache => afterCacheCallback(),
@@ -140,6 +182,7 @@ namespace FluentCaching.Tests.ThreadSafety
         private static async Task RunCacheOperations(IReadOnlyList<User> users,
             ICache cache,
             (int Start, int End ) processingRange,
+            Func<User, object> createKeyFunc,
             Func<CacheOperationType, Task> afterOperationCallback)
         {
             for (var i = processingRange.Start; i < processingRange.End; i++)
@@ -150,13 +193,13 @@ namespace FluentCaching.Tests.ThreadSafety
             await afterOperationCallback(CacheOperationType.Cache);
             for (var i = processingRange.Start; i < processingRange.End; i++)
             {
-                await cache.RetrieveAsync<User>(users[i].Id);
+                await cache.RetrieveAsync<User>(createKeyFunc(users[i]));
             }
 
             await afterOperationCallback(CacheOperationType.Retrieve);
             for (var i = processingRange.Start; i < processingRange.End; i++)
             {
-                await cache.RemoveAsync<User>(users[i].Id);
+                await cache.RemoveAsync<User>(createKeyFunc(users[i]));
             }
 
             await afterOperationCallback(CacheOperationType.Remove);
