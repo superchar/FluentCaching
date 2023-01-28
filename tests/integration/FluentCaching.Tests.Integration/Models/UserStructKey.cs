@@ -1,11 +1,15 @@
-﻿namespace FluentCaching.Tests.Integration.Models
+﻿namespace FluentCaching.Tests.Integration.Models;
+
+
+public struct UserStructKey
 {
-    public struct UserStructKey
-    {
-        public UserStructKey(int orderId, int id) => (OrderId, Id) = (orderId, id);
+    public UserStructKey(int orderId, int id) => (OrderId, Id) = (orderId, id);
+    
+    // ReSharper disable once MemberCanBePrivate.Global
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
+    public int OrderId { get; }
 
-        public int OrderId { get; }
-
-        public int Id { get; }
-    }
+    // ReSharper disable once MemberCanBePrivate.Global
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
+    public int Id { get; }
 }

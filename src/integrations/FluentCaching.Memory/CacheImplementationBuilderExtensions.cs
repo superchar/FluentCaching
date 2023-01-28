@@ -1,11 +1,12 @@
 ﻿using FluentCaching.Configuration.PolicyBuilders;
 
-namespace FluentCaching.Memory
+namespace FluentCaching.Memory;
+
+// ReSharper disable once UnusedType.Global
+public static class CacheImplementationBuilderExtensions
 {
-    public static class CacheImplementationBuilderExtensions
-    {
-        public static CacheImplementationPolicyBuilder StoreInMemory(
-            this CacheImplementationPolicyBuilder cacheImplementationPolicyBuilder) =>
-            cacheImplementationPolicyBuilder.StoreIn(new MemoryCacheImplementation());
-    }
+    // ReSharper disable once UnusedMember.Global
+    public static CacheImplementationPolicyBuilder StoreInMemory(
+        this CacheImplementationPolicyBuilder cacheImplementationPolicyBuilder) =>
+        cacheImplementationPolicyBuilder.StoreIn(new MemoryCacheImplementation());
 }

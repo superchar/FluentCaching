@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using FluentAssertions;
 using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Factories;

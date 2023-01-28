@@ -3,48 +3,47 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
-namespace FluentCaching.DistributedCache.Tests.Unit
+namespace FluentCaching.DistributedCache.Tests.Unit;
+
+public class ServiceLocatorTests
 {
-    public class ServiceLocatorTests
+    private readonly Mock<IServiceProvider> _serviceProviderMock;
+
+    public ServiceLocatorTests()
     {
-        private readonly Mock<IServiceProvider> _serviceProviderMock;
+        _serviceProviderMock = new Mock<IServiceProvider>();
+    }
 
-        public ServiceLocatorTests()
-        {
-            _serviceProviderMock = new Mock<IServiceProvider>();
-        }
+    [Fact]
+    public void Initialize_WhenCalled_DoesNotThrowException()
+    {
+        var initialize = () => ServiceLocator.Initialize(_serviceProviderMock.Object);
 
-        [Fact]
-        public void Initialize_WhenCalled_DoesNotThrowException()
-        {
-            Action initialize = () => ServiceLocator.Initialize(_serviceProviderMock.Object);
+        initialize.Should().NotThrow();
+    }
 
-            initialize.Should().NotThrow();
-        }
+    [Fact]
+    public void CreateScope_InvokesServiceProvider_WhenServiceProviderInitialized()
+    {
+        var serviceScopeFactoryMock = new Mock<IServiceScopeFactory>();
+        serviceScopeFactoryMock
+            .Setup(f => f.CreateScope())
+            .Returns(new Mock<IServiceScope>().Object);
+        _serviceProviderMock
+            .Setup(s => s.GetService(typeof(IServiceScopeFactory)))
+            .Returns(serviceScopeFactoryMock.Object);
+        ServiceLocator.Initialize(_serviceProviderMock.Object);
 
-        [Fact]
-        public void CreateScope_InvokesServiceProvider_WhenServiceProviderInitialized()
-        {
-            var serviceScopeFactoryMock = new Mock<IServiceScopeFactory>();
-            serviceScopeFactoryMock
-                .Setup(f => f.CreateScope())
-                .Returns(new Mock<IServiceScope>().Object);
-            _serviceProviderMock
-                .Setup(s => s.GetService(typeof(IServiceScopeFactory)))
-                .Returns(serviceScopeFactoryMock.Object);
-            ServiceLocator.Initialize(_serviceProviderMock.Object);
+        ServiceLocator.CreateScope();
 
-            ServiceLocator.CreateScope();
-
-            _serviceProviderMock.Verify(s => s.GetService(typeof(IServiceScopeFactory)), Times.Once);
-        }
+        _serviceProviderMock.Verify(s => s.GetService(typeof(IServiceScopeFactory)), Times.Once);
+    }
         
-        [Fact]
-        public void CreateScope_ThrowsInvalidOperationException_WhenServiceProviderIsNotInitialized()
-        {
-            Action createScope = () => ServiceLocator.CreateScope();
+    [Fact]
+    public void CreateScope_ThrowsInvalidOperationException_WhenServiceProviderIsNotInitialized()
+    {
+        Action createScope = () => ServiceLocator.CreateScope();
 
-            createScope.Should().Throw<InvalidOperationException>();
-        }
+        createScope.Should().Throw<InvalidOperationException>();
     }
 }

@@ -7,67 +7,66 @@ using FluentCaching.Tests.Unit.Models;
 using Moq;
 using Xunit;
 
-namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Keys
+namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Keys;
+
+public class CombinedCachingKeyPolicyBuilderTests
 {
-    public class CombinedCachingKeyPolicyBuilderTests
+    private readonly Mock<IKeyBuilder> _keyBuilderMock;
+
+    private readonly CombinedCachingKeyPolicyBuilder<User> _sut;
+
+    public CombinedCachingKeyPolicyBuilderTests()
     {
-        private readonly Mock<IKeyBuilder> _keyBuilderMock;
+        _keyBuilderMock = new Mock<IKeyBuilder>();
 
-        private readonly CombinedCachingKeyPolicyBuilder<User> _sut;
+        _sut = new CombinedCachingKeyPolicyBuilder<User>(_keyBuilderMock.Object);
+    }
 
-        public CombinedCachingKeyPolicyBuilderTests()
-        {
-            _keyBuilderMock = new Mock<IKeyBuilder>();
+    [Fact]
+    public void And_HappyPath_ReturnsNotNullTtlTypeBuilder()
+    {
+        var result = _sut.And();
 
-            _sut = new CombinedCachingKeyPolicyBuilder<User>(_keyBuilderMock.Object);
-        }
+        result.Should().NotBeNull();
+    }
 
-        [Fact]
-        public void And_HappyPath_ReturnsNotNullTtlTypeBuilder()
-        {
-            var result = _sut.And();
+    [Fact]
+    public void CombinedWith_Expression_CallsTrackExpressionWithProperParameter()
+    {
+        var result = _sut.CombinedWith(u => u.Name);
 
-            result.Should().NotBeNull();
-        }
+        result.Should().NotBeNull();
+        _keyBuilderMock
+            .Verify(p => p.AppendExpression(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
+    }
 
-        [Fact]
-        public void CombinedWith_Expression_CallsTrackExpressionWithProperParameter()
-        {
-            var result = _sut.CombinedWith(u => u.Name);
+    [Fact]
+    public void CombinedWith_StaticValue_CallsTrackStaticWithProperParameter()
+    {
+        var result = _sut.CombinedWith("static value");
 
-            result.Should().NotBeNull();
-            _keyBuilderMock
-                .Verify(p => p.AppendExpression(It.IsAny<Expression<Func<User, string>>>()), Times.Once);
-        }
+        result.Should().NotBeNull();
+        _keyBuilderMock
+            .Verify(p => p.AppendStatic("static value"), Times.Once);
+    }
 
-        [Fact]
-        public void CombinedWith_StaticValue_CallsTrackStaticWithProperParameter()
-        {
-            var result = _sut.CombinedWith("static value");
+    [Fact]
+    public void CombinedWithClassName_ClassName_CallsTrackStaticWithProperParameter()
+    {
+        var result = _sut.CombinedWithClassName();
 
-            result.Should().NotBeNull();
-            _keyBuilderMock
-                .Verify(p => p.AppendStatic("static value"), Times.Once);
-        }
+        result.Should().NotBeNull();
+        _keyBuilderMock
+            .Verify(p => p.AppendStatic("User"), Times.Once);
+    }
 
-        [Fact]
-        public void CombinedWithClassName_ClassName_CallsTrackStaticWithProperParameter()
-        {
-            var result = _sut.CombinedWithClassName();
+    [Fact]
+    public void CombinedWithClassFullName_ClassNameFullName_CallsTrackStaticWithProperParameter()
+    {
+        var result = _sut.CombinedWithClassFullName();
 
-            result.Should().NotBeNull();
-            _keyBuilderMock
-                .Verify(p => p.AppendStatic("User"), Times.Once);
-        }
-
-        [Fact]
-        public void CombinedWithClassFullName_ClassNameFullName_CallsTrackStaticWithProperParameter()
-        {
-            var result = _sut.CombinedWithClassFullName();
-
-            result.Should().NotBeNull();
-            _keyBuilderMock
-                .Verify(p => p.AppendStatic("FluentCaching.Tests.Unit.Models.User"), Times.Once);
-        }
+        result.Should().NotBeNull();
+        _keyBuilderMock
+            .Verify(p => p.AppendStatic("FluentCaching.Tests.Unit.Models.User"), Times.Once);
     }
 }

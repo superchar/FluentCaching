@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace FluentCaching.Keys.Builders
+namespace FluentCaching.Keys.Builders;
+
+internal interface IKeyBuilder
 {
-    internal interface IKeyBuilder
-    {
-        string BuildFromStaticKey();
+    string BuildFromStaticKey();
 
-        string BuildFromScalarKey(object scalarKey);
+    string BuildFromScalarKey(object scalarKey);
 
-        string BuildFromComplexKey(object complexKey);
+    string BuildFromComplexKey(object complexKey);
         
-        string BuildFromCachedObject(object cachedObject);
+    string BuildFromCachedObject(object cachedObject);
         
-        void AppendStatic<TValue>(TValue value);
+    void AppendStatic<TValue>(TValue value);
 
-        void AppendExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter);
+    void AppendExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter);
         
-    }
 }

@@ -1,9 +1,8 @@
 ﻿using FluentCaching.Cache.Models;
 
-namespace FluentCaching.Configuration
+namespace FluentCaching.Configuration;
+
+internal interface ICacheConfigurationItem
 {
-    internal interface ICacheConfigurationItem
-    {
-        CacheOptions Options { get; }
-    }
+    CacheOptions Options { get; }
 }

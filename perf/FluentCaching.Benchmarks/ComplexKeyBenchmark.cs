@@ -3,32 +3,29 @@ using BenchmarkDotNet.Attributes;
 using FluentCaching.Configuration.PolicyBuilders;
 using FluentCaching.Configuration.PolicyBuilders.Keys;
 
-namespace FluentCaching.Benchmarks
+namespace FluentCaching.Benchmarks;
+
+public class ComplexKeyBenchmark : BaseDictionaryCompareBenchmark
 {
-    public class ComplexKeyBenchmark : BaseDictionaryCompareBenchmark
+    [Benchmark]
+    public async Task CacheAndRetrieve()
     {
-        [Benchmark]
-        public async Task CacheAndRetrieve()
+        foreach (var user in Users)
         {
-            foreach (var user in Users)
-            {
-                await Cache.CacheAsync(user);
+            await Cache.CacheAsync(user);
 
-                var key = new {user.Id, user.LastName, user.FirstName};
+            var key = new {user.Id, user.LastName, user.FirstName};
 
-                await Cache.RetrieveAsync<User>(key);
-            }
+            await Cache.RetrieveAsync<User>(key);
         }
-
-        protected override AndPolicyBuilder<CacheImplementationPolicyBuilder> Configure(
-            CachingKeyPolicyBuilder<User> policyBuilder) =>
-            policyBuilder.UseAsKey("user")
-                .CombinedWith(_ => _.Id)
-                .CombinedWith(_ => _.FirstName)
-                .CombinedWith(_ => _.LastName)
-                .And().SetExpirationTimeoutTo(5).Seconds
-                .With().SlidingExpiration();
-
-        protected override string GetDictionaryKey(User user) => $"user{user.Id}{user.FirstName}{user.LastName}";
     }
+
+    protected override AndPolicyBuilder<CacheImplementationPolicyBuilder> Configure(
+        CachingKeyPolicyBuilder<User> policyBuilder) =>
+        policyBuilder.UseAsKey("user")
+            .CombinedWith(_ => _.Id)
+            .CombinedWith(_ => _.FirstName)
+            .CombinedWith(_ => _.LastName)
+            .And().SetExpirationTimeoutTo(5).Seconds
+            .With().SlidingExpiration();
 }
