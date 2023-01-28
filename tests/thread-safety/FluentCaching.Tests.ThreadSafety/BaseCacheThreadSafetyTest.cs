@@ -12,8 +12,81 @@ namespace FluentCaching.Tests.ThreadSafety
         [Fact]
         public async Task SimpleyKeyTypeWithTheSameKey()
         {
+            const int id = 42;
             var cache = new CacheBuilder()
                 .For<User>(_ => _.UseAsKey(u => u.Id).And()
+                    .SetInfiniteExpirationTimeout().And()
+                    .StoreIn(CacheImplementation))
+                .Build();
+
+            var users = GenerateUsers(_ => (id, "Some Name"));
+            var autoResetEvent = new AutoResetEvent(false);
+
+            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users);
+
+            await RunCacheOperations(users, cache, (users.Count / 2, users.Count),
+                afterCacheCallback: () =>
+                {
+                    autoResetEvent.Set();
+                    return Task.CompletedTask;
+                },
+                afterRetrieveCallback: async () =>
+                {
+                    var user = await cache.RetrieveAsync<User>(id);
+                    user.Should().NotBeNull();
+                    autoResetEvent.Set();
+                },
+                afterRemoveCallback: async () =>
+                {
+                    autoResetEvent.Set();
+                    await backgroudTask;
+                    var removedUser = await cache.RetrieveAsync<User>(id);
+                    removedUser.Should().BeNull();
+                });
+        }
+        
+        [Fact]
+        public async Task SimpleyKeyTypeWithTheDifferentKey()
+        {
+            var cache = new CacheBuilder()
+                .For<User>(_ => _.UseAsKey(u => u.Id).And()
+                    .SetInfiniteExpirationTimeout().And()
+                    .StoreIn(CacheImplementation))
+                .Build();
+
+            var users = GenerateUsers(index => (index, $"Some Name {index}"));
+            var targetUser = users.GetRandomItem();
+            var autoResetEvent = new AutoResetEvent(false);
+
+            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users);
+
+            await RunCacheOperations(users, cache, (users.Count / 2, users.Count),
+                afterCacheCallback: () =>
+                {
+                    autoResetEvent.Set();
+                    return Task.CompletedTask;
+                },
+                afterRetrieveCallback: async () =>
+                {
+                    var user = await cache.RetrieveAsync<User>(targetUser.Id);
+                    user.Should().NotBeNull();
+                    autoResetEvent.Set();
+                },
+                afterRemoveCallback: async () =>
+                {
+                    autoResetEvent.Set();
+                    await backgroudTask;
+                    var removedUser = await cache.RetrieveAsync<User>(targetUser.Id);
+                    removedUser.Should().BeNull();
+                });
+        }
+        
+        [Fact]
+        public async Task ComplexKeyTypeWithTheSameKey()
+        {
+            var key = new {Id = 42, Name = "Some name"};
+            var cache = new CacheBuilder()
+                .For<User>(_ => _.UseAsKey(u => $"{u.Id}-{u.Name}").And()
                     .SetInfiniteExpirationTimeout().And()
                     .StoreIn(CacheImplementation))
                 .Build();
@@ -21,50 +94,53 @@ namespace FluentCaching.Tests.ThreadSafety
             var users = GenerateUsers(_ => (42, "Some Name"));
             var autoResetEvent = new AutoResetEvent(false);
 
-            var backgroundThread = RunBackgroundСacheOperations(autoResetEvent, cache, users);
+            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users);
 
-            await RunCacheOperations(users, cache, async operationType =>
+            await RunCacheOperations(users, cache, (users.Count / 2, users.Count),
+                afterCacheCallback: () =>
                 {
-                    switch (operationType)
-                    {
-                        case CacheOperationType.Cache:
-                            autoResetEvent.Set();
-                            break;
-                        case CacheOperationType.Retrieve:
-                        {
-                            var user = await cache.RetrieveAsync<User>(42);
-                            user.Should().NotBeNull();
-                            autoResetEvent.Set();
-                            break;
-                        }
-                        case CacheOperationType.Remove:
-                            autoResetEvent.Set();
-                            backgroundThread.Join();
-                            var removedUser = await cache.RetrieveAsync<User>(42);
-                            removedUser.Should().BeNull();
-                            break;
-                    }
+                    autoResetEvent.Set();
+                    return Task.CompletedTask;
                 },
-                (users.Count / 2, users.Count));
+                afterRetrieveCallback: async () =>
+                {
+                    var user = await cache.RetrieveAsync<User>(key);
+                    user.Should().NotBeNull();
+                    autoResetEvent.Set();
+                },
+                afterRemoveCallback: async () =>
+                {
+                    autoResetEvent.Set();
+                    await backgroudTask;
+                    var removedUser = await cache.RetrieveAsync<User>(key);
+                    removedUser.Should().BeNull();
+                });
         }
 
-        private static Thread RunBackgroundСacheOperations(AutoResetEvent autoResetEvent, ICache cache,
-            List<User> users)
-        {
-            var thread = new Thread(async () =>
-            {
-                await RunCacheOperations(users, cache, _ => Task.FromResult(autoResetEvent.WaitOne()),
-                    (0, users.Count / 2));
-            });
-            thread.Start();
+        private static Task RunBackgroundСacheOperations(WaitHandle autoResetEvent, ICache cache,
+            IReadOnlyList<User> users)
+            => Task.Run(() => RunCacheOperations(users, cache, (0, users.Count / 2),
+                    _ => Task.FromResult(autoResetEvent.WaitOne())));
 
-            return thread;
-        }
-
-        private static async Task RunCacheOperations(List<User> users,
+        private static Task RunCacheOperations(IReadOnlyList<User> users,
             ICache cache,
-            Func<CacheOperationType, Task> afterOperationCallback,
-            (int Start, int End ) processingRange)
+            (int Start, int End ) processingRange,
+            Func<Task> afterCacheCallback,
+            Func<Task> afterRetrieveCallback,
+            Func<Task> afterRemoveCallback)
+            => RunCacheOperations(users, cache, processingRange,
+                operationType => operationType switch
+                {
+                    CacheOperationType.Cache => afterCacheCallback(),
+                    CacheOperationType.Retrieve => afterRetrieveCallback(),
+                    CacheOperationType.Remove => afterRemoveCallback(),
+                    _ => throw new ArgumentOutOfRangeException(nameof(operationType), operationType, null)
+                });
+        
+        private static async Task RunCacheOperations(IReadOnlyList<User> users,
+            ICache cache,
+            (int Start, int End ) processingRange,
+            Func<CacheOperationType, Task> afterOperationCallback)
         {
             for (var i = processingRange.Start; i < processingRange.End; i++)
             {
@@ -72,17 +148,15 @@ namespace FluentCaching.Tests.ThreadSafety
             }
 
             await afterOperationCallback(CacheOperationType.Cache);
-
             for (var i = processingRange.Start; i < processingRange.End; i++)
             {
-                await cache.RetrieveAsync<User>(42);
+                await cache.RetrieveAsync<User>(users[i].Id);
             }
 
             await afterOperationCallback(CacheOperationType.Retrieve);
-
             for (var i = processingRange.Start; i < processingRange.End; i++)
             {
-                await cache.RemoveAsync<User>(42);
+                await cache.RemoveAsync<User>(users[i].Id);
             }
 
             await afterOperationCallback(CacheOperationType.Remove);

@@ -2,7 +2,7 @@
 
 namespace FluentCaching.DistributedCache
 {
-    public static class FluentCachingExtensions
+    public static class ServiceCollectionExtensions
     {
         public static IApplicationBuilder UseFluentCaching(this IApplicationBuilder builder)
         {
