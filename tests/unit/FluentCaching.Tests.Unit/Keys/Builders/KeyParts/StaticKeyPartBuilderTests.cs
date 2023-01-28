@@ -1,10 +1,8 @@
 using System;
 using FluentAssertions;
-using FluentCaching.Keys;
 using FluentCaching.Keys.Builders.KeyParts;
 using FluentCaching.Keys.Exceptions;
 using FluentCaching.Keys.Models;
-using FluentCaching.Tests.Unit.Models;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.Keys.Builders.KeyParts;
@@ -33,6 +31,14 @@ public class StaticKeyPartBuilderTests
         result.Should().Be(keyPart);
     }
 
+    [Fact]
+    public void IsDynamic_WhenCalled_ReturnsFalse()
+    {
+        const string keyPart = "key part";
+        var builder = Create(keyPart);
+
+        builder.IsDynamic.Should().BeFalse();
+    }
 
     private static StaticKeyPartBuilder Create<T>(T value) where T : class
         => StaticKeyPartBuilder.Create(value);

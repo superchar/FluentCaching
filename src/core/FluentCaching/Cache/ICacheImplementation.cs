@@ -1,14 +1,13 @@
 ﻿using System.Threading.Tasks;
 using FluentCaching.Cache.Models;
 
-namespace FluentCaching.Cache
+namespace FluentCaching.Cache;
+
+public interface ICacheImplementation
 {
-    public interface ICacheImplementation
-    {
-        ValueTask<T> RetrieveAsync<T>(string key);
+    ValueTask<T> RetrieveAsync<T>(string key);
 
-        ValueTask CacheAsync<T>(string key, T targetObject, CacheOptions options);
+    ValueTask CacheAsync<T>(string key, T targetObject, CacheOptions options);
 
-        ValueTask RemoveAsync(string key);
-    }
+    ValueTask RemoveAsync(string key);
 }

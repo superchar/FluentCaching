@@ -3,42 +3,41 @@ using FluentCaching.Cache.Models;
 using FluentCaching.Configuration.PolicyBuilders.Ttl;
 using Xunit;
 
-namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Ttl
+namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Ttl;
+
+public class TimeTtlPolicyBuilderTests
 {
-    public class TimeTtlPolicyBuilderTests
+    private readonly TimeTtlPolicyBuilder _sut = new(new CacheOptions(), 42);
+
+    [Fact]
+    public void Seconds_WhenCalled_ReturnsTimeTtlValuePolicyBuilder()
     {
-        private readonly TimeTtlPolicyBuilder _sut = new(new CacheOptions(), 42);
+        var result = _sut.Seconds;
 
-        [Fact]
-        public void Seconds_WhenCalled_ReturnsTimeTtlValuePolicyBuilder()
-        {
-            var result = _sut.Seconds;
-
-            result.Should().NotBeNull();
-        }
+        result.Should().NotBeNull();
+    }
         
-        [Fact]
-        public void Minutes_WhenCalled_ReturnsTimeTtlValuePolicyBuilder()
-        {
-            var result = _sut.Minutes;
+    [Fact]
+    public void Minutes_WhenCalled_ReturnsTimeTtlValuePolicyBuilder()
+    {
+        var result = _sut.Minutes;
 
-            result.Should().NotBeNull();
-        }
+        result.Should().NotBeNull();
+    }
         
-        [Fact]
-        public void Hours_WhenCalled_ReturnsTimeTtlValuePolicyBuilder()
-        {
-            var result = _sut.Hours;
+    [Fact]
+    public void Hours_WhenCalled_ReturnsTimeTtlValuePolicyBuilder()
+    {
+        var result = _sut.Hours;
 
-            result.Should().NotBeNull();
-        }
+        result.Should().NotBeNull();
+    }
         
-        [Fact]
-        public void Days_WhenCalled_ReturnsTimeTtlValuePolicyBuilder()
-        {
-            var result = _sut.Days;
+    [Fact]
+    public void Days_WhenCalled_ReturnsTimeTtlValuePolicyBuilder()
+    {
+        var result = _sut.Days;
 
-            result.Should().NotBeNull();
-        }
+        result.Should().NotBeNull();
     }
 }

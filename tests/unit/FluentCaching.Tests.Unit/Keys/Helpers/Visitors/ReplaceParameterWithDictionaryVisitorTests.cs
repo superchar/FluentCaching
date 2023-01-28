@@ -61,7 +61,7 @@ public class ReplaceParameterWithDictionaryVisitorTests
         var dictionary = new Dictionary<string, object>
         {
             { nameof(User.Id), UserId },
-            { nameof(User.SubscriptionId), subscriptionId },
+            { nameof(User.SubscriptionId), subscriptionId }
         };
         var compiledExpression = BuildAndCompileExpression(newBody);
         var expectedResult = (UserId + subscriptionId).ToString();

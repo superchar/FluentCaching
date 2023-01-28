@@ -5,28 +5,27 @@ using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using Xunit;
 
-namespace FluentCaching.DistributedCache.Tests.Unit
+namespace FluentCaching.DistributedCache.Tests.Unit;
+
+public class CacheImplementationBuilderExtensionsTests
 {
-    public class CacheImplementationBuilderExtensionsTests
+    [Fact]
+    public void StoreInDistributedCache_CacheParameterIsNotProvided_ReturnsCacheImplementationPolicyBuilder()
     {
-        [Fact]
-        public void StoreInDistributedCache_CacheParameterIsNotProvided_ReturnsCacheImplementationPolicyBuilder()
-        {
-            var cacheImplementationPolicyBuilder = new CacheImplementationPolicyBuilder(new CacheOptions());
+        var cacheImplementationPolicyBuilder = new CacheImplementationPolicyBuilder(new CacheOptions());
 
-            var result = cacheImplementationPolicyBuilder.StoreInDistributedCache();
+        var result = cacheImplementationPolicyBuilder.StoreInDistributedCache();
 
-            result.Should().NotBeNull();
-        }
+        result.Should().NotBeNull();
+    }
 
-        [Fact]
-        public void StoreInDistributedCache_CacheParameterIsProvided_ReturnsCacheImplementationPolicyBuilder()
-        {
-            var cacheImplementationPolicyBuilder = new CacheImplementationPolicyBuilder(new CacheOptions());
+    [Fact]
+    public void StoreInDistributedCache_CacheParameterIsProvided_ReturnsCacheImplementationPolicyBuilder()
+    {
+        var cacheImplementationPolicyBuilder = new CacheImplementationPolicyBuilder(new CacheOptions());
 
-            var result = cacheImplementationPolicyBuilder.StoreInDistributedCache(new Mock<IDistributedCache>().Object);
+        var result = cacheImplementationPolicyBuilder.StoreInDistributedCache(new Mock<IDistributedCache>().Object);
 
-            result.Should().NotBeNull();
-        }
+        result.Should().NotBeNull();
     }
 }

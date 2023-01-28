@@ -1,9 +1,11 @@
+using System;
+
 namespace FluentCaching.Cache.Models;
 
 public struct CacheSource<T>
     where T : class
 {
-    public static CacheSource<T> Static = new(null, CacheSourceType.Static);
+    private static readonly CacheSource<T> Static = new(null, CacheSourceType.Static);
 
     private CacheSource(object key, CacheSourceType cacheSourceType)
     { 
@@ -11,9 +13,21 @@ public struct CacheSource<T>
         CacheSourceType = cacheSourceType;
     }
 
-    public static CacheSource<T> CreateScalar(object key) => new(key, CacheSourceType.Scalar);
-    
-    public static CacheSource<T> CreateComplex(object key) => new(key, CacheSourceType.Complex);
+    public static CacheSource<T> Create(object key)
+    {
+        if (key == null)
+        {
+            return Static;
+        }
+
+        var type = key.GetType();
+        var isScalarType = type.IsPrimitive 
+                                   || type == typeof(string) 
+                                   || type == typeof(decimal) 
+                                   || type == typeof(Guid);
+
+        return new(key, isScalarType ? CacheSourceType.Scalar : CacheSourceType.Complex);
+    }
 
     public object Key { get; }
     

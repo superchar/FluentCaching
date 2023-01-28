@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using FluentAssertions;
-using FluentCaching.Keys;
 using FluentCaching.Keys.Builders.KeyParts;
 using FluentCaching.Keys.Exceptions;
 using FluentCaching.Keys.Helpers;
@@ -49,7 +48,7 @@ public class ExpressionKeyPartBuilderTests
     {
         var user = new User
         {
-            SubscriptionId = 42,
+            SubscriptionId = 42
         };
         SetupExpressionRewriteFakes();
         var builder = Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
@@ -61,7 +60,7 @@ public class ExpressionKeyPartBuilderTests
     [Fact]
     public void Build_RetrieveContext_BuildsKeyPart()
     {
-        var subscriptionId = 42;
+        const int subscriptionId = 42;
         var retrieveContext = new Dictionary<string, object>
         {
             { nameof(User.SubscriptionId), subscriptionId }
@@ -78,7 +77,7 @@ public class ExpressionKeyPartBuilderTests
     {
         var user = new User
         {
-            SubscriptionId = null,
+            SubscriptionId = null
         };
         SetupExpressionRewriteFakes();
         var builder = Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
@@ -86,6 +85,15 @@ public class ExpressionKeyPartBuilderTests
         builder.Invoking(_ => _.Build(new KeyContext(user)))
             .Should()
             .Throw<KeyPartMissingException>();
+    }
+    
+    [Fact]
+    public void IsDynamic_WhenCalled_ReturnsTrue()
+    {
+        SetupExpressionRewriteFakes();
+        var builder = Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
+
+        builder.IsDynamic.Should().BeTrue();
     }
 
     private static ExpressionKeyPartBuilder Create<T>(Expression<Func<User, T>> valueGetter,

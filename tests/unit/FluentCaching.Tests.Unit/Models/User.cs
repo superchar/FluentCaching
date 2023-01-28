@@ -1,13 +1,12 @@
-﻿namespace FluentCaching.Tests.Unit.Models
+﻿namespace FluentCaching.Tests.Unit.Models;
+
+public class User
 {
-    public class User
-    {
-        public string Name { get; set; }
+    public string Name { get; init; }
 
-        public int Id { get; set; }
+    public int Id { get; init; }
 
-        public int? SubscriptionId { get; set; }
+    public int? SubscriptionId { get; init; }
 
-        public Currency Currency { get; set; }
-    }
+    public Currency Currency { get; init; }
 }

@@ -19,7 +19,7 @@ public class StaticKeyRetrieveStrategyTests : BaseCacheStrategyTests
     [Fact]
     public async Task RetrieveAsync_WhenCalled_CallsKeyBuilder()
     {
-        await _sut.RetrieveAsync(CacheSource<User>.Static);
+        await _sut.RetrieveAsync(CacheSource<User>.Create(null));
 
         KeyBuilderMock
             .Verify(_ => _.BuildFromStaticKey(), Times.Once);
@@ -33,7 +33,7 @@ public class StaticKeyRetrieveStrategyTests : BaseCacheStrategyTests
             .Setup(_ => _.BuildFromStaticKey())
             .Returns(key);
             
-        await _sut.RetrieveAsync(CacheSource<User>.Static);
+        await _sut.RetrieveAsync(CacheSource<User>.Create(null));
 
         TypeCacheImplementationMock
             .Verify(_ => _.RetrieveAsync<User>(key), Times.Once);

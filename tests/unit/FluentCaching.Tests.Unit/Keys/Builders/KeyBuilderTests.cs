@@ -113,6 +113,25 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
                 .Should()
                 .Throw<KeyPartMissingException>();
         }
+        
+        [Fact]
+        public void BuildFromStaticKey_DynamicPartsDontExist_CallsKeyPartBuilder()
+        {
+            const string key = "key";
+            MockProperties();
+            var keyPartBuilderMock = new Mock<IKeyPartBuilder>();
+            keyPartBuilderMock
+                .SetupGet(_ => _.IsDynamic)
+                .Returns(false);
+            _keyPartBuilderFactoryMock
+                .Setup(_ => _.Create(key))
+                .Returns(keyPartBuilderMock.Object);
+            _sut.AppendStatic(key);
+
+            _sut.BuildFromStaticKey();
+            
+            keyPartBuilderMock.Verify(_ => _.Build(KeyContext.Null), Times.Once);
+        }
 
         [Fact]
         public void BuildFromScalarKey_WhenCalled_CallsKeyContextBuilder()

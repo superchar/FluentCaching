@@ -1,26 +1,25 @@
 ﻿using FluentCaching.Cache.Models;
 
-namespace FluentCaching.Configuration.PolicyBuilders.Ttl
+namespace FluentCaching.Configuration.PolicyBuilders.Ttl;
+
+public class ExpirationTypePolicyBuilder
 {
-    public class ExpirationTypePolicyBuilder
+    private readonly CacheOptions _cacheOptions;
+
+    public ExpirationTypePolicyBuilder(CacheOptions currentOptions)
     {
-        private readonly CacheOptions _cacheOptions;
+        _cacheOptions = currentOptions;
+    }
 
-        public ExpirationTypePolicyBuilder(CacheOptions currentOptions)
-        {
-            _cacheOptions = currentOptions;
-        }
+    public AndPolicyBuilder<CacheImplementationPolicyBuilder> AbsoluteExpiration() 
+        => ExpirationType(Cache.Models.ExpirationType.Absolute);
 
-        public AndPolicyBuilder<CacheImplementationPolicyBuilder> AbsoluteExpiration() 
-            => ExpirationType(Cache.Models.ExpirationType.Absolute);
+    public AndPolicyBuilder<CacheImplementationPolicyBuilder> SlidingExpiration() 
+        => ExpirationType(Cache.Models.ExpirationType.Sliding);
 
-        public AndPolicyBuilder<CacheImplementationPolicyBuilder> SlidingExpiration() 
-            => ExpirationType(Cache.Models.ExpirationType.Sliding);
-
-        private AndPolicyBuilder<CacheImplementationPolicyBuilder> ExpirationType(ExpirationType expirationType)
-        {
-            _cacheOptions.ExpirationType = expirationType;
-            return new AndPolicyBuilder<CacheImplementationPolicyBuilder>(new CacheImplementationPolicyBuilder(_cacheOptions));
-        }
+    private AndPolicyBuilder<CacheImplementationPolicyBuilder> ExpirationType(ExpirationType expirationType)
+    {
+        _cacheOptions.ExpirationType = expirationType;
+        return new AndPolicyBuilder<CacheImplementationPolicyBuilder>(new CacheImplementationPolicyBuilder(_cacheOptions));
     }
 }
