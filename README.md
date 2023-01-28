@@ -1,4 +1,4 @@
-# FluentCaching
+<img src="https://raw.githubusercontent.com/superchar/FluentCaching/add_logo/logo.png" align='center' alt="Fluent caching"> 
 FluentCaching library provides abstraction layer over caching implementation (memory, Redis, etc.) with really small overhead (check benchmarks).
 Instead of writing boilerplate code to support caching, just configure caching policy for object using fluent api and use cache object to manipulate caching abstraction.  
 
