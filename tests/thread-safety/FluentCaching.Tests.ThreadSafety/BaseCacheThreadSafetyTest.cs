@@ -7,6 +7,8 @@ namespace FluentCaching.Tests.ThreadSafety
 {
     public abstract class BaseCacheThreadSafetyTest
     {
+        private readonly AutoResetEvent _autoResetEvent = new AutoResetEvent(false);
+        
         protected abstract ICacheImplementation CacheImplementation { get; }
 
         protected abstract int UsersCount { get; }
@@ -22,10 +24,9 @@ namespace FluentCaching.Tests.ThreadSafety
                 .Build();
 
             var users = GenerateUsers(_ => (id, "Some Name"));
-            var autoResetEvent = new AutoResetEvent(false);
             
-            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users, CreateScalarKey);
-            await RunForegroundСacheOperations(autoResetEvent, cache, users, backgroudTask, id, CreateScalarKey);
+            var backgroudTask = RunBackgroundСacheOperations(cache, users, CreateScalarKey);
+            await RunForegroundСacheOperations(cache, users, backgroudTask, id, CreateScalarKey);
         }
 
         [Fact]
@@ -39,10 +40,9 @@ namespace FluentCaching.Tests.ThreadSafety
 
             var users = GenerateUsers(index => (index, $"Some Name {index}"));
             var targetUser = users.GetRandomItem();
-            var autoResetEvent = new AutoResetEvent(false);
 
-            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users, CreateScalarKey);
-            await RunForegroundСacheOperations(autoResetEvent, cache, users, backgroudTask, CreateScalarKey(targetUser),
+            var backgroudTask = RunBackgroundСacheOperations(cache, users, CreateScalarKey);
+            await RunForegroundСacheOperations(cache, users, backgroudTask, CreateScalarKey(targetUser),
                 CreateScalarKey);
         }
 
@@ -57,10 +57,9 @@ namespace FluentCaching.Tests.ThreadSafety
                 .Build();
 
             var users = GenerateUsers(_ => (key.Id, key.Name));
-            var autoResetEvent = new AutoResetEvent(false);
             
-            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users, CreateComplexKey);
-            await RunForegroundСacheOperations(autoResetEvent, cache, users, backgroudTask, key, CreateComplexKey);
+            var backgroudTask = RunBackgroundСacheOperations(cache, users, CreateComplexKey);
+            await RunForegroundСacheOperations(cache, users, backgroudTask, key, CreateComplexKey);
         }
         
         [Fact]
@@ -74,45 +73,10 @@ namespace FluentCaching.Tests.ThreadSafety
 
             var users = GenerateUsers(index => (index, $"Some name {index}"));
             var targetUser = users.GetRandomItem();
-            var autoResetEvent = new AutoResetEvent(false);
 
-            var backgroudTask = RunBackgroundСacheOperations(autoResetEvent, cache, users, CreateComplexKey);
-            await RunForegroundСacheOperations(autoResetEvent, cache, users, backgroudTask, CreateComplexKey(targetUser), CreateComplexKey);
+            var backgroudTask = RunBackgroundСacheOperations(cache, users, CreateComplexKey);
+            await RunForegroundСacheOperations(cache, users, backgroudTask, CreateComplexKey(targetUser), CreateComplexKey);
         }
-
-        private static Task RunBackgroundСacheOperations(WaitHandle autoResetEvent, 
-            ICache cache,
-            User[] users,
-            Func<User, object> createKeyFunc)
-            => Task.Run(() => RunCacheOperations(users[..(users.Length / 2)], cache, createKeyFunc, 
-                    _ => Task.FromResult(autoResetEvent.WaitOne())));
-
-        private static Task RunForegroundСacheOperations(
-            EventWaitHandle autoResetEvent,
-            ICache cache,
-            User[] users,
-            Task backgroudTask,
-            object assertionKey,
-            Func<User, object> createKeyFunc)
-            => RunCacheOperations(users[(users.Length / 2)..], cache, createKeyFunc,
-                afterCacheCallback: () =>
-                {
-                    autoResetEvent.Set();
-                    return Task.CompletedTask;
-                },
-                afterRetrieveCallback: async () =>
-                {
-                    var user = await cache.RetrieveAsync<User>(assertionKey);
-                    user.Should().NotBeNull();
-                    autoResetEvent.Set();
-                },
-                afterRemoveCallback: async () =>
-                {
-                    autoResetEvent.Set();
-                    await backgroudTask;
-                    var removedUser = await cache.RetrieveAsync<User>(assertionKey);
-                    removedUser.Should().BeNull();
-                });
 
         private static Task RunCacheOperations(User[] users,
             ICache cache,
@@ -165,5 +129,37 @@ namespace FluentCaching.Tests.ThreadSafety
                     return new User(userData.Name, userData.Id);
                 })
                 .ToArray();
+        
+        private Task RunBackgroundСacheOperations(ICache cache,
+            User[] users,
+            Func<User, object> createKeyFunc)
+            => Task.Run(() => RunCacheOperations(users[..(users.Length / 2)], cache, createKeyFunc, 
+                _ => Task.FromResult(_autoResetEvent.WaitOne())));
+
+        private Task RunForegroundСacheOperations(
+            ICache cache,
+            User[] users,
+            Task backgroudTask,
+            object assertionKey,
+            Func<User, object> createKeyFunc)
+            => RunCacheOperations(users[(users.Length / 2)..], cache, createKeyFunc,
+                afterCacheCallback: () =>
+                {
+                    _autoResetEvent.Set();
+                    return Task.CompletedTask;
+                },
+                afterRetrieveCallback: async () =>
+                {
+                    var user = await cache.RetrieveAsync<User>(assertionKey);
+                    user.Should().NotBeNull();
+                    _autoResetEvent.Set();
+                },
+                afterRemoveCallback: async () =>
+                {
+                    _autoResetEvent.Set();
+                    await backgroudTask;
+                    var removedUser = await cache.RetrieveAsync<User>(assertionKey);
+                    removedUser.Should().BeNull();
+                });
     }
 }

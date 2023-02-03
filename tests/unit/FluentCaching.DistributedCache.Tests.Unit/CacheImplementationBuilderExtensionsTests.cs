@@ -4,6 +4,7 @@ using FluentCaching.Configuration.PolicyBuilders;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using Xunit;
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace FluentCaching.DistributedCache.Tests.Unit;
 
