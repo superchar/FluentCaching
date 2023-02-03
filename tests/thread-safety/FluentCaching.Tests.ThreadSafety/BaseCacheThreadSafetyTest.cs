@@ -9,6 +9,8 @@ namespace FluentCaching.Tests.ThreadSafety
     {
         protected abstract ICacheImplementation CacheImplementation { get; }
 
+        protected abstract int UsersCount { get; }
+
         [Fact]
         public async Task ScalarKeyTypeWithTheSameKey()
         {
@@ -151,17 +153,17 @@ namespace FluentCaching.Tests.ThreadSafety
             await afterOperationCallback(CacheOperationType.Remove);
         }
 
-        private static User[] GenerateUsers(Func<int, (int Id, string Name)> callback)
-            => Enumerable.Range(0, 10000000)
+        private static object CreateScalarKey(User user) => user.Id;
+
+        private static object CreateComplexKey(User user) => new { user.Id, user.Name };
+        
+        private User[] GenerateUsers(Func<int, (int Id, string Name)> callback)
+            => Enumerable.Range(0, UsersCount)
                 .Select(i =>
                 {
                     var userData = callback(i);
                     return new User(userData.Name, userData.Id);
                 })
                 .ToArray();
-        
-        private static object CreateScalarKey(User user) => user.Id;
-
-        private static object CreateComplexKey(User user) => new { user.Id, user.Name };
     }
 }
