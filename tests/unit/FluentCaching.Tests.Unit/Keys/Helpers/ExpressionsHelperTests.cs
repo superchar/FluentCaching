@@ -1,4 +1,6 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Linq.Expressions;
+using FluentAssertions;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Tests.Unit.Models;
 using Xunit;
@@ -10,10 +12,29 @@ public class ExpressionsHelperTests
     private readonly ExpressionsHelper _sut = new ();
 
     [Fact]
-    public void GetProperty_ExpressionIsNotSingleProperty_DoesNotThrowException()
+    public void GetProperty_ExpressionWithoutProperties_ReturnsEmptyArray()
     {
-        _sut.Invoking(s => s.GetParameterPropertyNames<User, string>(u => "test"))
-            .Should().NotThrow();
+        var result = _sut.GetParameterPropertyNames<User, string>(u => "test");
+
+        result.Should().BeEmpty();
+    }
+    
+    [Fact]
+    public void GetProperty_ExpressionWithSingleNonNullableProperty_ReturnsPropertyName()
+    {
+        var result = _sut.GetParameterPropertyNames<User, int>(u => u.Id);
+
+        var expectedProperties = new[] { nameof(User.Id) };
+        result.Should().BeEquivalentTo(expectedProperties);
+    }
+    
+    [Fact]
+    public void GetProperty_ExpressionWithSingleNullableProperty_ReturnsPropertyName()
+    {
+        var result = _sut.GetParameterPropertyNames<User, int>(u => u.SubscriptionId.Value);
+
+        var expectedProperties = new[] { nameof(User.SubscriptionId) };
+        result.Should().BeEquivalentTo(expectedProperties);
     }
 
     [Fact]
@@ -26,7 +47,7 @@ public class ExpressionsHelperTests
     }
 
     [Fact]
-    public void RewriteWithSafeToString_PropertyIsPrimitiveType_AddsToString()
+    public void ReplaceResultTypeWithString_PropertyIsPrimitiveType_ReplacesResultTypeWithString()
     {
         var user = new User
         {
@@ -41,14 +62,14 @@ public class ExpressionsHelperTests
     }
         
     [Fact]
-    public void RewriteWithSafeToString_PropertyIsNullablePrimitiveType_AddsToString()
+    public void ReplaceResultTypeWithString_PropertyIsNullablePrimitiveType_ReplacesResultTypeWithString()
     {
         var user = new User
         {
             SubscriptionId = 42
         };
 
-        var resultExpression = _sut.ReplaceResultTypeWithString<User, int?>(_ => _.SubscriptionId);
+        var resultExpression = _sut.ReplaceResultTypeWithString<User, int?>(_ => _.SubscriptionId.Value);
 
         var compiledExpression = resultExpression.Compile();
         var result = compiledExpression(user);
@@ -56,7 +77,7 @@ public class ExpressionsHelperTests
     }
         
     [Fact]
-    public void RewriteWithSafeToString_PropertyIsReferenceType_AddsToString()
+    public void ReplaceResultTypeWithString_PropertyIsReferenceType_ReplacesResultTypeWithString()
     {
         var user = new User
         {
@@ -69,19 +90,23 @@ public class ExpressionsHelperTests
         var result = compiledExpression(user);
         result.Should().Be("USD");
     }
-        
+    
     [Fact]
-    public void RewriteWithSafeToString_CachedObjectIsNull_AddsNullCheck()
+    public void ReplaceResultTypeWithString_PropertyIsStringType_DoesNotChangeExpression()
     {
-        var resultExpression = _sut.ReplaceResultTypeWithString<User, int>(_ => _.Id);
+        var user = new User
+        {
+            Name = "Some name"
+        };
+        Expression<Func<User, string>> expression = _ => _.Name;
 
-        var compiledExpression = resultExpression.Compile();
-        var result = compiledExpression(null);
-        result.Should().BeNull();
+        var resultExpression = _sut.ReplaceResultTypeWithString(expression);
+
+        resultExpression.Body.Should().Be(expression.Body);
     }
-        
+
     [Fact]
-    public void RewriteWithSafeToString_NullablePrimitiveTypePropertyIsNull_AddsNullCheck()
+    public void ReplaceResultTypeWithString_NullablePrimitiveTypePropertyIsNull_ReturnsNull()
     {
         var resultExpression = _sut.ReplaceResultTypeWithString<User, int?>(_ => _.SubscriptionId);
 
@@ -91,13 +116,21 @@ public class ExpressionsHelperTests
     }
         
     [Fact]
-    public void RewriteWithSafeToString_ReferenceTypePropertyIsNull_AddsNullCheck()
+    public void ReplaceResultTypeWithString_ReferenceTypePropertyIsNull_ReturnsNull()
     {
         var resultExpression = _sut.ReplaceResultTypeWithString<User, Currency>(_ => _.Currency);
 
         var compiledExpression = resultExpression.Compile();
         var result = compiledExpression(new User());
         result.Should().BeNull();
+    }
+    
+    [Fact]
+    public void ReplaceResultTypeWithString_PropertyIsValueType_DoesNotAddNullCheck()
+    {
+        var resultExpression = _sut.ReplaceResultTypeWithString<User, int>(_ => _.Id);
+
+        resultExpression.Body.NodeType.Should().Be(ExpressionType.Call);
     }
         
     [Fact]
