@@ -7,7 +7,7 @@ public static class Program
 {
     internal static void Main()
     {
-        BenchmarkRunner.Run<SimpleKeyBenchmark>();
+        BenchmarkRunner.Run<ComplexKeyBenchmark>();
         Console.ReadKey();
     }
 }

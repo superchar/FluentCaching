@@ -26,23 +26,18 @@ internal class ExpressionsHelper : IExpressionsHelper
 
     public Expression<Func<T, string>> ReplaceResultTypeWithString<T, TValue>(Expression<Func<T, TValue>> expression)
     {
-        var body = ConvertToNullableExpression(expression.Body);
-        var propertyToStringCall = Expression
-            .Call(body, nameof(ToString), Type.EmptyTypes);
+        var newBody = expression.Body.Type != typeof(string)
+            ? (IsNullableExpression(expression.Body)
+                ? GenerateNullCheck(expression.Body, ifNotNull: GenerateToStringCall(expression.Body))
+                : GenerateToStringCall(expression.Body))
+            : expression.Body;
 
-        var resultNullCheck = GenerateNullCheck(body,
-            ifNotNull: propertyToStringCall);
-        var cachedObject = expression.Parameters.Single();
-        var cachedObjectNullCheck = GenerateNullCheck(cachedObject,
-            ifNotNull: resultNullCheck);
-
-        return Expression.Lambda<Func<T, string>>(cachedObjectNullCheck, cachedObject);
+        return Expression.Lambda<Func<T, string>>(newBody, expression.Parameters);
     }
 
     public Expression<Func<Dictionary<string, object>, string>> ReplaceParameterWithDictionary<T>(Expression<Func<T, string>> expression)
     {
         var dictionaryParam = Expression.Parameter(typeof(Dictionary<string, object>));
-
         var body = new ReplaceParameterWithDictionaryVisitor(dictionaryParam).Visit(expression.Body);
             
         return Expression.Lambda<Func<Dictionary<string, object>, string>>(body, dictionaryParam);
@@ -83,14 +78,11 @@ internal class ExpressionsHelper : IExpressionsHelper
             test: Expression.Equal(expression, Expression.Constant(null)),
             ifTrue: Expression.Constant(null, typeof(string)),
             ifFalse: ifNotNull);
-        
-    private static Expression ConvertToNullableExpression(Expression expression)
-    {
-        var isNullable = !expression.Type.IsValueType 
-                         || Nullable.GetUnderlyingType(expression.Type) != null;
 
-        return isNullable 
-            ? expression 
-            : Expression.Convert(expression, typeof(Nullable<>).MakeGenericType(expression.Type));
-    }
+    private static bool IsNullableExpression(Expression expression)
+        => !expression.Type.IsValueType
+           || Nullable.GetUnderlyingType(expression.Type) != null;
+
+    private static Expression GenerateToStringCall(Expression expression)
+        => Expression.Call(expression, nameof(ToString), Type.EmptyTypes);
 }

@@ -26,22 +26,14 @@ public abstract class BaseParameterPropertyAccessVisitor : ExpressionVisitor
         && !IsNullableValueAccess(node);
 
     private static bool ComesFromParameter(Expression expression)
-    {
-        if (expression.NodeType == ExpressionType.Parameter)
+        => expression switch
         {
-            return true;
-        }
-
-        if (expression is not MemberExpression memberExpression
-            || memberExpression.Member.MemberType != MemberTypes.Property)
-        {
-            return false;
-        }
-
-        // ReSharper disable once TailRecursiveCall
-        return ComesFromParameter(memberExpression.Expression);
-    }
+            { NodeType: ExpressionType.Parameter } => true,
+            not MemberExpression or MemberExpression { Member.MemberType: not MemberTypes.Property } => false,
+            MemberExpression memberExpression => ComesFromParameter(memberExpression.Expression)
+        };
 
     private static bool IsNullableValueAccess(MemberExpression node)
         => node.Member.Name == "Value" && Nullable.GetUnderlyingType(node.Member.DeclaringType) != null;
+
 }

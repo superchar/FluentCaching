@@ -12,7 +12,7 @@ public abstract class BaseDictionaryCompareBenchmark
 {
     private Dictionary<string, object> _dictionary;
 
-    [Params(1, 10, 100)]
+    [Params(1, 10, 100, 1000, 10000)]
     // ReSharper disable once MemberCanBePrivate.Global
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public int CacheItemsCount { get; set; }
