@@ -4,29 +4,41 @@ using FluentCaching.Cache;
 using FluentCaching.Cache.Models;
 using FluentCaching.Configuration.PolicyBuilders;
 using FluentCaching.Configuration.PolicyBuilders.Keys;
+using FluentCaching.Keys.Builders;
+using FluentCaching.Keys.Builders.Factories;
 
 namespace FluentCaching.Configuration;
 
 internal sealed class CacheConfiguration : ICacheConfiguration
 {
-    private readonly Dictionary<Type, ICacheConfigurationItem> _predefinedConfigurations = new ();
+    private readonly IKeyBuilderFactory _keyBuilderFactory;
+
+    private readonly Dictionary<Type, ICacheConfigurationItem> _predefinedConfigurations = new();
+
+    public CacheConfiguration(IKeyBuilderFactory keyBuilderFactory)
+    {
+        _keyBuilderFactory = keyBuilderFactory;
+    }
 
     public ICacheImplementation Current { get; private set; }
 
     public ICacheConfiguration SetGenericCache(ICacheImplementation cacheImplementation)
     {
-        Current = cacheImplementation 
-                               ?? throw new ArgumentNullException(nameof(cacheImplementation), "Cache implementation cannot be null");
+        Current = cacheImplementation
+                  ?? throw new ArgumentNullException(nameof(cacheImplementation),
+                      "Cache implementation cannot be null");
         return this;
     }
 
-    public ICacheConfiguration For<T>(Func<CachingKeyPolicyBuilder<T>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
+    public ICacheConfiguration For<T>(
+        Func<CachingKeyPolicyBuilder<T>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
         where T : class
-        => For<T>(factoryFunc(new CachingKeyPolicyBuilder<T>()).And().CachingOptions);
+        => For<T>(factoryFunc(new CachingKeyPolicyBuilder<T>(_keyBuilderFactory.CreateKeyBuilder())).And()
+            .CachingOptions);
 
     public ICacheConfiguration For<T>(Func<CachingKeyPolicyBuilder<T>, CacheImplementationPolicyBuilder> factoryFunc)
         where T : class
-        => For<T>(factoryFunc(new CachingKeyPolicyBuilder<T>()).CachingOptions);
+        => For<T>(factoryFunc(new CachingKeyPolicyBuilder<T>(_keyBuilderFactory.CreateKeyBuilder())).CachingOptions);
 
     public ICacheConfigurationItem GetItem<T>() where T : class =>
         _predefinedConfigurations.TryGetValue(typeof(T), out var configurationItem)

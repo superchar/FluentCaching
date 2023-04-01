@@ -15,7 +15,7 @@ internal class ExpressionsHelper : IExpressionsHelper
     private static readonly MethodInfo CallInnerDelegateMethod =
         typeof(ExpressionsHelper).GetMethod(nameof(CallInnerDelegate),
             BindingFlags.NonPublic | BindingFlags.Static);
-        
+
     public IReadOnlyCollection<string> GetParameterPropertyNames<T, TValue>(Expression<Func<T, TValue>> expression)
     {
         var visitor = new CollectParameterPropertyNamesVisitor();

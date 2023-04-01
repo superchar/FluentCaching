@@ -3,6 +3,7 @@ using FluentCaching.Cache.Strategies.Factories;
 using FluentCaching.Configuration;
 using FluentCaching.Configuration.PolicyBuilders;
 using FluentCaching.Configuration.PolicyBuilders.Keys;
+using FluentCaching.Keys.Builders.Factories;
 
 namespace FluentCaching.Cache.Builders
 {
@@ -10,7 +11,7 @@ namespace FluentCaching.Cache.Builders
     {
         private readonly ICacheConfiguration _cacheConfiguration;
 
-        public CacheBuilder() : this(new CacheConfiguration())
+        public CacheBuilder() : this(new CacheConfiguration(new KeyBuilderFactory()))
         {
         }
 
@@ -26,7 +27,8 @@ namespace FluentCaching.Cache.Builders
             return this;
         }
 
-        public ICacheBuilder For<T>(Func<CachingKeyPolicyBuilder<T>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
+        public ICacheBuilder For<T>(
+            Func<CachingKeyPolicyBuilder<T>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
             where T : class
         {
             _cacheConfiguration.For(factoryFunc);
