@@ -13,21 +13,14 @@ namespace FluentCaching.Keys.Builders;
 internal class KeyBuilder : IKeyBuilder
 {
     private const string KeyPartSeparator = ":";
-        
+
     private readonly List<IKeyPartBuilder> _keyPartBuilders = new();
 
     private readonly IExpressionsHelper _expressionHelper;
     private readonly IKeyContextBuilder _keyContextBuilder;
     private readonly IKeyPartBuilderFactory _keyPartBuilderFactory;
 
-    public KeyBuilder() 
-        : this(new KeyContextBuilder(new ExpressionsHelper()), 
-            new ExpressionsHelper(),
-            new KeyPartBuilderFactory(new ExpressionsHelper()))
-    {
-    }
-
-    internal KeyBuilder(IKeyContextBuilder keyContextBuilder, 
+    internal KeyBuilder(IKeyContextBuilder keyContextBuilder,
         IExpressionsHelper expressionHelper,
         IKeyPartBuilderFactory keyPartBuilderFactory)
     {
@@ -37,17 +30,17 @@ internal class KeyBuilder : IKeyBuilder
     }
 
     private bool HasDynamicParts => _keyPartBuilders.Any(_ => _.IsDynamic);
-        
+
     public void AppendStatic<TValue>(TValue value)
         => _keyPartBuilders.Add(_keyPartBuilderFactory.Create(value));
-        
+
     public void AppendExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter)
     {
         foreach (var propertyName in _expressionHelper.GetParameterPropertyNames(valueGetter))
         {
             _keyContextBuilder.AddKey(propertyName);
         }
-            
+
         _keyPartBuilders.Add(_keyPartBuilderFactory.Create(valueGetter));
     }
 
@@ -63,7 +56,6 @@ internal class KeyBuilder : IKeyBuilder
         var context = _keyContextBuilder.BuildRetrieveContextFromComplexKey(complexKey);
 
         return Build(context);
-            
     }
 
     public string BuildFromStaticKey()

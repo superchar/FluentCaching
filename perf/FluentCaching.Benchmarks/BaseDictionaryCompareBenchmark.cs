@@ -52,5 +52,6 @@ public abstract class BaseDictionaryCompareBenchmark
         }
     }
 
-    protected abstract AndPolicyBuilder<CacheImplementationPolicyBuilder> Configure(CachingKeyPolicyBuilder<User> policyBuilder);
+    protected abstract AndPolicyBuilder<CacheImplementationPolicyBuilder> Configure(
+        CachingKeyPolicyBuilder<User> policyBuilder);
 }

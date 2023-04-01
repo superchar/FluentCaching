@@ -12,5 +12,5 @@ public class BaseTest
 
     protected ICacheBuilder CacheBuilder { get; } = new CacheBuilder();
 
-    protected DictionaryCacheImplementation CacheImplementation { get; } = new ();
+    protected DictionaryCacheImplementation CacheImplementation { get; } = new();
 }

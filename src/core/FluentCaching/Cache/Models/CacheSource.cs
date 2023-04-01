@@ -8,7 +8,7 @@ public struct CacheSource<T>
     private static readonly CacheSource<T> Static = new(null, CacheSourceType.Static);
 
     private CacheSource(object key, CacheSourceType cacheSourceType)
-    { 
+    {
         Key = key;
         CacheSourceType = cacheSourceType;
     }
@@ -21,15 +21,15 @@ public struct CacheSource<T>
         }
 
         var type = key.GetType();
-        var isScalarType = type.IsPrimitive 
-                                   || type == typeof(string) 
-                                   || type == typeof(decimal) 
-                                   || type == typeof(Guid);
+        var isScalarType = type.IsPrimitive
+                           || type == typeof(string)
+                           || type == typeof(decimal)
+                           || type == typeof(Guid);
 
-        return new(key, isScalarType ? CacheSourceType.Scalar : CacheSourceType.Complex);
+        return new CacheSource<T>(key, isScalarType ? CacheSourceType.Scalar : CacheSourceType.Complex);
     }
 
     public object Key { get; }
-    
+
     public CacheSourceType CacheSourceType { get; }
 }

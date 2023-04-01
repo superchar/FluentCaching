@@ -5,6 +5,8 @@ using FluentCaching.Cache.Models;
 using FluentCaching.Configuration;
 using FluentCaching.Configuration.PolicyBuilders;
 using FluentCaching.Configuration.PolicyBuilders.Keys;
+using FluentCaching.Keys.Builders;
+using FluentCaching.Keys.Builders.Factories;
 using FluentCaching.Tests.Unit.Models;
 using Moq;
 using Xunit;
@@ -13,7 +15,7 @@ namespace FluentCaching.Tests.Unit.Configuration;
 
 public class CacheConfigurationTests
 {
-    private readonly CacheConfiguration _sut = new ();
+    private readonly CacheConfiguration _sut = new (new Mock<IKeyBuilderFactory>().Object);
 
     [Fact]
     public void SetGenericCache_CacheImplementationIsNull_ThrowsException()

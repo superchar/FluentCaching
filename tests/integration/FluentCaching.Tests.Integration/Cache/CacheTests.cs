@@ -11,7 +11,7 @@ namespace FluentCaching.Tests.Integration.Cache;
 public class CacheTests : BaseTest
 {
     private const string Key = "user";
-        
+
     private readonly ICache _cache;
 
     public CacheTests()
@@ -20,7 +20,7 @@ public class CacheTests : BaseTest
             .For<User>(u => u.UseAsKey(Key).Complete())
             .Build();
     }
-        
+
     [Fact]
     public async Task CacheConfiguredObject_CachesObject()
     {
@@ -35,24 +35,24 @@ public class CacheTests : BaseTest
         await _cache.Invoking(c => c.CacheAsync(Order.Test).AsTask())
             .Should().ThrowAsync<ConfigurationNotFoundException>();
     }
-        
+
     [Fact]
     public async Task RemoveConfiguredObject_RemovesObjectFromCache()
     {
         CacheImplementation.Dictionary[Key] = new User();
-            
+
         await _cache.RemoveAsync<User>(Key);
 
         CacheImplementation.Dictionary.ContainsKey(Key).Should().BeFalse();
     }
-        
+
     [Fact]
     public async Task RemoveNotConfiguredObject_ThrowsException()
     {
         await _cache.Invoking(c => c.RemoveAsync<Order>(new { Id = 1, LastName = "Test" }).AsTask())
             .Should().ThrowAsync<ConfigurationNotFoundException>();
     }
-        
+
     [Fact]
     public async Task RetrieveConfiguredObject_RetrievesObjectFromCache()
     {
@@ -69,5 +69,21 @@ public class CacheTests : BaseTest
     {
         await _cache.Invoking(c => c.RetrieveAsync<Order>(new { Id = 1, LastName = "Test" }).AsTask())
             .Should().ThrowAsync<ConfigurationNotFoundException>();
+    }
+
+    [Fact]
+    public async Task CacheWithMultipleConfigurations_SupportsMultipleConfigurations()
+    {
+        var cache = CacheBuilder
+            .For<Order>(_ => _.UseAsKey(o => o.OrderId).Complete())
+            .Build();
+
+        await cache.CacheAsync(new User());
+        await cache.CacheAsync(Order.Test);
+        var retrievedUser = await cache.RetrieveAsync<User>(Key);
+        var retrievedOrder = await cache.RetrieveAsync<Order>(Order.Test.OrderId);
+
+        retrievedUser.Should().NotBeNull();
+        retrievedOrder.Should().NotBeNull();
     }
 }

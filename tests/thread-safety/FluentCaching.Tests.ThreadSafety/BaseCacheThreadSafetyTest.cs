@@ -7,8 +7,8 @@ namespace FluentCaching.Tests.ThreadSafety
 {
     public abstract class BaseCacheThreadSafetyTest
     {
-        private readonly AutoResetEvent _autoResetEvent = new AutoResetEvent(false);
-        
+        private readonly AutoResetEvent _autoResetEvent = new(false);
+
         protected abstract ICacheImplementation CacheImplementation { get; }
 
         protected abstract int UsersCount { get; }
@@ -24,9 +24,9 @@ namespace FluentCaching.Tests.ThreadSafety
                 .Build();
 
             var users = GenerateUsers(_ => (id, "Some Name"));
-            
-            var backgroudTask = RunBackgroundСacheOperations(cache, users, CreateScalarKey);
-            await RunForegroundСacheOperations(cache, users, backgroudTask, id, CreateScalarKey);
+
+            var backgroundTask = RunBackgroundСacheOperations(cache, users, CreateScalarKey);
+            await RunForegroundСacheOperations(cache, users, backgroundTask, id, CreateScalarKey);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace FluentCaching.Tests.ThreadSafety
         [Fact]
         public async Task ComplexKeyTypeWithTheSameKey()
         {
-            var key = new {Id = 42, Name = "Some Name"};
+            var key = new { Id = 42, Name = "Some Name" };
             var cache = new CacheBuilder()
                 .For<User>(_ => _.UseAsKey(u => $"{u.Id}-{u.Name}").And()
                     .SetInfiniteExpirationTimeout().And()
@@ -57,11 +57,11 @@ namespace FluentCaching.Tests.ThreadSafety
                 .Build();
 
             var users = GenerateUsers(_ => (key.Id, key.Name));
-            
+
             var backgroudTask = RunBackgroundСacheOperations(cache, users, CreateComplexKey);
             await RunForegroundСacheOperations(cache, users, backgroudTask, key, CreateComplexKey);
         }
-        
+
         [Fact]
         public async Task ComplexKeyTypeWithTheDifferentKey()
         {
@@ -75,7 +75,8 @@ namespace FluentCaching.Tests.ThreadSafety
             var targetUser = users.GetRandomItem();
 
             var backgroudTask = RunBackgroundСacheOperations(cache, users, CreateComplexKey);
-            await RunForegroundСacheOperations(cache, users, backgroudTask, CreateComplexKey(targetUser), CreateComplexKey);
+            await RunForegroundСacheOperations(cache, users, backgroudTask, CreateComplexKey(targetUser),
+                CreateComplexKey);
         }
 
         private static Task RunCacheOperations(User[] users,
@@ -92,7 +93,7 @@ namespace FluentCaching.Tests.ThreadSafety
                     CacheOperationType.Remove => afterRemoveCallback(),
                     _ => throw new ArgumentOutOfRangeException(nameof(operationType), operationType, null)
                 });
-        
+
         private static async Task RunCacheOperations(User[] users,
             ICache cache,
             Func<User, object> createKeyFunc,
@@ -102,25 +103,28 @@ namespace FluentCaching.Tests.ThreadSafety
             {
                 await cache.CacheAsync(user);
             }
+
             await afterOperationCallback(CacheOperationType.Cache);
-            
+
             foreach (var user in users)
             {
                 await cache.RetrieveAsync<User>(createKeyFunc(user));
             }
+
             await afterOperationCallback(CacheOperationType.Retrieve);
 
             foreach (var user in users)
             {
                 await cache.RemoveAsync<User>(createKeyFunc(user));
             }
+
             await afterOperationCallback(CacheOperationType.Remove);
         }
 
         private static object CreateScalarKey(User user) => user.Id;
 
         private static object CreateComplexKey(User user) => new { user.Id, user.Name };
-        
+
         private User[] GenerateUsers(Func<int, (int Id, string Name)> callback)
             => Enumerable.Range(0, UsersCount)
                 .Select(i =>
@@ -129,11 +133,11 @@ namespace FluentCaching.Tests.ThreadSafety
                     return new User(userData.Name, userData.Id);
                 })
                 .ToArray();
-        
+
         private Task RunBackgroundСacheOperations(ICache cache,
             User[] users,
             Func<User, object> createKeyFunc)
-            => Task.Run(() => RunCacheOperations(users[..(users.Length / 2)], cache, createKeyFunc, 
+            => Task.Run(() => RunCacheOperations(users[..(users.Length / 2)], cache, createKeyFunc,
                 _ => Task.FromResult(_autoResetEvent.WaitOne())));
 
         private Task RunForegroundСacheOperations(

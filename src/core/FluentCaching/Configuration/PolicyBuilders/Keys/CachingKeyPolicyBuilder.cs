@@ -10,11 +10,7 @@ namespace FluentCaching.Configuration.PolicyBuilders.Keys
         private static readonly string ClassFullName = typeof(T).FullName;
 
         private readonly IKeyBuilder _keyBuilder;
-        
-        internal CachingKeyPolicyBuilder() : this(new KeyBuilder())
-        {
-        }
-        
+
         internal CachingKeyPolicyBuilder(IKeyBuilder keyBuilder)
         {
             _keyBuilder = keyBuilder;

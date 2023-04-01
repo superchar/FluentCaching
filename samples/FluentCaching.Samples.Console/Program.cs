@@ -2,14 +2,14 @@
 using FluentCaching.Cache.Builders;
 using FluentCaching.Memory;
 
-namespace FluentCaching.Samples.Console 
+namespace FluentCaching.Samples.Console
 {
     internal class Program
     {
         static async Task Main(string[] args)
         {
             var cache = BuildCache();
-            
+
             for (var i = 0; i < 20; i++)
             {
                 var factorial = await FactorialAsync(i, cache);
@@ -35,7 +35,7 @@ namespace FluentCaching.Samples.Console
             var result = factorial * await FactorialAsync(factorial - 1, cache);
             factorialSource = new FactorialSource(factorial, result);
             await cache.CacheAsync(factorialSource);
-            
+
             return result;
         }
 
