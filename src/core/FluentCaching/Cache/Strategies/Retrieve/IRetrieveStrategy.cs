@@ -3,8 +3,8 @@ using FluentCaching.Cache.Models;
 
 namespace FluentCaching.Cache.Strategies.Retrieve;
 
-internal interface IRetrieveStrategy<T>
-    where T : class
+internal interface IRetrieveStrategy<TEntity>
+    where TEntity : class
 {
-    ValueTask<T> RetrieveAsync(CacheSource<T> source);
+    ValueTask<TEntity> RetrieveAsync(CacheSource<TEntity> source);
 }

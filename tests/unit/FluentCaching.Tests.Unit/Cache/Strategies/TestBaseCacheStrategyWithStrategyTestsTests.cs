@@ -3,7 +3,7 @@ using FluentCaching.Cache;
 using FluentCaching.Cache.Models;
 using FluentCaching.Configuration;
 using FluentCaching.Configuration.Exceptions;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
 

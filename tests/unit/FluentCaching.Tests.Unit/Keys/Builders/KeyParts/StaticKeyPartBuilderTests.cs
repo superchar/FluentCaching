@@ -1,26 +1,15 @@
-using System;
 using FluentAssertions;
+using FluentCaching.Extensions;
 using FluentCaching.Keys.Builders.KeyParts;
 using FluentCaching.Keys.Exceptions;
 using FluentCaching.Keys.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.Keys.Builders.KeyParts;
 
 public class StaticKeyPartBuilderTests
 {
-    [Theory]
-    [InlineData("")]
-    [InlineData(null)]
-    public void Create_ValueIsNullOrEmpty_ThrowsKeyPartMissingException(string missingValue)
-    {
-        Action create = () => Create(missingValue);
-
-        create
-            .Should()
-            .Throw<KeyPartMissingException>();
-    }
-    
     [Fact]
     public void Build_WhenCalled_BuildsKeyPart()
     {
@@ -32,6 +21,19 @@ public class StaticKeyPartBuilderTests
     }
 
     [Fact]
+    public void Build_ValueIsNull_ThrowsKeyPartNullException()
+    {
+        var builder = Create((string)null);
+
+        var expectedMessage =
+            $"Key part is null for {typeof(User).ToFullNameString()}. Please check the cache configuration.";
+        builder.Invoking(b => b.Build(KeyContext.Null))
+            .Should()
+            .Throw<KeyPartNullException>()
+            .WithMessage(expectedMessage);
+    }
+
+    [Fact]
     public void IsDynamic_WhenCalled_ReturnsFalse()
     {
         const string keyPart = "key part";
@@ -40,6 +42,6 @@ public class StaticKeyPartBuilderTests
         builder.IsDynamic.Should().BeFalse();
     }
 
-    private static StaticKeyPartBuilder Create<T>(T value) where T : class
-        => StaticKeyPartBuilder.Create(value);
+    private static StaticKeyPartBuilder<User> Create<T>(T value) where T : class
+        => StaticKeyPartBuilder<User>.Create(value);
 }

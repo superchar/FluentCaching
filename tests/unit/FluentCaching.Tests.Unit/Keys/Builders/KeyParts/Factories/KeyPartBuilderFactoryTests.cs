@@ -4,7 +4,7 @@ using FluentAssertions;
 using FluentCaching.Keys.Builders.KeyParts;
 using FluentCaching.Keys.Builders.KeyParts.Factories;
 using FluentCaching.Keys.Helpers;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
 
@@ -26,9 +26,9 @@ public class KeyPartBuilderFactoryTests
     [Fact]
     public void Create_StaticValue_ReturnsStaticKeyPartBuilder()
     {
-        var result = _sut.Create("test");
+        var result = _sut.Create<User, string>("test");
 
-        result.Should().BeOfType<StaticKeyPartBuilder>();
+        result.Should().BeOfType<StaticKeyPartBuilder<User>>();
     }
     
     [Fact]
@@ -43,6 +43,6 @@ public class KeyPartBuilderFactoryTests
 
         var result = _sut.Create<User, string>(_ => _.Name);
 
-        result.Should().BeOfType<ExpressionKeyPartBuilder>();
+        result.Should().BeOfType<ExpressionKeyPartBuilder<User>>();
     }
 }

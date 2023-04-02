@@ -4,7 +4,7 @@ using FluentCaching.Keys.Builders;
 using FluentCaching.Keys.Exceptions;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Keys.Models;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
 
@@ -14,13 +14,13 @@ public class KeyContextBuilderTests
 {
     private readonly Mock<IExpressionsHelper> _expressionHelperMock;
 
-    private readonly KeyContextBuilder _sut;
+    private readonly KeyContextBuilder<User> _sut;
 
     public KeyContextBuilderTests()
     {
         _expressionHelperMock = new Mock<IExpressionsHelper>();
 
-        _sut = new KeyContextBuilder(_expressionHelperMock.Object);
+        _sut = new KeyContextBuilder<User>(_expressionHelperMock.Object);
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class KeyContextBuilderTests
 
         _sut.Invoking(_ => _.BuildRetrieveContextFromScalarKey("target string"))
             .Should()
-            .Throw<KeyPartMissingException>();
+            .Throw<KeyIsNotCompleteException>();
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class KeyContextBuilderTests
 
         _sut.Invoking(_ => _.BuildRetrieveContextFromComplexKey(objectKey))
             .Should()
-            .Throw<KeyPartMissingException>();
+            .Throw<KeyIsNotCompleteException>();
     }
 
     [Fact]

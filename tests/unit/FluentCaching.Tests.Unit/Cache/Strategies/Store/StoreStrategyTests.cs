@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Store;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
 

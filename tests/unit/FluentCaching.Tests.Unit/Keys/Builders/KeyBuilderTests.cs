@@ -1,14 +1,14 @@
 using System;
 using System.Linq.Expressions;
 using FluentAssertions;
-using FluentCaching.Keys;
+using FluentCaching.Extensions;
 using FluentCaching.Keys.Builders;
 using FluentCaching.Keys.Builders.KeyParts;
 using FluentCaching.Keys.Builders.KeyParts.Factories;
 using FluentCaching.Keys.Exceptions;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Keys.Models;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
 
@@ -20,7 +20,7 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
         private readonly Mock<IExpressionsHelper> _expressionHelperMock;
         private readonly Mock<IKeyPartBuilderFactory> _keyPartBuilderFactoryMock;
 
-        private KeyBuilder _sut;
+        private readonly KeyBuilder _sut;
 
         public KeyBuilderTests()
         {
@@ -38,17 +38,17 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
         {
             const string keyPart = "key part";
 
-            _sut.AppendStatic(keyPart);
+            _sut.AppendStatic<User, string>(keyPart);
 
             _keyPartBuilderFactoryMock
-                .Verify(_ => _.Create(keyPart), Times.Once);
+                .Verify(_ => _.Create<User, string>(keyPart), Times.Once);
         }
 
         [Fact]
         public void AppendExpression_WhenCalled_CallsGetPropertyNames()
         {
             MockProperties();
-            
+
             _sut.AppendExpression<User, string>(_ => _.Name);
 
             _expressionHelperMock
@@ -86,9 +86,9 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
                 .Setup(k => k.Build(context))
                 .Returns("Key part");
             _keyPartBuilderFactoryMock
-                .Setup(_ => _.Create("user"))
+                .Setup(_ => _.Create<User, string>("user"))
                 .Returns(keyPartBuilderMock.Object);
-            _sut.AppendStatic("user");
+            _sut.AppendStatic<User, string>("user");
 
             _sut.BuildFromCachedObject(user);
 
@@ -97,7 +97,7 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
         }
 
         [Fact]
-        public void BuildFromStaticKey_DynamicPartsExist_ThrowsKeyPartMissingException()
+        public void BuildFromStaticKey_DynamicPartsExist_ThrowsKeyHasDynamicPartsException()
         {
             MockProperties();
             var keyPartBuilderMock = new Mock<IKeyPartBuilder>();
@@ -109,11 +109,15 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
                 .Returns(keyPartBuilderMock.Object);
             _sut.AppendExpression<User, string>(_ => _.Name);
 
-            _sut.Invoking(_ => _.BuildFromStaticKey())
+            var expectedMessage =
+                $"Cannot build key without parameters, because key cache configuration for {typeof(User).ToFullNameString()} contains dynamic parts." +
+                " Please provide necessary parameters when performing cache operations.";
+            _sut.Invoking(_ => _.BuildFromStaticKey<User>())
                 .Should()
-                .Throw<KeyPartMissingException>();
+                .Throw<KeyHasDynamicPartsException>()
+                .WithMessage(expectedMessage);
         }
-        
+
         [Fact]
         public void BuildFromStaticKey_DynamicPartsDontExist_CallsKeyPartBuilder()
         {
@@ -124,19 +128,19 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
                 .SetupGet(_ => _.IsDynamic)
                 .Returns(false);
             _keyPartBuilderFactoryMock
-                .Setup(_ => _.Create(key))
+                .Setup(_ => _.Create<User, string>(key))
                 .Returns(keyPartBuilderMock.Object);
-            _sut.AppendStatic(key);
+            _sut.AppendStatic<User, string>(key);
 
-            _sut.BuildFromStaticKey();
-            
+            _sut.BuildFromStaticKey<User>();
+
             keyPartBuilderMock.Verify(_ => _.Build(KeyContext.Null), Times.Once);
         }
 
         [Fact]
         public void BuildFromScalarKey_WhenCalled_CallsKeyContextBuilder()
         {
-            _sut.BuildFromScalarKey("UserName");
+            _sut.BuildFromScalarKey<User>("UserName");
 
             _keyContextBuilderMock
                 .Verify(_ => _.BuildRetrieveContextFromScalarKey("UserName"), Times.Once);
@@ -147,13 +151,13 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
         {
             var obj = new { };
 
-            _sut.BuildFromComplexKey(obj);
+            _sut.BuildFromComplexKey<User>(obj);
 
             _keyContextBuilderMock
                 .Verify(_ => _.BuildRetrieveContextFromComplexKey(obj), Times.Once);
         }
-        
-        private void MockProperties(params string [] properties) =>
+
+        private void MockProperties(params string[] properties) =>
             _expressionHelperMock
                 .Setup(_ => _.GetParameterPropertyNames(It.IsAny<Expression<Func<User, string>>>()))
                 .Returns(properties);

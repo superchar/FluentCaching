@@ -3,18 +3,18 @@ using FluentCaching.Configuration;
 
 namespace FluentCaching.Cache.Strategies.Store;
 
-internal class StoreStrategy<T> : BaseCacheStrategyWithConfiguration, IStoreStrategy<T>
-    where T : class
+internal class StoreStrategy<TEntity> : BaseCacheStrategyWithConfiguration, IStoreStrategy<TEntity>
+    where TEntity : class
 {
     public StoreStrategy(ICacheConfiguration configuration) : base(configuration)
     {
     }
 
-    public ValueTask StoreAsync(T cachedObject)
+    public ValueTask StoreAsync(TEntity cachedObject)
     {
-        var item = GetConfigurationItem<T>();
+        var item = GetConfigurationItem<TEntity>();
         var key = item.Options.KeyBuilder.BuildFromCachedObject(cachedObject);
-        return GetCacheImplementation<T>(item)
+        return GetCacheImplementation<TEntity>(item)
             .CacheAsync(key, cachedObject, item.Options);
     }
 }

@@ -5,10 +5,10 @@ using FluentCaching.Keys.Builders;
 
 namespace FluentCaching.Configuration.PolicyBuilders.Keys;
 
-public class CombinedCachingKeyPolicyBuilder<T>
+public class CombinedCachingKeyPolicyBuilder<TEntity>
 {
-    private static readonly string ClassName = typeof(T).Name;
-    private static readonly string ClassFullName = typeof(T).FullName;
+    private static readonly string ClassName = typeof(TEntity).Name;
+    private static readonly string ClassFullName = typeof(TEntity).FullName;
 
     private readonly IKeyBuilder _keyBuilder;
 
@@ -19,27 +19,27 @@ public class CombinedCachingKeyPolicyBuilder<T>
 
     public TtlTypePolicyBuilder And() => new (_keyBuilder);
 
-    public CombinedCachingKeyPolicyBuilder<T> CombinedWith<TValue>(Expression<Func<T, TValue>> valueGetter)
+    public CombinedCachingKeyPolicyBuilder<TEntity> CombinedWith<TValue>(Expression<Func<TEntity, TValue>> valueGetter)
     {
         _keyBuilder.AppendExpression(valueGetter);
         return this;
     }
 
-    public CombinedCachingKeyPolicyBuilder<T> CombinedWith<TValue>(TValue value)
+    public CombinedCachingKeyPolicyBuilder<TEntity> CombinedWith<TValue>(TValue value)
     {
-        _keyBuilder.AppendStatic(value);
+        _keyBuilder.AppendStatic<TEntity, TValue>(value);
         return this;
     }
 
-    public CombinedCachingKeyPolicyBuilder<T> CombinedWithClassName()
+    public CombinedCachingKeyPolicyBuilder<TEntity> CombinedWithClassName()
     {
-        _keyBuilder.AppendStatic(ClassName);
+        _keyBuilder.AppendStatic<TEntity, string>(ClassName);
         return this;
     }
 
-    public CombinedCachingKeyPolicyBuilder<T> CombinedWithClassFullName()
+    public CombinedCachingKeyPolicyBuilder<TEntity> CombinedWithClassFullName()
     {
-        _keyBuilder.AppendStatic(ClassFullName);
+        _keyBuilder.AppendStatic<TEntity, string>(ClassFullName);
         return this;
     }
 }

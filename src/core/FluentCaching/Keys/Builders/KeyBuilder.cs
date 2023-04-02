@@ -31,10 +31,10 @@ internal class KeyBuilder : IKeyBuilder
 
     private bool HasDynamicParts => _keyPartBuilders.Any(_ => _.IsDynamic);
 
-    public void AppendStatic<TValue>(TValue value)
-        => _keyPartBuilders.Add(_keyPartBuilderFactory.Create(value));
+    public void AppendStatic<TEntity, TValue>(TValue value)
+        => _keyPartBuilders.Add(_keyPartBuilderFactory.Create<TEntity, TValue>(value));
 
-    public void AppendExpression<T, TValue>(Expression<Func<T, TValue>> valueGetter)
+    public void AppendExpression<TEntity, TValue>(Expression<Func<TEntity, TValue>> valueGetter)
     {
         foreach (var propertyName in _expressionHelper.GetParameterPropertyNames(valueGetter))
         {
@@ -44,29 +44,22 @@ internal class KeyBuilder : IKeyBuilder
         _keyPartBuilders.Add(_keyPartBuilderFactory.Create(valueGetter));
     }
 
-    public string BuildFromScalarKey(object scalarKey)
+    public string BuildFromScalarKey<TEntity>(object scalarKey)
     {
         var context = _keyContextBuilder.BuildRetrieveContextFromScalarKey(scalarKey);
 
         return Build(context);
     }
 
-    public string BuildFromComplexKey(object complexKey)
+    public string BuildFromComplexKey<TEntity>(object complexKey)
     {
         var context = _keyContextBuilder.BuildRetrieveContextFromComplexKey(complexKey);
 
         return Build(context);
     }
 
-    public string BuildFromStaticKey()
-    {
-        if (HasDynamicParts)
-        {
-            throw new KeyPartMissingException();
-        }
-
-        return Build(KeyContext.Null);
-    }
+    public string BuildFromStaticKey<TEntity>() =>
+        HasDynamicParts ? throw new KeyHasDynamicPartsException(typeof(TEntity)) : Build(KeyContext.Null);
 
     public string BuildFromCachedObject(object cachedObject)
     {

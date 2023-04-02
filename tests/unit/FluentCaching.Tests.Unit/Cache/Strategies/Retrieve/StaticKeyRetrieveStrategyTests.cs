@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Retrieve;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
 
@@ -22,7 +22,7 @@ public class StaticKeyRetrieveStrategyTests : BaseCacheStrategyTests
         await _sut.RetrieveAsync(CacheSource<User>.Create(null));
 
         KeyBuilderMock
-            .Verify(_ => _.BuildFromStaticKey(), Times.Once);
+            .Verify(_ => _.BuildFromStaticKey<User>(), Times.Once);
     }
 
     [Fact]
@@ -30,7 +30,7 @@ public class StaticKeyRetrieveStrategyTests : BaseCacheStrategyTests
     {
         const string key = "key";
         KeyBuilderMock
-            .Setup(_ => _.BuildFromStaticKey())
+            .Setup(_ => _.BuildFromStaticKey<User>())
             .Returns(key);
             
         await _sut.RetrieveAsync(CacheSource<User>.Create(null));

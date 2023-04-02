@@ -4,10 +4,10 @@ using FluentCaching.Keys.Builders;
 
 namespace FluentCaching.Configuration.PolicyBuilders.Keys
 {
-    public class CachingKeyPolicyBuilder<T>
+    public class CachingKeyPolicyBuilder<TEntity>
     {
-        private static readonly string ClassName = typeof(T).Name;
-        private static readonly string ClassFullName = typeof(T).FullName;
+        private static readonly string ClassName = typeof(TEntity).Name;
+        private static readonly string ClassFullName = typeof(TEntity).FullName;
 
         private readonly IKeyBuilder _keyBuilder;
 
@@ -16,28 +16,28 @@ namespace FluentCaching.Configuration.PolicyBuilders.Keys
             _keyBuilder = keyBuilder;
         }
 
-        public CombinedCachingKeyPolicyBuilder<T> UseAsKey<TValue>(Expression<Func<T, TValue>> valueGetter)
+        public CombinedCachingKeyPolicyBuilder<TEntity> UseAsKey<TValue>(Expression<Func<TEntity, TValue>> valueGetter)
         {
             _keyBuilder.AppendExpression(valueGetter);
-            return new CombinedCachingKeyPolicyBuilder<T>(_keyBuilder);
+            return new CombinedCachingKeyPolicyBuilder<TEntity>(_keyBuilder);
         }
 
-        public CombinedCachingKeyPolicyBuilder<T> UseAsKey<TValue>(TValue value)
+        public CombinedCachingKeyPolicyBuilder<TEntity> UseAsKey<TValue>(TValue value)
         {
-            _keyBuilder.AppendStatic(value);
-            return new CombinedCachingKeyPolicyBuilder<T>(_keyBuilder);
+            _keyBuilder.AppendStatic<TEntity, TValue>(value);
+            return new CombinedCachingKeyPolicyBuilder<TEntity>(_keyBuilder);
         }
 
-        public CombinedCachingKeyPolicyBuilder<T> UseClassNameAsKey()
+        public CombinedCachingKeyPolicyBuilder<TEntity> UseClassNameAsKey()
         {
-            _keyBuilder.AppendStatic(ClassName);
-            return new CombinedCachingKeyPolicyBuilder<T>(_keyBuilder);
+            _keyBuilder.AppendStatic<TEntity, string>(ClassName);
+            return new CombinedCachingKeyPolicyBuilder<TEntity>(_keyBuilder);
         }
 
-        public CombinedCachingKeyPolicyBuilder<T> UseClassFullNameAsKey()
+        public CombinedCachingKeyPolicyBuilder<TEntity> UseClassFullNameAsKey()
         {
-            _keyBuilder.AppendStatic(ClassFullName);
-            return new CombinedCachingKeyPolicyBuilder<T>(_keyBuilder);
+            _keyBuilder.AppendStatic<TEntity, string>(ClassFullName);
+            return new CombinedCachingKeyPolicyBuilder<TEntity>(_keyBuilder);
         }
     }
 }

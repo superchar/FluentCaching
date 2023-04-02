@@ -4,19 +4,19 @@ using FluentCaching.Configuration;
 
 namespace FluentCaching.Cache.Strategies.Remove;
 
-internal class StaticKeyRemoveStrategy<T> : BaseCacheStrategyWithConfiguration,  IRemoveStrategy<T>
-    where T : class
+internal class StaticKeyRemoveStrategy<TEntity> : BaseCacheStrategyWithConfiguration,  IRemoveStrategy<TEntity>
+    where TEntity : class
 {
     public StaticKeyRemoveStrategy(ICacheConfiguration configuration) 
         : base(configuration)
     {
     }
     
-    public ValueTask RemoveAsync(CacheSource<T> source)
+    public ValueTask RemoveAsync(CacheSource<TEntity> source)
     {
-        var item = GetConfigurationItem<T>();
-        var key = item.Options.KeyBuilder.BuildFromStaticKey();
-        return GetCacheImplementation<T>(item)
+        var item = GetConfigurationItem<TEntity>();
+        var key = item.Options.KeyBuilder.BuildFromStaticKey<TEntity>();
+        return GetCacheImplementation<TEntity>(item)
             .RemoveAsync(key);        
     }
 }

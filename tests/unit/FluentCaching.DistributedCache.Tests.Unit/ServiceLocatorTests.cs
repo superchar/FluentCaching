@@ -5,7 +5,7 @@ using Xunit;
 
 namespace FluentCaching.DistributedCache.Tests.Unit;
 
-public class ServiceLocatorTests
+public class ServiceLocatorTests : IDisposable
 {
     private readonly Mock<IServiceProvider> _serviceProviderMock;
 
@@ -40,10 +40,13 @@ public class ServiceLocatorTests
     }
         
     [Fact]
-    public void CreateScope_ThrowsInvalidOperationException_WhenServiceProviderIsNotInitialized()
+    public void CreateScope_ThrowsServiceProviderNotInitializedException_WhenServiceProviderIsNotInitialized()
     {
         Action createScope = () => ServiceLocator.CreateScope();
 
-        createScope.Should().Throw<InvalidOperationException>();
+        createScope.Should().Throw<ServiceProviderNotInitializedException>();
     }
+
+    void IDisposable.Dispose()
+        => ServiceLocator.Initialize(null);
 }

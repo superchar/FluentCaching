@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using FluentAssertions;
 using FluentCaching.Configuration.PolicyBuilders.Keys;
 using FluentCaching.Keys.Builders;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
 
@@ -47,7 +47,7 @@ public class CombinedCachingKeyPolicyBuilderTests
 
         result.Should().NotBeNull();
         _keyBuilderMock
-            .Verify(p => p.AppendStatic("static value"), Times.Once);
+            .Verify(p => p.AppendStatic<User, string>("static value"), Times.Once);
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class CombinedCachingKeyPolicyBuilderTests
 
         result.Should().NotBeNull();
         _keyBuilderMock
-            .Verify(p => p.AppendStatic("User"), Times.Once);
+            .Verify(p => p.AppendStatic<User, string>("User"), Times.Once);
     }
 
     [Fact]
@@ -67,6 +67,6 @@ public class CombinedCachingKeyPolicyBuilderTests
 
         result.Should().NotBeNull();
         _keyBuilderMock
-            .Verify(p => p.AppendStatic("FluentCaching.Tests.Unit.Models.User"), Times.Once);
+            .Verify(p => p.AppendStatic<User, string>("FluentCaching.Tests.Unit.TestModels.User"), Times.Once);
     }
 }

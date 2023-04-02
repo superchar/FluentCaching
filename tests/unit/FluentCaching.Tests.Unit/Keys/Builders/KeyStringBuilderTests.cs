@@ -9,15 +9,15 @@ namespace FluentCaching.Tests.Unit.Keys.Builders;
 
 public class KeyStringBuilderTests
 {
-    private static readonly Fixture Fixture = new ();
-        
+    private static readonly Fixture Fixture = new();
+
     private KeyStringBuilder _sut;
 
     public KeyStringBuilderTests()
     {
         _sut = new KeyStringBuilder();
     }
-        
+
     [Theory]
     [InlineData(0)]
     [InlineData(5)]
@@ -30,12 +30,14 @@ public class KeyStringBuilderTests
     {
         _sut.Invoking(_ => AppendStrings(count)).Should().NotThrow();
     }
-        
+
     [Fact]
     public void Append_StringIsMoreThenMaxSize_ThrowsKeyLengthExceededException()
     {
+        const string expectedMessage = "The caching key can consists of maximum '120' parts. " +
+                                       "Please change the configuration to reduce key parts count.";
         _sut.Invoking(_ => AppendStrings(121)).Should().Throw<KeyCountExceededException>()
-            .WithMessage("Maximum key parts count exceeded. Maximum count is 120.");
+            .WithMessage(expectedMessage);
     }
 
     [Theory]
@@ -55,13 +57,13 @@ public class KeyStringBuilderTests
         var expectedResult = string.Join(string.Empty, targetStrings);
         result.Should().Be(expectedResult);
     }
-        
+
     private string[] AppendStrings(int count)
     {
         var targetStrings = Fixture
             .CreateMany<string>(count)
             .ToArray();
- 
+
         foreach (var targetString in targetStrings)
         {
             _sut.Append(targetString);

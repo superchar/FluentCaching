@@ -4,18 +4,18 @@ using FluentCaching.Configuration;
 
 namespace FluentCaching.Cache.Strategies.Remove;
 
-internal class ScalarKeyRemoveStrategy<T> : BaseCacheStrategyWithConfiguration, IRemoveStrategy<T>
-    where T : class
+internal class ScalarKeyRemoveStrategy<TEntity> : BaseCacheStrategyWithConfiguration, IRemoveStrategy<TEntity>
+    where TEntity : class
 {
     public ScalarKeyRemoveStrategy(ICacheConfiguration configuration) : base(configuration)
     {
     }
 
-    public ValueTask RemoveAsync(CacheSource<T> source)
+    public ValueTask RemoveAsync(CacheSource<TEntity> source)
     {
-        var item = GetConfigurationItem<T>();
-        var key = item.Options.KeyBuilder.BuildFromScalarKey(source.Key);
-        return GetCacheImplementation<T>(item)
+        var item = GetConfigurationItem<TEntity>();
+        var key = item.Options.KeyBuilder.BuildFromScalarKey<TEntity>(source.Key);
+        return GetCacheImplementation<TEntity>(item)
             .RemoveAsync(key);    
     }
 }

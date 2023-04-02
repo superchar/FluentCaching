@@ -6,7 +6,7 @@ using Xunit;
 
 namespace FluentCaching.DistributedCache.Tests.Unit;
 
-public class DistributedCacheHolderTests
+public class DistributedCacheHolderTests : IDisposable
 {
     private readonly Mock<IDistributedCache> _distributedCacheMock;
     private Mock<IServiceProvider> _scopeServiceProviderMock;
@@ -79,4 +79,7 @@ public class DistributedCacheHolderTests
             
         ServiceLocator.Initialize(serviceProviderMock.Object);
     }
+    
+    void IDisposable.Dispose()
+        => ServiceLocator.Initialize(null);
 }

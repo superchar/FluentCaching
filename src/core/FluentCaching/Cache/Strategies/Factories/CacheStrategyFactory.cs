@@ -15,22 +15,22 @@ internal class CacheStrategyFactory : ICacheStrategyFactory
         _cacheConfiguration = cacheConfiguration;
     }
 
-    public IStoreStrategy<T> CreateStoreStrategy<T>() where T : class
-        => new StoreStrategy<T>(_cacheConfiguration);
+    public IStoreStrategy<TEntity> CreateStoreStrategy<TEntity>() where TEntity : class
+        => new StoreStrategy<TEntity>(_cacheConfiguration);
 
-    public IRetrieveStrategy<T> CreateRetrieveStrategy<T>(CacheSource<T> source) where T : class
+    public IRetrieveStrategy<TEntity> CreateRetrieveStrategy<TEntity>(CacheSource<TEntity> source) where TEntity : class
         => source.CacheSourceType switch
         {
-            CacheSourceType.Static => new StaticKeyRetrieveStrategy<T>(_cacheConfiguration),
-            CacheSourceType.Scalar => new ScalarKeyRetrieveStrategy<T>(_cacheConfiguration),
-            _ => new ComplexKeyRetrieveStrategy<T>(_cacheConfiguration)
+            CacheSourceType.Static => new StaticKeyRetrieveStrategy<TEntity>(_cacheConfiguration),
+            CacheSourceType.Scalar => new ScalarKeyRetrieveStrategy<TEntity>(_cacheConfiguration),
+            _ => new ComplexKeyRetrieveStrategy<TEntity>(_cacheConfiguration)
         };
 
-    public IRemoveStrategy<T> CreateRemoveStrategy<T>(CacheSource<T> source) where T : class
+    public IRemoveStrategy<TEntity> CreateRemoveStrategy<TEntity>(CacheSource<TEntity> source) where TEntity : class
         => source.CacheSourceType switch
         {
-            CacheSourceType.Scalar => new ScalarKeyRemoveStrategy<T>(_cacheConfiguration),
-            CacheSourceType.Static => new StaticKeyRemoveStrategy<T>(_cacheConfiguration),
-            _ => new ComplexKeyRemoveStrategy<T>(_cacheConfiguration)
+            CacheSourceType.Scalar => new ScalarKeyRemoveStrategy<TEntity>(_cacheConfiguration),
+            CacheSourceType.Static => new StaticKeyRemoveStrategy<TEntity>(_cacheConfiguration),
+            _ => new ComplexKeyRemoveStrategy<TEntity>(_cacheConfiguration)
         };
 }
