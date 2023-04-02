@@ -13,29 +13,29 @@ namespace FluentCaching.Cache
             _cacheStrategyFactory = cacheStrategyFactory;
         }
 
-        public ValueTask CacheAsync<T>(T targetObject) where T : class
+        public ValueTask CacheAsync<TEntity>(TEntity targetObject) where TEntity : class
             => _cacheStrategyFactory
-                .CreateStoreStrategy<T>()
+                .CreateStoreStrategy<TEntity>()
                 .StoreAsync(targetObject);
 
-        public ValueTask<T> RetrieveAsync<T>(object key) where T : class
-            => RetrieveAsync(CacheSource<T>.Create(key));
+        public ValueTask<TEntity> RetrieveAsync<TEntity>(object key) where TEntity : class
+            => RetrieveAsync(CacheSource<TEntity>.Create(key));
 
-        public ValueTask<T> RetrieveAsync<T>() where T : class
-            => RetrieveAsync(CacheSource<T>.Create(null));
+        public ValueTask<TEntity> RetrieveAsync<TEntity>() where TEntity : class
+            => RetrieveAsync(CacheSource<TEntity>.Create(null));
 
-        public ValueTask RemoveAsync<T>(object key) where T : class
-            => RemoveAsync(CacheSource<T>.Create(key));
+        public ValueTask RemoveAsync<TEntity>(object key) where TEntity : class
+            => RemoveAsync(CacheSource<TEntity>.Create(key));
 
-        public ValueTask RemoveAsync<T>() where T : class
-            => RemoveAsync(CacheSource<T>.Create(null));
+        public ValueTask RemoveAsync<TEntity>() where TEntity : class
+            => RemoveAsync(CacheSource<TEntity>.Create(null));
         
-        private ValueTask<T> RetrieveAsync<T>(CacheSource<T> source) where T : class
+        private ValueTask<TEntity> RetrieveAsync<TEntity>(CacheSource<TEntity> source) where TEntity : class
             => _cacheStrategyFactory
                 .CreateRetrieveStrategy(source)
                 .RetrieveAsync(source);
         
-        private ValueTask RemoveAsync<T>(CacheSource<T> source) where T : class
+        private ValueTask RemoveAsync<TEntity>(CacheSource<TEntity> source) where TEntity : class
             => _cacheStrategyFactory
                 .CreateRemoveStrategy(source)
                 .RemoveAsync(source);

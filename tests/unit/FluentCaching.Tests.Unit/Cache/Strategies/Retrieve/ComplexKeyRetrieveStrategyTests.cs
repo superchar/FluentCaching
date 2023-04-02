@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Retrieve;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
 
@@ -25,7 +25,7 @@ public class ComplexKeyRetrieveStrategyTests : BaseCacheStrategyTests
         await _sut.RetrieveAsync(ComplexKeySource);
 
         KeyBuilderMock
-            .Verify(_ => _.BuildFromComplexKey(ComplexKeySource.Key), Times.Once);
+            .Verify(_ => _.BuildFromComplexKey<User>(ComplexKeySource.Key), Times.Once);
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class ComplexKeyRetrieveStrategyTests : BaseCacheStrategyTests
     {
         const string key = "key";
         KeyBuilderMock
-            .Setup(_ => _.BuildFromComplexKey(ComplexKeySource.Key))
+            .Setup(_ => _.BuildFromComplexKey<User>(ComplexKeySource.Key))
             .Returns(key);
             
         await _sut.RetrieveAsync(ComplexKeySource);

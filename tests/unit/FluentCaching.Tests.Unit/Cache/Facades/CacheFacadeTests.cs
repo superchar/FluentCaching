@@ -4,7 +4,6 @@ using FluentCaching.Cache.Strategies.Factories;
 using FluentCaching.Cache.Strategies.Remove;
 using FluentCaching.Cache.Strategies.Retrieve;
 using FluentCaching.Cache.Strategies.Store;
-using FluentCaching.Tests.Unit.Models;
 using Moq;
 using Xunit;
 

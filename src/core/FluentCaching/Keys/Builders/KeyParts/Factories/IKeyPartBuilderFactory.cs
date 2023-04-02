@@ -5,7 +5,7 @@ namespace FluentCaching.Keys.Builders.KeyParts.Factories;
 
 internal interface IKeyPartBuilderFactory
 {
-    IKeyPartBuilder Create<TValue>(TValue value);
+    IKeyPartBuilder Create<TEntity, TValue>(TValue value);
     
-    IKeyPartBuilder Create<T, TValue>(Expression<Func<T, TValue>> valueGetter);
+    IKeyPartBuilder Create<TEntity, TValue>(Expression<Func<TEntity, TValue>> valueGetter);
 }

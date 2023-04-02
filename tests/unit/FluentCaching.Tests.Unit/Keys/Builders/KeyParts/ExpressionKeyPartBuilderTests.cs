@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using FluentAssertions;
+using FluentCaching.Extensions;
 using FluentCaching.Keys.Builders.KeyParts;
 using FluentCaching.Keys.Exceptions;
 using FluentCaching.Keys.Helpers;
 using FluentCaching.Keys.Models;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
 
@@ -73,7 +74,7 @@ public class ExpressionKeyPartBuilderTests
     }
 
     [Fact]
-    public void Build_ValueIsNull_ThrowsKeyPartMissingException()
+    public void Build_ValueIsNull_ThrowsKeyPartNullException()
     {
         var user = new User
         {
@@ -82,9 +83,11 @@ public class ExpressionKeyPartBuilderTests
         SetupExpressionRewriteFakes();
         var builder = Create(_ => _.SubscriptionId, _expressionsHelperMock.Object);
 
+        var expectedMessage = $"Key part is null for {typeof(User).ToFullNameString()}. Please check the cache configuration.";
         builder.Invoking(_ => _.Build(new KeyContext(user)))
             .Should()
-            .Throw<KeyPartMissingException>();
+            .Throw<KeyPartNullException>()
+            .WithMessage(expectedMessage);
     }
     
     [Fact]
@@ -96,9 +99,9 @@ public class ExpressionKeyPartBuilderTests
         builder.IsDynamic.Should().BeTrue();
     }
 
-    private static ExpressionKeyPartBuilder Create<T>(Expression<Func<User, T>> valueGetter,
+    private static ExpressionKeyPartBuilder<User> Create<T>(Expression<Func<User, T>> valueGetter,
         IExpressionsHelper expressionsHelper)
-        => ExpressionKeyPartBuilder.Create(valueGetter, expressionsHelper);
+        => ExpressionKeyPartBuilder<User>.Create(valueGetter, expressionsHelper);
 
     private void SetupExpressionRewriteFakes()
     {

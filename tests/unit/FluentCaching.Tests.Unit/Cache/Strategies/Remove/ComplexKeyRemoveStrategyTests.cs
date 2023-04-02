@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Remove;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
 
@@ -25,7 +25,7 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies.Remove
             await _sut.RemoveAsync(ObjectKeySource);
 
             KeyBuilderMock
-                .Verify(_ => _.BuildFromComplexKey(ObjectKeySource.Key), Times.Once);
+                .Verify(_ => _.BuildFromComplexKey<User>(ObjectKeySource.Key), Times.Once);
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace FluentCaching.Tests.Unit.Cache.Strategies.Remove
         {
             const string key = "key";
             KeyBuilderMock
-                .Setup(_ => _.BuildFromComplexKey(ObjectKeySource.Key))
+                .Setup(_ => _.BuildFromComplexKey<User>(ObjectKeySource.Key))
                 .Returns(key);
             
             await _sut.RemoveAsync(ObjectKeySource);

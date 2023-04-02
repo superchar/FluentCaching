@@ -4,18 +4,18 @@ using FluentCaching.Configuration;
 
 namespace FluentCaching.Cache.Strategies.Retrieve;
 
-internal class ScalarKeyRetrieveStrategy<T> : BaseCacheStrategyWithConfiguration, IRetrieveStrategy<T>
-    where T : class
+internal class ScalarKeyRetrieveStrategy<TEntity> : BaseCacheStrategyWithConfiguration, IRetrieveStrategy<TEntity>
+    where TEntity : class
 {
     public ScalarKeyRetrieveStrategy(ICacheConfiguration configuration) : base(configuration)
     {
     }
     
-    public ValueTask<T> RetrieveAsync(CacheSource<T> source)
+    public ValueTask<TEntity> RetrieveAsync(CacheSource<TEntity> source)
     {
-        var item = GetConfigurationItem<T>();
-        var key = item.Options.KeyBuilder.BuildFromScalarKey(source.Key);
-        return GetCacheImplementation<T>(item)
-            .RetrieveAsync<T>(key);    
+        var item = GetConfigurationItem<TEntity>();
+        var key = item.Options.KeyBuilder.BuildFromScalarKey<TEntity>(source.Key);
+        return GetCacheImplementation<TEntity>(item)
+            .RetrieveAsync<TEntity>(key);    
     }
 }

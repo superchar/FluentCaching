@@ -13,9 +13,9 @@ internal class KeyPartBuilderFactory : IKeyPartBuilderFactory
         _expressionsHelper = expressionsHelper;
     }
 
-    public IKeyPartBuilder Create<TValue>(TValue value)
-        => StaticKeyPartBuilder.Create(value);
+    public IKeyPartBuilder Create<TEntity, TValue>(TValue value)
+        => StaticKeyPartBuilder<TEntity>.Create(value);
 
-    public IKeyPartBuilder Create<T, TValue>(Expression<Func<T, TValue>> valueGetter)
-        => ExpressionKeyPartBuilder.Create(valueGetter, _expressionsHelper);
+    public IKeyPartBuilder Create<TEntity, TValue>(Expression<Func<TEntity, TValue>> valueGetter)
+        => ExpressionKeyPartBuilder<TEntity>.Create(valueGetter, _expressionsHelper);
 }

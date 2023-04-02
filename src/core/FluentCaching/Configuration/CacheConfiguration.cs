@@ -30,25 +30,29 @@ internal sealed class CacheConfiguration : ICacheConfiguration
         return this;
     }
 
-    public ICacheConfiguration For<T>(
-        Func<CachingKeyPolicyBuilder<T>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
-        where T : class
-        => For<T>(factoryFunc(new CachingKeyPolicyBuilder<T>(_keyBuilderFactory.CreateKeyBuilder())).And()
-            .CachingOptions);
+    public ICacheConfiguration For<TEntity>(
+        Func<CachingKeyPolicyBuilder<TEntity>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
+        where TEntity : class
+        => For<TEntity>(
+            factoryFunc(new CachingKeyPolicyBuilder<TEntity>(_keyBuilderFactory.CreateKeyBuilder<TEntity>())).And()
+                .CachingOptions);
 
-    public ICacheConfiguration For<T>(Func<CachingKeyPolicyBuilder<T>, CacheImplementationPolicyBuilder> factoryFunc)
-        where T : class
-        => For<T>(factoryFunc(new CachingKeyPolicyBuilder<T>(_keyBuilderFactory.CreateKeyBuilder())).CachingOptions);
+    public ICacheConfiguration For<TEntity>(
+        Func<CachingKeyPolicyBuilder<TEntity>, CacheImplementationPolicyBuilder> factoryFunc)
+        where TEntity : class
+        => For<TEntity>(
+            factoryFunc(new CachingKeyPolicyBuilder<TEntity>(_keyBuilderFactory.CreateKeyBuilder<TEntity>()))
+                .CachingOptions);
 
-    public ICacheConfigurationItem GetItem<T>() where T : class =>
-        _predefinedConfigurations.TryGetValue(typeof(T), out var configurationItem)
+    public ICacheConfigurationItem GetItem<TEntity>() where TEntity : class =>
+        _predefinedConfigurations.TryGetValue(typeof(TEntity), out var configurationItem)
             ? configurationItem
             : null;
 
-    private ICacheConfiguration For<T>(CacheOptions options)
-        where T : class
+    private ICacheConfiguration For<TEntity>(CacheOptions options)
+        where TEntity : class
     {
-        _predefinedConfigurations[typeof(T)] = new CacheConfigurationItem(options);
+        _predefinedConfigurations[typeof(TEntity)] = new CacheConfigurationItem(options);
         return this;
     }
 }

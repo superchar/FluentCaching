@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using FluentCaching.Cache.Models;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.Cache.Models;

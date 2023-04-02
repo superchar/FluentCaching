@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using FluentAssertions;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
 

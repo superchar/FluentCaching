@@ -3,8 +3,8 @@ using FluentCaching.Cache.Models;
 
 namespace FluentCaching.Cache.Strategies.Remove;
 
-public interface IRemoveStrategy<T>
-    where T : class
+public interface IRemoveStrategy<TEntity>
+    where TEntity : class
 {
-    ValueTask RemoveAsync(CacheSource<T> source);
+    ValueTask RemoveAsync(CacheSource<TEntity> source);
 }

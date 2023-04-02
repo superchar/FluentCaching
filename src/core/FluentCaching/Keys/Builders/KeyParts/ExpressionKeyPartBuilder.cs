@@ -7,8 +7,10 @@ using FluentCaching.Keys.Models;
 
 namespace FluentCaching.Keys.Builders.KeyParts;
 
-internal class ExpressionKeyPartBuilder: IKeyPartBuilder
+internal class ExpressionKeyPartBuilder<TEntity>: IKeyPartBuilder
 {
+    private static readonly Type EntityType = typeof(TEntity);
+    
     private Func<object, string> _storeFunc;
     private Func<Dictionary<string, object>, string> _retrieveFunc;
     
@@ -21,19 +23,19 @@ internal class ExpressionKeyPartBuilder: IKeyPartBuilder
 
     public bool IsDynamic => true;
 
-    public static ExpressionKeyPartBuilder Create<T, TValue>(Expression<Func<T, TValue>> valueGetter,
+    public static ExpressionKeyPartBuilder<TEntity> Create<TValue>(Expression<Func<TEntity, TValue>> valueGetter,
         IExpressionsHelper expressionsHelper)
-        => new ExpressionKeyPartBuilder(expressionsHelper)
+        => new ExpressionKeyPartBuilder<TEntity>(expressionsHelper)
             .AddExpression(valueGetter);
 
-    private ExpressionKeyPartBuilder AddExpression<T, TValue>(
-        Expression<Func<T, TValue>> valueGetter)
+    private ExpressionKeyPartBuilder<TEntity> AddExpression<TValue>(
+        Expression<Func<TEntity, TValue>> valueGetter)
     {
         var storeExpression = _expressionsHelper.ReplaceResultTypeWithString(valueGetter);
         var retrieveExpression = _expressionsHelper.ReplaceParameterWithDictionary(storeExpression);
 
         var compliedStoreExpression = storeExpression.Compile();
-        _storeFunc = o => compliedStoreExpression((T)o); 
+        _storeFunc = o => compliedStoreExpression((TEntity)o); 
         _retrieveFunc = retrieveExpression.Compile();
 
         return this;
@@ -44,7 +46,6 @@ internal class ExpressionKeyPartBuilder: IKeyPartBuilder
         var keyPart = keyContext.Store != null 
             ? _storeFunc(keyContext.Store) : _retrieveFunc(keyContext.Retrieve);
 
-        return keyPart
-            .ThrowIfKeyPartIsNullOrEmpty();
+        return keyPart.ThrowIfKeyPartIsNull(EntityType);
     }
 }

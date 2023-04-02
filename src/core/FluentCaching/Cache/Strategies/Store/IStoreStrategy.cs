@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 
 namespace FluentCaching.Cache.Strategies.Store;
 
-public interface IStoreStrategy<in T>
-    where T : class
+public interface IStoreStrategy<in TEntity>
+    where TEntity : class
 {
-    ValueTask StoreAsync(T cachedObject);
+    ValueTask StoreAsync(TEntity cachedObject);
 }

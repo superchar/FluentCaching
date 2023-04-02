@@ -2,10 +2,10 @@ using System;
 
 namespace FluentCaching.Cache.Models;
 
-public struct CacheSource<T>
-    where T : class
+public struct CacheSource<TEntity>
+    where TEntity : class
 {
-    private static readonly CacheSource<T> Static = new(null, CacheSourceType.Static);
+    private static readonly CacheSource<TEntity> Static = new(null, CacheSourceType.Static);
 
     private CacheSource(object key, CacheSourceType cacheSourceType)
     {
@@ -13,7 +13,7 @@ public struct CacheSource<T>
         CacheSourceType = cacheSourceType;
     }
 
-    public static CacheSource<T> Create(object key)
+    public static CacheSource<TEntity> Create(object key)
     {
         if (key == null)
         {
@@ -26,7 +26,7 @@ public struct CacheSource<T>
                            || type == typeof(decimal)
                            || type == typeof(Guid);
 
-        return new CacheSource<T>(key, isScalarType ? CacheSourceType.Scalar : CacheSourceType.Complex);
+        return new CacheSource<TEntity>(key, isScalarType ? CacheSourceType.Scalar : CacheSourceType.Complex);
     }
 
     public object Key { get; }

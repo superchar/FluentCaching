@@ -10,9 +10,9 @@ public interface ICacheBuilder
 
     // ReSharper disable once UnusedMemberInSuper.Global
     // ReSharper disable once UnusedMethodReturnValue.Global
-    ICacheBuilder For<T>(Func<CachingKeyPolicyBuilder<T>, CacheImplementationPolicyBuilder> factoryFunc) where T : class;
+    ICacheBuilder For<TEntity>(Func<CachingKeyPolicyBuilder<TEntity>, CacheImplementationPolicyBuilder> factoryFunc) where TEntity : class;
 
-    ICacheBuilder For<T>(Func<CachingKeyPolicyBuilder<T>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc) where T : class;
+    ICacheBuilder For<TEntity>(Func<CachingKeyPolicyBuilder<TEntity>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc) where TEntity : class;
 
     ICacheBuilder SetGenericCache(ICacheImplementation cacheImplementation);
 }

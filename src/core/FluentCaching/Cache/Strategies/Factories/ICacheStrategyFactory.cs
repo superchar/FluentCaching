@@ -7,9 +7,9 @@ namespace FluentCaching.Cache.Strategies.Factories;
 
 internal interface ICacheStrategyFactory
 {
-    IStoreStrategy<T> CreateStoreStrategy<T>() where T : class;
+    IStoreStrategy<TEntity> CreateStoreStrategy<TEntity>() where TEntity : class;
 
-    IRetrieveStrategy<T> CreateRetrieveStrategy<T>(CacheSource<T> source)  where T : class;
+    IRetrieveStrategy<TEntity> CreateRetrieveStrategy<TEntity>(CacheSource<TEntity> source)  where TEntity : class;
     
-    IRemoveStrategy<T> CreateRemoveStrategy<T>(CacheSource<T> source)  where T : class;
+    IRemoveStrategy<TEntity> CreateRemoveStrategy<TEntity>(CacheSource<TEntity> source)  where TEntity : class;
 }

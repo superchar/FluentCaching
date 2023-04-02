@@ -5,10 +5,10 @@ namespace FluentCaching.Keys.Builders.Factories;
 
 internal class KeyBuilderFactory : IKeyBuilderFactory
 {
-    public IKeyBuilder CreateKeyBuilder()
+    public IKeyBuilder CreateKeyBuilder<TEntity>()
     {
         var expressionsHelper = new ExpressionsHelper();
-        return new KeyBuilder(new KeyContextBuilder(expressionsHelper),
+        return new KeyBuilder(new KeyContextBuilder<TEntity>(expressionsHelper),
             expressionsHelper, new KeyPartBuilderFactory(expressionsHelper));
     }
 }

@@ -2,7 +2,7 @@ using FluentCaching.Cache;
 using FluentCaching.Cache.Models;
 using FluentCaching.Configuration;
 using FluentCaching.Keys.Builders;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 
 namespace FluentCaching.Tests.Unit.Cache.Strategies;

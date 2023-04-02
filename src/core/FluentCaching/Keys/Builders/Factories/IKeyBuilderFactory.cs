@@ -2,5 +2,5 @@
 
 internal interface IKeyBuilderFactory
 {
-    IKeyBuilder CreateKeyBuilder();
+    IKeyBuilder CreateKeyBuilder<TEntity>();
 }

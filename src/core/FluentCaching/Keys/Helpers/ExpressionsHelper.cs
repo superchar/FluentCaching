@@ -16,7 +16,7 @@ internal class ExpressionsHelper : IExpressionsHelper
         typeof(ExpressionsHelper).GetMethod(nameof(CallInnerDelegate),
             BindingFlags.NonPublic | BindingFlags.Static);
 
-    public IReadOnlyCollection<string> GetParameterPropertyNames<T, TValue>(Expression<Func<T, TValue>> expression)
+    public IReadOnlyCollection<string> GetParameterPropertyNames<TEntity, TValue>(Expression<Func<TEntity, TValue>> expression)
     {
         var visitor = new CollectParameterPropertyNamesVisitor();
         visitor.Visit(expression.Body);
@@ -24,7 +24,7 @@ internal class ExpressionsHelper : IExpressionsHelper
         return visitor.Properties;
     }
 
-    public Expression<Func<T, string>> ReplaceResultTypeWithString<T, TValue>(Expression<Func<T, TValue>> expression)
+    public Expression<Func<TEntity, string>> ReplaceResultTypeWithString<TEntity, TValue>(Expression<Func<TEntity, TValue>> expression)
     {
         var newBody = expression.Body.Type != typeof(string)
             ? (IsNullableExpression(expression.Body)
@@ -32,10 +32,10 @@ internal class ExpressionsHelper : IExpressionsHelper
                 : GenerateToStringCall(expression.Body))
             : expression.Body;
 
-        return Expression.Lambda<Func<T, string>>(newBody, expression.Parameters);
+        return Expression.Lambda<Func<TEntity, string>>(newBody, expression.Parameters);
     }
 
-    public Expression<Func<Dictionary<string, object>, string>> ReplaceParameterWithDictionary<T>(Expression<Func<T, string>> expression)
+    public Expression<Func<Dictionary<string, object>, string>> ReplaceParameterWithDictionary<TEntity>(Expression<Func<TEntity, string>> expression)
     {
         var dictionaryParam = Expression.Parameter(typeof(Dictionary<string, object>));
         var body = new ReplaceParameterWithDictionaryVisitor(dictionaryParam).Visit(expression.Body);

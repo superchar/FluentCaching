@@ -1,4 +1,4 @@
-namespace FluentCaching.Tests.Unit.Models;
+namespace FluentCaching.Tests.Unit.TestModels;
 
 public class Currency
 {

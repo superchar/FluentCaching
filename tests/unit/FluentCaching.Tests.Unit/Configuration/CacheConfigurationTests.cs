@@ -7,7 +7,7 @@ using FluentCaching.Configuration.PolicyBuilders;
 using FluentCaching.Configuration.PolicyBuilders.Keys;
 using FluentCaching.Keys.Builders;
 using FluentCaching.Keys.Builders.Factories;
-using FluentCaching.Tests.Unit.Models;
+using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
 

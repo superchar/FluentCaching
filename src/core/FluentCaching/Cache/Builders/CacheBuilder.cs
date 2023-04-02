@@ -20,16 +20,17 @@ namespace FluentCaching.Cache.Builders
             _cacheConfiguration = cacheConfiguration;
         }
 
-        public ICacheBuilder For<T>(Func<CachingKeyPolicyBuilder<T>, CacheImplementationPolicyBuilder> factoryFunc)
-            where T : class
+        public ICacheBuilder For<TEntity>(
+            Func<CachingKeyPolicyBuilder<TEntity>, CacheImplementationPolicyBuilder> factoryFunc)
+            where TEntity : class
         {
             _cacheConfiguration.For(factoryFunc);
             return this;
         }
 
-        public ICacheBuilder For<T>(
-            Func<CachingKeyPolicyBuilder<T>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
-            where T : class
+        public ICacheBuilder For<TEntity>(
+            Func<CachingKeyPolicyBuilder<TEntity>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
+            where TEntity : class
         {
             _cacheConfiguration.For(factoryFunc);
             return this;

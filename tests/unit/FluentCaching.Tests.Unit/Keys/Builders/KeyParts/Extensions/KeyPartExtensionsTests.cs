@@ -2,30 +2,29 @@ using System;
 using FluentAssertions;
 using FluentCaching.Keys.Builders.KeyParts.Extensions;
 using FluentCaching.Keys.Exceptions;
+using FluentCaching.Tests.Unit.TestModels;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.Keys.Builders.KeyParts.Extensions;
 
 public class KeyPartExtensionsTests
 {
-    [Theory]
-    [InlineData("")]
-    [InlineData(null)]
-    public void ThrowIfKeyPartIsNullOrEmpty_KeyIsNullOrEmpty_ThrowsKeyPartMissingException(string key)
+    [Fact]
+    public void ThrowIfKeyPartIsNullOrEmpty_KeyIsNull_ThrowsKeyPartMissingException()
     {
-        Action throwIfKeyPartIsNullOrEmpty = () => key.ThrowIfKeyPartIsNullOrEmpty();
-        
+        Action throwIfKeyPartIsNullOrEmpty = () => ((string)null).ThrowIfKeyPartIsNull(typeof(User));
+
         throwIfKeyPartIsNullOrEmpty
             .Should()
-            .Throw<KeyPartMissingException>();
+            .Throw<KeyPartNullException>();
     }
-    
-    [Fact]
-    public void ThrowIfKeyPartIsNullOrEmpty_KeyIsNotNullOrEmpty_DoesNotThrowKeyPartMissingException()
-    {
-        const string key = "key";
 
-        key.Invoking(_ => _.ThrowIfKeyPartIsNullOrEmpty())
+    [Theory]
+    [InlineData("")]
+    [InlineData("key")]
+    public void ThrowIfKeyPartIsNullOrEmpty_KeyIsNotNullOrEmpty_DoesNotThrowKeyPartMissingException(string key)
+    {
+        key.Invoking(k => k.ThrowIfKeyPartIsNull(typeof(User)))
             .Should()
             .NotThrow();
     }

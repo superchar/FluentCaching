@@ -1,28 +1,25 @@
+using System;
 using FluentCaching.Keys.Builders.KeyParts.Extensions;
 using FluentCaching.Keys.Models;
 
 namespace FluentCaching.Keys.Builders.KeyParts;
 
-internal class StaticKeyPartBuilder : IKeyPartBuilder
+internal class StaticKeyPartBuilder<TEntity> : IKeyPartBuilder
 {
+    private static readonly Type EntityType = typeof(TEntity);
     private string _keyPart;
-
-    private StaticKeyPartBuilder()
-    {
-    }
     
     public bool IsDynamic => false;
 
-    public static StaticKeyPartBuilder Create<TValue>(TValue value)
-        => new StaticKeyPartBuilder().AppendStatic(value);
+    public static StaticKeyPartBuilder<TEntity> Create<TValue>(TValue value)
+        => new StaticKeyPartBuilder<TEntity>()
+            .AppendStatic(value);
 
-    public string Build(KeyContext keyContext) => _keyPart;
+    public string Build(KeyContext keyContext) => _keyPart.ThrowIfKeyPartIsNull(EntityType);
 
-    private StaticKeyPartBuilder AppendStatic<TValue>(TValue value)
+    private StaticKeyPartBuilder<TEntity> AppendStatic<TValue>(TValue value)
     {
-        _keyPart = value?
-            .ToString();
-        _keyPart.ThrowIfKeyPartIsNullOrEmpty();
+        _keyPart = value?.ToString();
 
         return this;
     }

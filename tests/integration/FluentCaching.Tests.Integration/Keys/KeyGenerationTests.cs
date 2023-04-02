@@ -2,6 +2,7 @@
 using AutoFixture;
 using FluentAssertions;
 using FluentCaching.Cache;
+using FluentCaching.Extensions;
 using FluentCaching.Keys.Exceptions;
 using FluentCaching.Tests.Integration.Extensions;
 using FluentCaching.Tests.Integration.Models;
@@ -19,7 +20,7 @@ public class KeyGenerationTests : BaseTest
         fixture.Customize(new SupportMutableValueTypesCustomization());
         _user = fixture.Create<User>();
     }
-        
+
     [Fact]
     public async Task StaticKey_GeneratesCorrectKey()
     {
@@ -213,7 +214,7 @@ public class KeyGenerationTests : BaseTest
         await cache.RemoveAsync<User>(new { OrderId = 4, Id = 9 });
         CacheImplementation.Dictionary.Should().BeEmpty();
     }
-        
+
     [Fact]
     public async Task StructRetrieveKey_CanRetrieveWithStructKey()
     {
@@ -231,10 +232,12 @@ public class KeyGenerationTests : BaseTest
     [Fact]
     public void MultipleNestedPropertiesWithTheSameName_ShouldThrowException()
     {
+        var expectedMessage = $"The caching key for {typeof(User).ToFullNameString()} cannot contain multiple properties with the same name. " +
+                                       "Duplicated property name - 'Id'.";
         CacheBuilder.Invoking(c => c.For<User>(_ => _.UseAsKey(u => u.Address.Id)
                 .CombinedWith(u => u.Id).Complete()))
-            .Should().Throw<KeyPartException>()
-            .WithMessage("Property name duplicates are not supported. Duplicated property name - Id.");
+            .Should().Throw<KeyPropertyDuplicateException>()
+            .WithMessage(expectedMessage);
     }
 
     private async Task<ICache> CacheAsync(User user)

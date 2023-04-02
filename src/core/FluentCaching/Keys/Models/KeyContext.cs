@@ -6,6 +6,8 @@ public struct KeyContext
 {
     public static readonly KeyContext Null = new(null, null);
 
+    public static readonly KeyContext Empty = new(new Dictionary<string, object>());
+
     public KeyContext(object store) : this(store, null)
     {
     }

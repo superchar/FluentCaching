@@ -9,14 +9,14 @@ internal interface ICacheConfiguration
 {
     ICacheImplementation Current { get; }
 
-    ICacheConfigurationItem GetItem<T>()
-        where T : class;
+    ICacheConfigurationItem GetItem<TEntity>()
+        where TEntity : class;
 
-    ICacheConfiguration For<T>(Func<CachingKeyPolicyBuilder<T>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
-        where T : class;
+    ICacheConfiguration For<TEntity>(Func<CachingKeyPolicyBuilder<TEntity>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
+        where TEntity : class;
 
-    ICacheConfiguration For<T>(Func<CachingKeyPolicyBuilder<T>, CacheImplementationPolicyBuilder> factoryFunc)
-        where T : class;
+    ICacheConfiguration For<TEntity>(Func<CachingKeyPolicyBuilder<TEntity>, CacheImplementationPolicyBuilder> factoryFunc)
+        where TEntity : class;
 
     ICacheConfiguration SetGenericCache(ICacheImplementation cacheImplementation);
 }
