@@ -44,14 +44,14 @@ internal class KeyBuilder : IKeyBuilder
         _keyPartBuilders.Add(_keyPartBuilderFactory.Create(valueGetter));
     }
 
-    public string BuildFromScalarKey<TEntity>(object scalarKey)
+    public string BuildFromScalarKey(object scalarKey)
     {
         var context = _keyContextBuilder.BuildRetrieveContextFromScalarKey(scalarKey);
 
         return Build(context);
     }
 
-    public string BuildFromComplexKey<TEntity>(object complexKey)
+    public string BuildFromComplexKey(object complexKey)
     {
         var context = _keyContextBuilder.BuildRetrieveContextFromComplexKey(complexKey);
 

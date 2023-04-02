@@ -25,7 +25,7 @@ public class ScalarKeyRetrieveStrategyTests : BaseCacheStrategyTests
         await _sut.RetrieveAsync(ScalarKeySource);
 
         KeyBuilderMock
-            .Verify(_ => _.BuildFromScalarKey<User>(ScalarKeySource.Key), Times.Once);
+            .Verify(_ => _.BuildFromScalarKey(ScalarKeySource.Key), Times.Once);
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class ScalarKeyRetrieveStrategyTests : BaseCacheStrategyTests
     {
         const string key = "key";
         KeyBuilderMock
-            .Setup(_ => _.BuildFromScalarKey<User>(ScalarKeySource.Key))
+            .Setup(_ => _.BuildFromScalarKey(ScalarKeySource.Key))
             .Returns(key);
             
         await _sut.RetrieveAsync(ScalarKeySource);

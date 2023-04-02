@@ -140,7 +140,7 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
         [Fact]
         public void BuildFromScalarKey_WhenCalled_CallsKeyContextBuilder()
         {
-            _sut.BuildFromScalarKey<User>("UserName");
+            _sut.BuildFromScalarKey("UserName");
 
             _keyContextBuilderMock
                 .Verify(_ => _.BuildRetrieveContextFromScalarKey("UserName"), Times.Once);
@@ -151,7 +151,7 @@ namespace FluentCaching.Tests.Unit.Keys.Builders
         {
             var obj = new { };
 
-            _sut.BuildFromComplexKey<User>(obj);
+            _sut.BuildFromComplexKey(obj);
 
             _keyContextBuilderMock
                 .Verify(_ => _.BuildRetrieveContextFromComplexKey(obj), Times.Once);

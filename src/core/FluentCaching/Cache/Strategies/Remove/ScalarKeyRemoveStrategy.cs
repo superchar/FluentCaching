@@ -14,7 +14,7 @@ internal class ScalarKeyRemoveStrategy<TEntity> : BaseCacheStrategyWithConfigura
     public ValueTask RemoveAsync(CacheSource<TEntity> source)
     {
         var item = GetConfigurationItem<TEntity>();
-        var key = item.Options.KeyBuilder.BuildFromScalarKey<TEntity>(source.Key);
+        var key = item.Options.KeyBuilder.BuildFromScalarKey(source.Key);
         return GetCacheImplementation<TEntity>(item)
             .RemoveAsync(key);    
     }

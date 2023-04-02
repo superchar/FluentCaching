@@ -25,7 +25,7 @@ public class ScalarKeyRemoveStrategyTests : BaseCacheStrategyTests
         await _sut.RemoveAsync(StringKeySource);
 
         KeyBuilderMock
-            .Verify(_ => _.BuildFromScalarKey<User>(StringKeySource.Key), Times.Once);
+            .Verify(_ => _.BuildFromScalarKey(StringKeySource.Key), Times.Once);
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class ScalarKeyRemoveStrategyTests : BaseCacheStrategyTests
     {
         const string key = "key";
         KeyBuilderMock
-            .Setup(_ => _.BuildFromScalarKey<User>(StringKeySource.Key))
+            .Setup(_ => _.BuildFromScalarKey(StringKeySource.Key))
             .Returns(key);
             
         await _sut.RemoveAsync(StringKeySource);

@@ -21,11 +21,14 @@ public class MemoryCacheImplementationTests
     [Fact]
     public async Task KeyIsInCache_ReturnsValue()
     {
-        await _sut.CacheAsync("Some key", User, new CacheOptions());
+        await _sut.CacheAsync("Some key", User, new CacheOptions
+        {
+            Ttl = TimeSpan.MaxValue
+        });
             
         var result = await _sut.RetrieveAsync<User>("Some key");
 
-        result.Should().BeNull();
+        result.Should().NotBeNull();
     }
         
     [Fact]
