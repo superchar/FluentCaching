@@ -7,7 +7,7 @@ namespace FluentCaching.Keys.Helpers;
 
 internal interface IExpressionsHelper
 {
-    IReadOnlyCollection<string> GetParameterPropertyNames<TEntity, TValue>(Expression<Func<TEntity, TValue>> expression);
+    IEnumerable<string> GetParameterPropertyNames<TEntity, TValue>(Expression<Func<TEntity, TValue>> expression);
 
     Expression<Func<TEntity, string>> ReplaceResultTypeWithString<TEntity, TValue>(Expression<Func<TEntity, TValue>> expression);
 

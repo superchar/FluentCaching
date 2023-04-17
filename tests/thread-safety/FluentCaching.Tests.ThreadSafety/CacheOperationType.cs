@@ -1,7 +1,6 @@
-﻿namespace FluentCaching.Tests.ThreadSafety
+﻿namespace FluentCaching.Tests.ThreadSafety;
+
+public enum CacheOperationType
 {
-    public enum CacheOperationType
-    {
-        Cache, Retrieve, Remove
-    }
+    Cache, Retrieve, Remove
 }

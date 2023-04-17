@@ -5,7 +5,6 @@ using FluentCaching.Cache.Models;
 using FluentCaching.Configuration;
 using FluentCaching.Configuration.PolicyBuilders;
 using FluentCaching.Configuration.PolicyBuilders.Keys;
-using FluentCaching.Keys.Builders;
 using FluentCaching.Keys.Builders.Factories;
 using FluentCaching.Tests.Unit.TestModels;
 using Moq;

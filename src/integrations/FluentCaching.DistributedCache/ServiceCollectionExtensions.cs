@@ -1,15 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace FluentCaching.DistributedCache
+namespace FluentCaching.DistributedCache;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    public static IApplicationBuilder UseFluentCaching(this IApplicationBuilder builder)
     {
-        public static IApplicationBuilder UseFluentCaching(this IApplicationBuilder builder)
-        {
-            ServiceLocator.Initialize(builder.ApplicationServices);
+        ServiceLocator.Initialize(builder.ApplicationServices);
 
-            return builder;
-        }
-    } 
+        return builder;
+    }
 }
-

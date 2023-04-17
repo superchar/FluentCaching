@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentCaching.Cache.Models;
+// ReSharper disable UnusedMember.Global
 
 namespace FluentCaching.Configuration.PolicyBuilders.Ttl;
 

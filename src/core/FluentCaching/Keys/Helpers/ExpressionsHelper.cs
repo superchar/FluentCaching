@@ -16,7 +16,7 @@ internal class ExpressionsHelper : IExpressionsHelper
         typeof(ExpressionsHelper).GetMethod(nameof(CallInnerDelegate),
             BindingFlags.NonPublic | BindingFlags.Static);
 
-    public IReadOnlyCollection<string> GetParameterPropertyNames<TEntity, TValue>(Expression<Func<TEntity, TValue>> expression)
+    public IEnumerable<string> GetParameterPropertyNames<TEntity, TValue>(Expression<Func<TEntity, TValue>> expression)
     {
         var visitor = new CollectParameterPropertyNamesVisitor();
         visitor.Visit(expression.Body);
@@ -27,9 +27,9 @@ internal class ExpressionsHelper : IExpressionsHelper
     public Expression<Func<TEntity, string>> ReplaceResultTypeWithString<TEntity, TValue>(Expression<Func<TEntity, TValue>> expression)
     {
         var newBody = expression.Body.Type != typeof(string)
-            ? (IsNullableExpression(expression.Body)
+            ? IsNullableExpression(expression.Body)
                 ? GenerateNullCheck(expression.Body, ifNotNull: GenerateToStringCall(expression.Body))
-                : GenerateToStringCall(expression.Body))
+                : GenerateToStringCall(expression.Body)
             : expression.Body;
 
         return Expression.Lambda<Func<TEntity, string>>(newBody, expression.Parameters);

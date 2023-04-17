@@ -2,51 +2,50 @@
 using FluentCaching.Cache.Builders;
 using FluentCaching.Memory;
 
-namespace FluentCaching.Samples.Console
+namespace FluentCaching.Samples.Console;
+
+public static class Program
 {
-    internal class Program
+    public static async Task Main()
     {
-        static async Task Main(string[] args)
+        var cache = BuildCache();
+
+        for (var i = 0; i < 90; i++)
         {
-            var cache = BuildCache();
-
-            for (var i = 0; i < 20; i++)
-            {
-                var factorial = await FactorialAsync(i, cache);
-                System.Console.WriteLine($"Factorial of {i} is {factorial}");
-            }
-
-            System.Console.ReadKey();
+            var fibonacciNumber = await FibonacciAsync(i, cache);
+            System.Console.WriteLine($"Fibonacci of {i} is {fibonacciNumber}");
         }
 
-        private static async Task<long> FactorialAsync(int factorial, ICache cache)
-        {
-            var factorialSource = await cache.RetrieveAsync<FactorialSource>(factorial);
-            if (factorialSource != null)
-            {
-                return factorialSource.Result;
-            }
-
-            if (factorial is 0 or 1)
-            {
-                return 1;
-            }
-
-            var result = factorial * await FactorialAsync(factorial - 1, cache);
-            factorialSource = new FactorialSource(factorial, result);
-            await cache.CacheAsync(factorialSource);
-
-            return result;
-        }
-
-        private static ICache BuildCache() =>
-            new CacheBuilder()
-                .For<FactorialSource>(_
-                    => _.UseAsKey(s => $"Factorial:{s.Factorial}")
-                        .And().SetInfiniteExpirationTimeout()
-                        .And().StoreInMemory())
-                .Build();
+        System.Console.ReadKey();
     }
 
-    public record FactorialSource(int Factorial, long Result);
+    private static async Task<long> FibonacciAsync(int number, ICache cache)
+    {
+        var fibonacciSource = await cache.RetrieveAsync<FibonacciSource>(number);
+        if (fibonacciSource != null)
+        {
+            return fibonacciSource.Result;
+        }
+
+        if (number < 2)
+        {
+            return number;
+        }
+
+        var result = await FibonacciAsync(number - 1, cache) + await FibonacciAsync(number - 2, cache);
+        fibonacciSource = new FibonacciSource(number, result);
+        await cache.CacheAsync(fibonacciSource);
+
+        return result;
+    }
+
+    private static ICache BuildCache() =>
+        new CacheBuilder()
+            .For<FibonacciSource>(_
+                => _.UseAsKey(s => $"Fibonacci:{s.Number}")
+                    .And().SetInfiniteExpirationTimeout()
+                    .And().StoreInMemory())
+            .Build();
 }
+
+public record FibonacciSource(int Number, long Result);
