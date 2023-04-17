@@ -1,3 +1,4 @@
 ﻿namespace FluentCaching.DistributedCache.Tests.Unit;
 
-public record User;
+// ReSharper disable once NotAccessedPositionalProperty.Global
+public record User(string Name);

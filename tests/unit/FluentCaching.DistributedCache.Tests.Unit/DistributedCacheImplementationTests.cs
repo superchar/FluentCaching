@@ -10,7 +10,7 @@ namespace FluentCaching.DistributedCache.Tests.Unit;
 
 public class DistributedCacheImplementationTests
 {
-    private static readonly User User = new ();
+    private static readonly User User = new ("User Name");
         
     private readonly Mock<IDistributedCache> _distributedCacheMock;
 
