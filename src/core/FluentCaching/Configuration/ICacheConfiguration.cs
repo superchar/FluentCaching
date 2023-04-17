@@ -2,6 +2,7 @@
 using FluentCaching.Cache;
 using FluentCaching.Configuration.PolicyBuilders;
 using FluentCaching.Configuration.PolicyBuilders.Keys;
+// ReSharper disable UnusedMethodReturnValue.Global
 
 namespace FluentCaching.Configuration;
 

@@ -1,5 +1,7 @@
 ﻿using FluentCaching.Configuration.PolicyBuilders;
 using Microsoft.Extensions.Caching.Distributed;
+// ReSharper disable UnusedType.Global
+// ReSharper disable UnusedMember.Global
 
 namespace FluentCaching.DistributedCache;
 

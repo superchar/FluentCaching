@@ -4,12 +4,13 @@ using FluentCaching.Cache.Models;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using Xunit;
+// ReSharper disable CoVariantArrayConversion
 
 namespace FluentCaching.DistributedCache.Tests.Unit;
 
 public class DistributedCacheImplementationTests
 {
-    private static readonly User User = new ("Some name");
+    private static readonly User User = new ();
         
     private readonly Mock<IDistributedCache> _distributedCacheMock;
 
@@ -33,7 +34,7 @@ public class DistributedCacheImplementationTests
 
     [Theory]
     [MemberData(nameof(NullOrEmptyBytes))]
-    public async Task RetrieveAsync_KeyIsNotInCache_ReturnsNull(byte[]? resultBytes)
+    public async Task RetrieveAsync_KeyIsNotInCache_ReturnsNull(byte[] resultBytes)
     {
         _distributedCacheMock
             .Setup(c => c.GetAsync("Some key", CancellationToken.None))

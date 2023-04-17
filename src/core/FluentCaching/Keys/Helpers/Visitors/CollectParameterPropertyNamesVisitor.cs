@@ -7,7 +7,7 @@ public class CollectParameterPropertyNamesVisitor : BaseParameterPropertyAccessV
 {
     private readonly List<string> _properties = new();
 
-    public IReadOnlyCollection<string> Properties => _properties;
+    public IEnumerable<string> Properties => _properties;
     
     protected override Expression VisitParameterPropertyAccess(MemberExpression node)
     {

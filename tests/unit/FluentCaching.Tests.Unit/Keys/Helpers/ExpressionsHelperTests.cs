@@ -94,10 +94,6 @@ public class ExpressionsHelperTests
     [Fact]
     public void ReplaceResultTypeWithString_PropertyIsStringType_DoesNotChangeExpression()
     {
-        var user = new User
-        {
-            Name = "Some name"
-        };
         Expression<Func<User, string>> expression = _ => _.Name;
 
         var resultExpression = _sut.ReplaceResultTypeWithString(expression);

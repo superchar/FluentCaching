@@ -9,6 +9,7 @@ public class TimeTtlValuePolicyBuilder
         _ttlPolicyBuilder = ttlPolicyBuilder;
     }
 
+    // ReSharper disable once UnusedMember.Global
     public TimeTtlPolicyBuilder And(ushort value)
     {
         _ttlPolicyBuilder.SetCurrentValue(value);

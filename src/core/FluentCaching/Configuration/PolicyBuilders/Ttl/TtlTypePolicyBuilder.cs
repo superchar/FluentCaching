@@ -15,6 +15,7 @@ public class TtlTypePolicyBuilder
 
     public TimeTtlPolicyBuilder SetExpirationTimeoutTo(ushort value) => new (_currentOptions, value);
 
+    // ReSharper disable once UnusedMember.Global
     public AndPolicyBuilder<CacheImplementationPolicyBuilder> SetInfiniteExpirationTimeout()
     {
         _currentOptions.Ttl = TimeSpan.MaxValue;

@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using FluentCaching.Configuration.PolicyBuilders.Ttl;
 using FluentCaching.Keys.Builders;
+// ReSharper disable UnusedMember.Global
 
 namespace FluentCaching.Configuration.PolicyBuilders.Keys;
 

@@ -11,6 +11,7 @@ public class ExpirationTypePolicyBuilder
         _cacheOptions = currentOptions;
     }
 
+    // ReSharper disable once UnusedMember.Global
     public AndPolicyBuilder<CacheImplementationPolicyBuilder> AbsoluteExpiration() 
         => ExpirationType(Cache.Models.ExpirationType.Absolute);
 
