@@ -4,8 +4,9 @@ Instead of writing boilerplate code to support caching, just configure caching p
 <br/><br/>The core library is written in plain C# with no external dependencies. 
 The nearest plan is to prepare the first release version. 
 
-<br/><br/>
-**Configure caching policy by entity and build cache object**
+<h1>Code samples</h1>
+
+Configure caching policy by entity and build cache object
 ```csharp
 
 var cache = new CacheBuilder()
@@ -14,14 +15,14 @@ var cache = new CacheBuilder()
                 .With().SlidingExpiration())
 .Build();
 ```
-**Add object to cache**
+Add object to cache
 ```csharp
 var user = _userService.GetUserById(42);
 
 await cache.CacheAsync(user);
 ```
 
-**Retrieve object from cache**
+Retrieve object from cache
 ```csharp
 var userId = 42;
 
@@ -29,7 +30,7 @@ await cache.RetrieveAsync<User>(userId);
 
 ```
 
-**Remove object from cache**
+Remove object from cache
 ```csharp
 var userId = 42;
 
@@ -37,7 +38,7 @@ await cache.RemoveAsync<User>(userId);
 
 ```
 
-**Multi property configuration is supported with the same set of features**
+Multi property configuration is supported with the same set of features
 ```csharp
 var cache = new CacheBuilder()
 .For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName) // alternatively UseAsKey(u => u.FirstName + u.LastName)
@@ -49,7 +50,7 @@ var userKey = new {FirstName = "John", LastName = "Doe"}; // may be any class or
 await cache.RetrieveAsync<User>(userKey);
 ```
 
-**Different cache implementations for different entities are supported**
+Different cache implementations for different entities are supported
 ```csharp
 var cache = new CacheBuilder()
 .For<User>(u => u.UseAsKey(u => u.FirstName).CombinedWith(u => u.LastName)
