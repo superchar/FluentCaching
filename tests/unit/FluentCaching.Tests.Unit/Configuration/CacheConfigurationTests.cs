@@ -5,6 +5,7 @@ using FluentCaching.Cache.Models;
 using FluentCaching.Configuration;
 using FluentCaching.Configuration.PolicyBuilders;
 using FluentCaching.Configuration.PolicyBuilders.Keys;
+using FluentCaching.Keys.Builders;
 using FluentCaching.Keys.Builders.Factories;
 using FluentCaching.Tests.Unit.TestModels;
 using Moq;
@@ -38,7 +39,7 @@ public class CacheConfigurationTests
         var factoryMock = new Mock<Func<CachingKeyPolicyBuilder<User>, AndPolicyBuilder<CacheImplementationPolicyBuilder>>>();
         factoryMock
             .Setup(f => f(It.IsAny<CachingKeyPolicyBuilder<User>>()))
-            .Returns(new AndPolicyBuilder<CacheImplementationPolicyBuilder>(new CacheImplementationPolicyBuilder(new CacheOptions())));
+            .Returns(new AndPolicyBuilder<CacheImplementationPolicyBuilder>(CreateCachePolicyBuilder()));
 
         _sut.For(factoryMock.Object);
 
@@ -52,7 +53,7 @@ public class CacheConfigurationTests
         var factoryMock = new Mock<Func<CachingKeyPolicyBuilder<User>, CacheImplementationPolicyBuilder>>();
         factoryMock
             .Setup(f => f(It.IsAny<CachingKeyPolicyBuilder<User>>()))
-            .Returns(new CacheImplementationPolicyBuilder(new CacheOptions()));
+            .Returns(CreateCachePolicyBuilder());
 
         _sut.For(factoryMock.Object);
 
@@ -74,7 +75,7 @@ public class CacheConfigurationTests
         var factoryMock = new Mock<Func<CachingKeyPolicyBuilder<User>, AndPolicyBuilder<CacheImplementationPolicyBuilder>>> ();
         factoryMock
             .Setup(f => f(It.IsAny<CachingKeyPolicyBuilder<User>>()))
-            .Returns(new AndPolicyBuilder<CacheImplementationPolicyBuilder>(new CacheImplementationPolicyBuilder(new CacheOptions())));
+            .Returns(new AndPolicyBuilder<CacheImplementationPolicyBuilder>(CreateCachePolicyBuilder()));
         _sut.For(factoryMock.Object);
 
         var result = _sut.GetItem<User>();
@@ -83,4 +84,7 @@ public class CacheConfigurationTests
         factoryMock
             .Verify(f => f(It.IsAny<CachingKeyPolicyBuilder<User>>()), Times.Once);
     }
+
+    private static CacheImplementationPolicyBuilder CreateCachePolicyBuilder()
+        => new (new CacheOptions(new Mock<IKeyBuilder>().Object));
 }

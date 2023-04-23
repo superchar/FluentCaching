@@ -4,7 +4,7 @@ namespace FluentCaching.Keys.Models;
 
 internal struct PropertyAccessor
 {
-    public PropertyAccessor(string name, Func<object, object> get)
+    public PropertyAccessor(string name, Func<object, object?> get)
     {
         Name = name;
         Get = get;
@@ -12,5 +12,5 @@ internal struct PropertyAccessor
 
     public string Name { get; }
 
-    public Func<object, object> Get { get; }
+    public Func<object, object?> Get { get; }
 }

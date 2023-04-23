@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using FluentCaching.Cache.Models;
 using FluentCaching.Configuration.PolicyBuilders.Ttl;
+using FluentCaching.Keys.Builders;
+using Moq;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Ttl;
@@ -13,7 +15,7 @@ public class ExpirationTypePolicyBuilderTests
 
     public ExpirationTypePolicyBuilderTests()
     {
-        _cacheOptions = new CacheOptions();
+        _cacheOptions = new CacheOptions(new Mock<IKeyBuilder>().Object);
 
         _sut = new ExpirationTypePolicyBuilder(_cacheOptions);
     }

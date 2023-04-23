@@ -7,7 +7,7 @@ namespace FluentCaching.Keys.Builders.KeyParts;
 internal class StaticKeyPartBuilder<TEntity> : IKeyPartBuilder
 {
     private static readonly Type EntityType = typeof(TEntity);
-    private string _keyPart;
+    private string? _keyPart;
     
     public bool IsDynamic => false;
 
@@ -15,7 +15,7 @@ internal class StaticKeyPartBuilder<TEntity> : IKeyPartBuilder
         => new StaticKeyPartBuilder<TEntity>()
             .AppendStatic(value);
 
-    public string Build(KeyContext keyContext) => _keyPart.ThrowIfKeyPartIsNull(EntityType);
+    public string Build(KeyContext keyContext) => _keyPart!.ThrowIfKeyPartIsNull(EntityType);
 
     private StaticKeyPartBuilder<TEntity> AppendStatic<TValue>(TValue value)
     {

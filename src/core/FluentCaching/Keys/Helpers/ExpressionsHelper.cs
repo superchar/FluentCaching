@@ -14,7 +14,7 @@ internal class ExpressionsHelper : IExpressionsHelper
     private static readonly ConcurrentDictionary<Type, PropertyAccessor[]> Cache = new ();
     private static readonly MethodInfo CallInnerDelegateMethod =
         typeof(ExpressionsHelper).GetMethod(nameof(CallInnerDelegate),
-            BindingFlags.NonPublic | BindingFlags.Static);
+            BindingFlags.NonPublic | BindingFlags.Static)!;
 
     public IEnumerable<string> GetParameterPropertyNames<TEntity, TValue>(Expression<Func<TEntity, TValue>> expression)
     {
@@ -52,7 +52,7 @@ internal class ExpressionsHelper : IExpressionsHelper
         
     private static Delegate CreateGetPropertyDelegate(MemberInfo property)
     {
-        var parameter = Expression.Parameter(property.DeclaringType);
+        var parameter = Expression.Parameter(property.DeclaringType!);
         var body = Expression.Property(parameter, property.Name);
 
         return Expression.Lambda(body, parameter)
@@ -63,13 +63,13 @@ internal class ExpressionsHelper : IExpressionsHelper
     {
         var getMethodDelegate = CreateGetPropertyDelegate(property);
         var callInnerGenericMethodWithTypes = CallInnerDelegateMethod
-            .MakeGenericMethod(property.DeclaringType, property.PropertyType);
-        var result = (Func<object, object>)callInnerGenericMethodWithTypes
-            .Invoke(null, new object[] { getMethodDelegate });
+            .MakeGenericMethod(property.DeclaringType!, property.PropertyType);
+        var result = (Func<object, object?>)callInnerGenericMethodWithTypes
+            .Invoke(null, new object[] { getMethodDelegate })!;
         return new PropertyAccessor(property.Name, result);
     }
         
-    private static Func<object, object> CallInnerDelegate<TClass, TResult>(
+    private static Func<object, object?> CallInnerDelegate<TClass, TResult>(
         Func<TClass, TResult> targetDelegate)
         => instance => targetDelegate((TClass)instance);
 

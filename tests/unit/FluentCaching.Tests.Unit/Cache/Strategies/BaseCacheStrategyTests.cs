@@ -36,12 +36,11 @@ public abstract class BaseCacheStrategyTests
 
     private void SetupCacheConfiguration()
     {
-        var options = new CacheOptions
+        var options = new CacheOptions(KeyBuilderMock.Object)
         {
-            CacheImplementation = TypeCacheImplementationMock.Object,
-            KeyBuilder = KeyBuilderMock.Object
+            CacheImplementation = TypeCacheImplementationMock.Object
         };
-            
+
         ConfigurationItemMock
             .SetupGet(_ => _.Options)
             .Returns(options);

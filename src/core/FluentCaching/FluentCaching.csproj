@@ -2,6 +2,7 @@
 
   <PropertyGroup>
 	  <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+	  <Nullable>enable</Nullable>
 	  <Title>Library which provides fluent api for caching</Title>
 	  <PackageId>VLobyntsev.FluentCaching</PackageId>
 	  <Authors>Vladyslav Lobyntsev</Authors>
@@ -25,6 +26,18 @@
 			<_Parameter1>FluentCaching.Tests.Unit</_Parameter1>
 		</AssemblyAttribute>
 
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>FluentCaching.Memory.Tests.Integration</_Parameter1>
+		</AssemblyAttribute>
+
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>FluentCaching.DistributedCache.Tests.Unit</_Parameter1>
+		</AssemblyAttribute>
+
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>FluentCaching.Memory.Tests.Unit</_Parameter1>
+		</AssemblyAttribute>
+		
 		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
 			<_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
 		</AssemblyAttribute>

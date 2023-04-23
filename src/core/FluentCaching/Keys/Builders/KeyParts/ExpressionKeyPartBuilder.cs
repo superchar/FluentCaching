@@ -11,8 +11,8 @@ internal class ExpressionKeyPartBuilder<TEntity>: IKeyPartBuilder
 {
     private static readonly Type EntityType = typeof(TEntity);
     
-    private Func<object, string> _storeFunc;
-    private Func<Dictionary<string, object>, string> _retrieveFunc;
+    private Func<object, string> _storeFunc = null!;
+    private Func<Dictionary<string, object>, string> _retrieveFunc = null!;
     
     private readonly IExpressionsHelper _expressionsHelper;
 
@@ -44,7 +44,7 @@ internal class ExpressionKeyPartBuilder<TEntity>: IKeyPartBuilder
     public string Build(KeyContext keyContext)
     {
         var keyPart = keyContext.Store != null 
-            ? _storeFunc(keyContext.Store) : _retrieveFunc(keyContext.Retrieve);
+            ? _storeFunc(keyContext.Store) : _retrieveFunc(keyContext.Retrieve!);
 
         return keyPart.ThrowIfKeyPartIsNull(EntityType);
     }

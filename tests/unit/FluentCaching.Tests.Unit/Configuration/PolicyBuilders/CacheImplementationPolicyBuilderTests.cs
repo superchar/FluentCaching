@@ -3,6 +3,7 @@ using FluentAssertions;
 using FluentCaching.Cache;
 using FluentCaching.Cache.Models;
 using FluentCaching.Configuration.PolicyBuilders;
+using FluentCaching.Keys.Builders;
 using Moq;
 using Xunit;
 
@@ -16,7 +17,7 @@ public class CacheImplementationPolicyBuilderTests
 
     public CacheImplementationPolicyBuilderTests()
     {
-        _cacheOptions = new CacheOptions();
+        _cacheOptions = new CacheOptions(new Mock<IKeyBuilder>().Object);
 
         _sut = new CacheImplementationPolicyBuilder(_cacheOptions);
     }

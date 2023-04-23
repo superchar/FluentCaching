@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using FluentAssertions;
 using FluentCaching.Cache.Models;
+using FluentCaching.Keys.Builders;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using Xunit;
@@ -123,7 +124,7 @@ public class DistributedCacheImplementationTests
 
     private static CacheOptions CreateCacheOptions(TimeSpan ttl,
         ExpirationType expirationType = ExpirationType.Absolute)
-        => new ()
+        => new (new Mock<IKeyBuilder>().Object)
         {
             Ttl = ttl,
             ExpirationType = expirationType

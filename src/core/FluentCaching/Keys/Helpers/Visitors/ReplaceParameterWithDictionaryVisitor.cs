@@ -28,6 +28,6 @@ public class ReplaceParameterWithDictionaryVisitor : BaseParameterPropertyAccess
         var dictionaryIndexer = _dictionaryParam.Type.GetProperty("Item");
         var propertyNameKey = Expression.Constant(propertyName);
         
-        return Expression.Property(_dictionaryParam, dictionaryIndexer, propertyNameKey);
+        return Expression.Property(_dictionaryParam, dictionaryIndexer!, propertyNameKey);
     }
 }

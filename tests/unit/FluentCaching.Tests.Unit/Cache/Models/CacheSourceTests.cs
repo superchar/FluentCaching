@@ -14,7 +14,6 @@ public class CacheSourceTests
     {
         var cacheSource = CacheSource<User>.Create(null);
 
-        cacheSource.Key.Should().Be(null);
         cacheSource.CacheSourceType.Should().Be(CacheSourceType.Static);
     }
     

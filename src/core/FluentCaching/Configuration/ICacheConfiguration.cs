@@ -8,9 +8,9 @@ namespace FluentCaching.Configuration;
 
 internal interface ICacheConfiguration
 {
-    ICacheImplementation Current { get; }
+    ICacheImplementation? Current { get; }
 
-    ICacheConfigurationItem GetItem<TEntity>()
+    ICacheConfigurationItem? GetItem<TEntity>()
         where TEntity : class;
 
     ICacheConfiguration For<TEntity>(Func<CachingKeyPolicyBuilder<TEntity>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)

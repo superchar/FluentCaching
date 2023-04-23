@@ -33,7 +33,7 @@ internal class KeyContextBuilder<TEntity> : IKeyContextBuilder
     public KeyContext BuildRetrieveContextFromComplexKey(object complexKey)
     {
         var properties = _expressionsHelper.GetProperties(complexKey.GetType());
-        var contextDictionary = new Dictionary<string, object>(properties.Length);
+        var contextDictionary = new Dictionary<string, object?>(properties.Length);
         foreach (var property in properties)
         {
             if (!_keys.ContainsKey(property.Name))
@@ -59,7 +59,7 @@ internal class KeyContextBuilder<TEntity> : IKeyContextBuilder
                 return KeyContext.Empty;
             default:
             {
-                var retrieveContext = new Dictionary<string, object>
+                var retrieveContext = new Dictionary<string, object?>
                 {
                     {
                         _keys.FirstKey(), scalarKey

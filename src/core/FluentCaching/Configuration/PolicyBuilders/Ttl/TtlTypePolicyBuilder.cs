@@ -6,11 +6,11 @@ namespace FluentCaching.Configuration.PolicyBuilders.Ttl;
 
 public class TtlTypePolicyBuilder
 {
-    private readonly CacheOptions _currentOptions = new ();
+    private readonly CacheOptions _currentOptions;
 
     internal TtlTypePolicyBuilder(IKeyBuilder keyBuilder)
     {
-        _currentOptions.KeyBuilder = keyBuilder;
+        _currentOptions = new CacheOptions(keyBuilder);
     }
 
     public TimeTtlPolicyBuilder SetExpirationTimeoutTo(ushort value) => new (_currentOptions, value);

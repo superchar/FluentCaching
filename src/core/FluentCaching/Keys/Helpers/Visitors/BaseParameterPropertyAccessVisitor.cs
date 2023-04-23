@@ -30,10 +30,10 @@ public abstract class BaseParameterPropertyAccessVisitor : ExpressionVisitor
         {
             { NodeType: ExpressionType.Parameter } => true,
             not MemberExpression or MemberExpression { Member.MemberType: not MemberTypes.Property } => false,
-            MemberExpression memberExpression => ComesFromParameter(memberExpression.Expression)
+            MemberExpression memberExpression => ComesFromParameter(memberExpression.Expression!)
         };
 
     private static bool IsNullableValueAccess(MemberExpression node)
-        => node.Member.Name == "Value" && Nullable.GetUnderlyingType(node.Member.DeclaringType) != null;
+        => node.Member.Name == "Value" && Nullable.GetUnderlyingType(node.Member.DeclaringType!) != null;
 
 }

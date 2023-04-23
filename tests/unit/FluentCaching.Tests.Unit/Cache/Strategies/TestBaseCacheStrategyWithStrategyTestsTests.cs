@@ -3,6 +3,7 @@ using FluentCaching.Cache;
 using FluentCaching.Cache.Models;
 using FluentCaching.Configuration;
 using FluentCaching.Configuration.Exceptions;
+using FluentCaching.Keys.Builders;
 using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
@@ -77,6 +78,6 @@ public class TestBaseCacheStrategyWithStrategyTestsTests : BaseCacheStrategyTest
     {
         ConfigurationItemMock
             .SetupGet(_ => _.Options)
-            .Returns(new CacheOptions());
+            .Returns(new CacheOptions(new Mock<IKeyBuilder>().Object));
     }
 }

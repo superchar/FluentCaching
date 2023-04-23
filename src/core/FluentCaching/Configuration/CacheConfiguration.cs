@@ -19,7 +19,7 @@ internal sealed class CacheConfiguration : ICacheConfiguration
         _keyBuilderFactory = keyBuilderFactory;
     }
 
-    public ICacheImplementation Current { get; private set; }
+    public ICacheImplementation? Current { get; private set; }
 
     public ICacheConfiguration SetGenericCache(ICacheImplementation cacheImplementation)
     {
@@ -43,7 +43,7 @@ internal sealed class CacheConfiguration : ICacheConfiguration
             factoryFunc(new CachingKeyPolicyBuilder<TEntity>(_keyBuilderFactory.CreateKeyBuilder<TEntity>()))
                 .CachingOptions);
 
-    public ICacheConfigurationItem GetItem<TEntity>() where TEntity : class =>
+    public ICacheConfigurationItem? GetItem<TEntity>() where TEntity : class =>
         _predefinedConfigurations.TryGetValue(typeof(TEntity), out var configurationItem)
             ? configurationItem
             : null;
