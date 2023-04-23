@@ -18,10 +18,10 @@ internal class Cache : ICache
             .CreateStoreStrategy<TEntity>()
             .StoreAsync(targetObject);
 
-    public ValueTask<TEntity> RetrieveAsync<TEntity>(object key) where TEntity : class
+    public ValueTask<TEntity?> RetrieveAsync<TEntity>(object key) where TEntity : class
         => RetrieveAsync(CacheSource<TEntity>.Create(key));
 
-    public ValueTask<TEntity> RetrieveAsync<TEntity>() where TEntity : class
+    public ValueTask<TEntity?> RetrieveAsync<TEntity>() where TEntity : class
         => RetrieveAsync(CacheSource<TEntity>.Create(null));
 
     public ValueTask RemoveAsync<TEntity>(object key) where TEntity : class
@@ -30,7 +30,7 @@ internal class Cache : ICache
     public ValueTask RemoveAsync<TEntity>() where TEntity : class
         => RemoveAsync(CacheSource<TEntity>.Create(null));
         
-    private ValueTask<TEntity> RetrieveAsync<TEntity>(CacheSource<TEntity> source) where TEntity : class
+    private ValueTask<TEntity?> RetrieveAsync<TEntity>(CacheSource<TEntity> source) where TEntity : class
         => _cacheStrategyFactory
             .CreateRetrieveStrategy(source)
             .RetrieveAsync(source);

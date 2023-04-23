@@ -9,7 +9,7 @@ namespace FluentCaching.DistributedCache;
 
 public class DistributedCacheImplementation : ICacheImplementation
 {
-    private readonly IDistributedCache _distributedCache;
+    private readonly IDistributedCache? _distributedCache;
 
     public DistributedCacheImplementation()
     {
@@ -20,17 +20,18 @@ public class DistributedCacheImplementation : ICacheImplementation
         _distributedCache = distributedCache;
     }
 
-    public async ValueTask<T> RetrieveAsync<T>(string key)
+    public async ValueTask<TEntity?> RetrieveAsync<TEntity>(string key)
     {
         using var holder = GetDistributedCacheHolder();
         var resultBytes = await holder.DistributedCache.GetAsync(key);
 
         return resultBytes == null || resultBytes.Length == 0
             ? default
-            : JsonSerializer.Deserialize<T>(resultBytes);
+            : JsonSerializer.Deserialize<TEntity>(resultBytes);
     }
 
-    public async ValueTask CacheAsync<T>(string key, T targetObject, CacheOptions options)
+    public async ValueTask CacheAsync<TEntity>(string key, TEntity targetObject, CacheOptions options)
+        where TEntity : notnull
     {
         using var holder = GetDistributedCacheHolder();
         var resultBytes = JsonSerializer.SerializeToUtf8Bytes(targetObject);

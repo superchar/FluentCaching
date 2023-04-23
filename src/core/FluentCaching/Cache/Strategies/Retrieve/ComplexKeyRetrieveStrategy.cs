@@ -11,7 +11,7 @@ internal class ComplexKeyRetrieveStrategy<TEntity> : BaseCacheStrategyWithConfig
     {
     }
 
-    public ValueTask<TEntity> RetrieveAsync(CacheSource<TEntity> source)
+    public ValueTask<TEntity?> RetrieveAsync(CacheSource<TEntity> source)
     {
         var item = GetConfigurationItem<TEntity>();
         var key = item.Options.KeyBuilder.BuildFromComplexKey(source.Key);

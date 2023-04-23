@@ -84,7 +84,7 @@ public class MemoryCacheImplementationTests
         result.Should().BeNull();
     }
 
-    private async Task<User> WaitAndRetrieve(int timeout)
+    private async Task<User?> WaitAndRetrieve(int timeout)
     {
         await Task.Delay(timeout);
         return await _sut.RetrieveAsync<User>("Some key");   

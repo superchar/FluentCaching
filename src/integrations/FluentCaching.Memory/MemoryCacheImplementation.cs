@@ -10,12 +10,13 @@ public class MemoryCacheImplementation : ICacheImplementation
 {
     private static readonly ObjectCache Cache = MemoryCache.Default;
 
-    public ValueTask<T> RetrieveAsync<T>(string key)
-    {
-        return Cache.Contains(key) ? new ValueTask<T>((T)Cache[key]) : new ValueTask<T>(default(T));
-    }
+    public ValueTask<TEntity?> RetrieveAsync<TEntity>(string key)
+        => Cache.Contains(key)
+            ? new ValueTask<TEntity?>((TEntity)Cache[key])
+            : new ValueTask<TEntity?>(default(TEntity));
 
-    public ValueTask CacheAsync<T>(string key, T targetObject, CacheOptions options)
+    public ValueTask CacheAsync<TEntity>(string key, TEntity targetObject, CacheOptions options)
+        where TEntity : notnull
     {
         Cache.Set(key, targetObject, CreatePolicy(options));
         return default;
