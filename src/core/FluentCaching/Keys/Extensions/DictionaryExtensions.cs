@@ -11,7 +11,8 @@ internal static class DictionaryExtensions
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
     /// <returns></returns>
-    public static TKey FirstKey<TKey, TValue>(this Dictionary<TKey, TValue> dictionary)
+    public static TKey FirstKey<TKey, TValue>(this Dictionary<TKey, TValue> dictionary) 
+        where TKey : notnull
     {
         using var enumerator = dictionary.GetEnumerator();
         enumerator.MoveNext();

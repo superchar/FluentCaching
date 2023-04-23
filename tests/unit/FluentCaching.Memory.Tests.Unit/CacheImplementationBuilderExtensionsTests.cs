@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using FluentCaching.Cache.Models;
 using FluentCaching.Configuration.PolicyBuilders;
+using FluentCaching.Keys.Builders;
+using Moq;
 using Xunit;
 
 namespace FluentCaching.Memory.Tests.Unit;
@@ -10,7 +12,7 @@ public class CacheImplementationBuilderExtensionsTests
     [Fact]
     public void StoreInMemory_WhenCalled_ReturnsCacheImplementationPolicyBuilder()
     {
-        var builder = new CacheImplementationPolicyBuilder(new CacheOptions());
+        var builder = new CacheImplementationPolicyBuilder(new CacheOptions(new Mock<IKeyBuilder>().Object));
 
         var result = builder.StoreInMemory();
 

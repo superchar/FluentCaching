@@ -112,7 +112,7 @@ public class CacheTests
         await _sut.RetrieveAsync<User>();
 
         _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRetrieveStrategy(It.Is<CacheSource<User>>(s => s.Key == null)), Times.Once);
+            .Verify(_ => _.CreateRetrieveStrategy(It.Is<CacheSource<User>>(s => s.CacheSourceType == CacheSourceType.Static)), Times.Once);
     }
 
     [Fact]
@@ -121,7 +121,7 @@ public class CacheTests
         await _sut.RetrieveAsync<User>();
 
         _retrieveStrategyMock
-            .Verify(_ => _.RetrieveAsync(It.Is<CacheSource<User>>(s => s.Key == null)), Times.Once);
+            .Verify(_ => _.RetrieveAsync(It.Is<CacheSource<User>>(s => s.CacheSourceType == CacheSourceType.Static)), Times.Once);
     }
 
     [Fact]
@@ -174,7 +174,7 @@ public class CacheTests
         await _sut.RemoveAsync<User>();
 
         _cacheStrategyFactoryMock
-            .Verify(_ => _.CreateRemoveStrategy(It.Is<CacheSource<User>>(s => s.Key == null)), Times.Once);
+            .Verify(_ => _.CreateRemoveStrategy(It.Is<CacheSource<User>>(s => s.CacheSourceType == CacheSourceType.Static)), Times.Once);
     }
 
     [Fact]
@@ -183,6 +183,6 @@ public class CacheTests
         await _sut.RemoveAsync<User>();
 
         _removeStrategyMock
-            .Verify(_ => _.RemoveAsync(It.Is<CacheSource<User>>(s => s.Key == null)), Times.Once);
+            .Verify(_ => _.RemoveAsync(It.Is<CacheSource<User>>(s => s.CacheSourceType == CacheSourceType.Static)), Times.Once);
     }
 }

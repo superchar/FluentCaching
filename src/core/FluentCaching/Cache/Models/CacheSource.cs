@@ -5,7 +5,7 @@ namespace FluentCaching.Cache.Models;
 public struct CacheSource<TEntity>
     where TEntity : class
 {
-    private static readonly CacheSource<TEntity> Static = new(null, CacheSourceType.Static);
+    private static readonly CacheSource<TEntity> Static = new(new object(), CacheSourceType.Static);
 
     private CacheSource(object key, CacheSourceType cacheSourceType)
     {
@@ -13,7 +13,7 @@ public struct CacheSource<TEntity>
         CacheSourceType = cacheSourceType;
     }
 
-    public static CacheSource<TEntity> Create(object key)
+    public static CacheSource<TEntity> Create(object? key)
     {
         if (key == null)
         {

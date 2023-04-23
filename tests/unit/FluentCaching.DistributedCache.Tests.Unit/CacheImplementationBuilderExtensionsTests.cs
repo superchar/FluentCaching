@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using FluentCaching.Cache.Models;
 using FluentCaching.Configuration.PolicyBuilders;
+using FluentCaching.Keys.Builders;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using Xunit;
@@ -13,7 +14,7 @@ public class CacheImplementationBuilderExtensionsTests
     [Fact]
     public void StoreInDistributedCache_CacheParameterIsNotProvided_ReturnsCacheImplementationPolicyBuilder()
     {
-        var cacheImplementationPolicyBuilder = new CacheImplementationPolicyBuilder(new CacheOptions());
+        var cacheImplementationPolicyBuilder = CreateCachePolicyBuilder();
 
         var result = cacheImplementationPolicyBuilder.StoreInDistributedCache();
 
@@ -23,10 +24,13 @@ public class CacheImplementationBuilderExtensionsTests
     [Fact]
     public void StoreInDistributedCache_CacheParameterIsProvided_ReturnsCacheImplementationPolicyBuilder()
     {
-        var cacheImplementationPolicyBuilder = new CacheImplementationPolicyBuilder(new CacheOptions());
+        var cacheImplementationPolicyBuilder = CreateCachePolicyBuilder();
 
         var result = cacheImplementationPolicyBuilder.StoreInDistributedCache(new Mock<IDistributedCache>().Object);
 
         result.Should().NotBeNull();
     }
+
+    private static CacheImplementationPolicyBuilder CreateCachePolicyBuilder()
+        => new (new CacheOptions(new Mock<IKeyBuilder>().Object));
 }

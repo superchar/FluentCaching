@@ -6,7 +6,7 @@ namespace FluentCaching.DistributedCache;
 
 public readonly struct DistributedCacheHolder : IDisposable
 {
-    private readonly IServiceScope _serviceScope;
+    private readonly IServiceScope? _serviceScope;
         
     public DistributedCacheHolder(IDistributedCache distributedCache)
     {
@@ -17,7 +17,7 @@ public readonly struct DistributedCacheHolder : IDisposable
     public DistributedCacheHolder()
     {
         _serviceScope = ServiceLocator.CreateScope();
-        DistributedCache = _serviceScope.ServiceProvider.GetService<IDistributedCache>();
+        DistributedCache = _serviceScope.ServiceProvider.GetRequiredService<IDistributedCache>();
     }
     
     public IDistributedCache DistributedCache { get; }

@@ -8,7 +8,7 @@ namespace FluentCaching.Configuration.PolicyBuilders.Keys;
 public class CachingKeyPolicyBuilder<TEntity>
 {
     private static readonly string ClassName = typeof(TEntity).Name;
-    private static readonly string ClassFullName = typeof(TEntity).FullName;
+    private static readonly string ClassFullName = typeof(TEntity).FullName!;
 
     private readonly IKeyBuilder _keyBuilder;
 

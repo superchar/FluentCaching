@@ -1,13 +1,15 @@
 ﻿using FluentAssertions;
 using FluentCaching.Cache.Models;
 using FluentCaching.Configuration.PolicyBuilders.Ttl;
+using FluentCaching.Keys.Builders;
+using Moq;
 using Xunit;
 
 namespace FluentCaching.Tests.Unit.Configuration.PolicyBuilders.Ttl;
 
 public class TimeTtlValuePolicyBuilderTests
 {
-    private readonly TimeTtlValuePolicyBuilder _sut = new (new TimeTtlPolicyBuilder(new CacheOptions(), 42));
+    private readonly TimeTtlValuePolicyBuilder _sut = new (new TimeTtlPolicyBuilder(new CacheOptions(new Mock<IKeyBuilder>().Object), 42));
 
     [Theory]
     [InlineData(0)]
