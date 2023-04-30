@@ -11,7 +11,7 @@ public class ComplexKeyCacheBenchmark : BaseBenchmark
     [Benchmark]
     public Task CacheWithComplexKey()
         => CacheAllUsers();
-    
+
     protected override CacheImplementationPolicyBuilder Configure(CachingKeyPolicyBuilder<User> policyBuilder)
         => ConfigureComplexKey(policyBuilder);
 }

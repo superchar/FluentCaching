@@ -11,7 +11,7 @@ public class SimpleKeyCacheBenchmark : BaseBenchmark
     [Benchmark]
     public Task CacheWithSimpleKey()
         => CacheAllUsers();
-    
+
     protected override CacheImplementationPolicyBuilder Configure(CachingKeyPolicyBuilder<User> policyBuilder)
         => ConfigureSimpleKey(policyBuilder);
 }

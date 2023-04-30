@@ -7,5 +7,4 @@ public class User
     public string LastName { get; init; }
 
     public int Id { get; init; }
-
 }

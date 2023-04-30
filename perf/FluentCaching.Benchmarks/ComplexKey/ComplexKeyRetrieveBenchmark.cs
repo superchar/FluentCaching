@@ -13,13 +13,13 @@ public class ComplexKeyRetrieveBenchmark : BaseBenchmark
         await base.GlobalSetup();
         await CacheAllUsers();
     }
-    
+
     [Benchmark]
     public async Task RetrieveWithComplexKey()
     {
         foreach (var user in Users)
         {
-            var key = new {user.Id, user.LastName, user.FirstName};
+            var key = new { user.Id, user.LastName, user.FirstName };
 
             await Cache.RetrieveAsync<User>(key);
         }
