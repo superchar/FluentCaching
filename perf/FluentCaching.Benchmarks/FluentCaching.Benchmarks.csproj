@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\core\FluentCaching\FluentCaching.csproj" />
+    <ProjectReference Include="..\..\src\integrations\FluentCaching.Memory\FluentCaching.Memory.csproj" />
   </ItemGroup>
 
 </Project>
