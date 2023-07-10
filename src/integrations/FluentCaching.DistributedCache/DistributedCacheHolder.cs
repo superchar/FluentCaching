@@ -8,19 +8,19 @@ public readonly struct DistributedCacheHolder : IDisposable
 {
     private readonly IServiceScope? _serviceScope;
         
-    public DistributedCacheHolder(IDistributedCache distributedCache)
+    public DistributedCacheHolder(IDistributedCache cache)
     {
-        DistributedCache = distributedCache;
+        Cache = cache;
         _serviceScope = null;
     }
     
     public DistributedCacheHolder()
     {
         _serviceScope = ServiceLocator.CreateScope();
-        DistributedCache = _serviceScope.ServiceProvider.GetRequiredService<IDistributedCache>();
+        Cache = _serviceScope.ServiceProvider.GetRequiredService<IDistributedCache>();
     }
     
-    public IDistributedCache DistributedCache { get; }
+    public IDistributedCache Cache { get; }
         
     public void Dispose() => _serviceScope?.Dispose();
 }

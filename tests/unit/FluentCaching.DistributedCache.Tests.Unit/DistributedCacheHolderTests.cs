@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
+using static FluentCaching.DistributedCache.Tests.Unit.MockHelper;
 
 namespace FluentCaching.DistributedCache.Tests.Unit;
 
@@ -15,7 +16,7 @@ public class DistributedCacheHolderTests : IDisposable
     public DistributedCacheHolderTests()
     {
         _distributedCacheMock = new Mock<IDistributedCache>(); 
-        MockScopeServiceProvider();
+        MockScopeAndServiceProvider();
     }
 
     [Fact]
@@ -23,7 +24,7 @@ public class DistributedCacheHolderTests : IDisposable
     {
         var holder = new DistributedCacheHolder(_distributedCacheMock.Object);
 
-        holder.DistributedCache.Should().NotBeNull();
+        holder.Cache.Should().NotBeNull();
         _scopeServiceProviderMock.Verify(p => p.GetService(typeof(IDistributedCache)), Times.Never);
     }
         
@@ -32,7 +33,7 @@ public class DistributedCacheHolderTests : IDisposable
     {
         var holder = new DistributedCacheHolder();
 
-        holder.DistributedCache.Should().NotBeNull();
+        holder.Cache.Should().NotBeNull();
         _scopeServiceProviderMock.Verify(p => p.GetService(typeof(IDistributedCache)), Times.Once);
     }
         
@@ -56,28 +57,14 @@ public class DistributedCacheHolderTests : IDisposable
         _serviceScopeMock.Verify(s => s.Dispose(), Times.Once);
     }
 
-    private void MockScopeServiceProvider()
+    private void MockScopeAndServiceProvider()
     {
-        _serviceScopeMock = new Mock<IServiceScope>();
-        _scopeServiceProviderMock = new Mock<IServiceProvider>();
+        var (serviceScopeMock, scopeServiceProviderMock) = MockServiceLocator();
+        _serviceScopeMock = serviceScopeMock;
+        _scopeServiceProviderMock = scopeServiceProviderMock;
         _scopeServiceProviderMock
             .Setup(s => s.GetService(typeof(IDistributedCache)))
             .Returns(_distributedCacheMock.Object);
-        _serviceScopeMock
-            .SetupGet(s => s.ServiceProvider)
-            .Returns(_scopeServiceProviderMock.Object);
-            
-        var serviceScopeFactoryMock = new Mock<IServiceScopeFactory>();
-        serviceScopeFactoryMock
-            .Setup(f => f.CreateScope())
-            .Returns(_serviceScopeMock.Object);
-
-        var serviceProviderMock = new Mock<IServiceProvider>();
-        serviceProviderMock
-            .Setup(s => s.GetService(typeof(IServiceScopeFactory)))
-            .Returns(serviceScopeFactoryMock.Object);
-            
-        ServiceLocator.Initialize(serviceProviderMock.Object);
     }
     
     void IDisposable.Dispose()

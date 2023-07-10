@@ -26,7 +26,8 @@ public class CacheImplementationBuilderExtensionsTests
     {
         var cacheImplementationPolicyBuilder = CreateCachePolicyBuilder();
 
-        var result = cacheImplementationPolicyBuilder.StoreInDistributedCache(new Mock<IDistributedCache>().Object);
+        var result = cacheImplementationPolicyBuilder.StoreInDistributedCache(new Mock<IDistributedCache>().Object,
+            new Mock<IDistributedCacheSerializer>().Object);
 
         result.Should().NotBeNull();
     }
