@@ -12,6 +12,8 @@ public static class CacheImplementationBuilderExtensions
         cacheImplementationPolicyBuilder.StoreIn(new DistributedCacheImplementation());
     
     public static CacheImplementationPolicyBuilder StoreInDistributedCache(
-        this CacheImplementationPolicyBuilder cacheImplementationPolicyBuilder, IDistributedCache distributedCache) =>
-        cacheImplementationPolicyBuilder.StoreIn(new DistributedCacheImplementation(distributedCache));
+        this CacheImplementationPolicyBuilder cacheImplementationPolicyBuilder, 
+        IDistributedCache distributedCache, 
+        params IDistributedCacheSerializer[] serializers) =>
+        cacheImplementationPolicyBuilder.StoreIn(new DistributedCacheImplementation(distributedCache, serializers));
 }

@@ -20,9 +20,9 @@ public class DictionaryCacheImplementation : ICacheImplementation
         return default;
     }
 
-    public ValueTask CacheAsync<T>(string key, T targetObject, CacheOptions options)
+    public ValueTask CacheAsync<T>(string key, T entity, CacheOptions options)
     {
-        Dictionary[key] = targetObject;
+        Dictionary[key] = entity;
         return default;
     }
 }
