@@ -15,10 +15,10 @@ public class MemoryCacheImplementation : ICacheImplementation
             ? new ValueTask<TEntity?>((TEntity)Cache[key])
             : new ValueTask<TEntity?>(default(TEntity));
 
-    public ValueTask CacheAsync<TEntity>(string key, TEntity targetObject, CacheOptions options)
+    public ValueTask CacheAsync<TEntity>(string key, TEntity entity, CacheOptions options)
         where TEntity : notnull
     {
-        Cache.Set(key, targetObject, CreatePolicy(options));
+        Cache.Set(key, entity, CreatePolicy(options));
         return default;
     }
 

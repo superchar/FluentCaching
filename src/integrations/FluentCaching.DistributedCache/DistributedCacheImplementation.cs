@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json;
 using System.Threading.Tasks;
 using FluentCaching.Cache;
 using FluentCaching.Cache.Models;
@@ -10,38 +9,44 @@ namespace FluentCaching.DistributedCache;
 public class DistributedCacheImplementation : ICacheImplementation
 {
     private readonly IDistributedCache? _distributedCache;
+    private readonly IDistributedCacheSerializer[]? _cacheSerializers;
 
     public DistributedCacheImplementation()
     {
     }
         
-    public DistributedCacheImplementation(IDistributedCache distributedCache)
+    public DistributedCacheImplementation(IDistributedCache distributedCache, 
+        IDistributedCacheSerializer[]? cacheSerializers)
     {
         _distributedCache = distributedCache;
+        _cacheSerializers = cacheSerializers;
     }
 
     public async ValueTask<TEntity?> RetrieveAsync<TEntity>(string key)
     {
-        using var holder = GetDistributedCacheHolder();
-        var resultBytes = await holder.DistributedCache.GetAsync(key);
+        using var cacheHolder = GetDistributedCacheHolder();
+        using var serializerHolder = GetCacheSerializerHolder<TEntity>();
+        var resultBytes = await cacheHolder.Cache.GetAsync(key);
 
         return resultBytes == null || resultBytes.Length == 0
             ? default
-            : JsonSerializer.Deserialize<TEntity>(resultBytes);
+            : await serializerHolder.Serializer.DeserializeAsync<TEntity>(resultBytes);
     }
 
-    public async ValueTask CacheAsync<TEntity>(string key, TEntity targetObject, CacheOptions options)
+    public async ValueTask CacheAsync<TEntity>(string key, TEntity entity, CacheOptions options)
         where TEntity : notnull
     {
-        using var holder = GetDistributedCacheHolder();
-        var resultBytes = JsonSerializer.SerializeToUtf8Bytes(targetObject);
-        await holder.DistributedCache.SetAsync(key, resultBytes, GetDistributedCacheEntryOptions(options));
+        using var cacheHolder = GetDistributedCacheHolder();
+        using var serializerHolder = GetCacheSerializerHolder<TEntity>();
+        var resultBytes = await serializerHolder.Serializer.SerializeAsync(entity);
+        
+        await cacheHolder.Cache.SetAsync(key, resultBytes, GetDistributedCacheEntryOptions(options));
     }
 
     public async ValueTask RemoveAsync(string key)
     {
         using var holder = GetDistributedCacheHolder();
-        await holder.DistributedCache.RemoveAsync(key);
+        await holder.Cache.RemoveAsync(key);
     }
 
     private static DistributedCacheEntryOptions GetDistributedCacheEntryOptions(CacheOptions cacheOptions)
@@ -67,4 +72,9 @@ public class DistributedCacheImplementation : ICacheImplementation
         => _distributedCache == null
             ? new DistributedCacheHolder()
             : new DistributedCacheHolder(_distributedCache);
+
+    private DistributedCacheSerializerHolder<TEntity> GetCacheSerializerHolder<TEntity>()
+        => _cacheSerializers == null || _cacheSerializers.Length == 0
+            ? new DistributedCacheSerializerHolder<TEntity>()
+            : new DistributedCacheSerializerHolder<TEntity>(_cacheSerializers);
 }
