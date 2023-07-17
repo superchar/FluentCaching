@@ -74,7 +74,7 @@ public class DistributedCacheImplementation : ICacheImplementation
             : new DistributedCacheHolder(_distributedCache);
 
     private DistributedCacheSerializerHolder<TEntity> GetCacheSerializerHolder<TEntity>()
-        => _cacheSerializers == null || _cacheSerializers.Length == 0
+        => _cacheSerializers == null
             ? new DistributedCacheSerializerHolder<TEntity>()
             : new DistributedCacheSerializerHolder<TEntity>(_cacheSerializers);
 }
