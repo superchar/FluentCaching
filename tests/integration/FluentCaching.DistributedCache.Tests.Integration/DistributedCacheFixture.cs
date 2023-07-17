@@ -17,14 +17,14 @@ public class DistributedCacheFixture : IDisposable
 
     public DistributedCacheFixture()
     {
-        _container.StartAsync();
+        _container.StartAsync().GetAwaiter().GetResult();
     }
 
     public IDistributedCache Cache => _cache ??= GetDistributedCache();
     
     public void Dispose()
     {
-        _container.StopAsync();
+        _container.StopAsync().GetAwaiter().GetResult();
     }
     
     private static IDistributedCache GetDistributedCache()
