@@ -3,13 +3,11 @@ using FluentAssertions;
 using FluentCaching.Cache;
 using FluentCaching.Cache.Builders;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
 using Xunit;
 
 namespace FluentCaching.DistributedCache.Tests.Integration;
 
-public class CacheTests
+public class CacheTests : IClassFixture<DistributedCacheFixture>
 {
     private const string UserLastName = "User last name";
 
@@ -19,13 +17,14 @@ public class CacheTests
         LastName = UserLastName
     };
 
-    private readonly IDistributedCache _distributedCache;
     
+    private readonly IDistributedCache _distributedCache;
+
     private ICache _cache;
 
-    public CacheTests()
+    public CacheTests(DistributedCacheFixture distributedCacheFixture)
     {
-        _distributedCache = GetDistributedCache();
+        _distributedCache = distributedCacheFixture.Cache;
         _cache = BuildWithScalarCacheConfiguration();
     }
 
@@ -202,19 +201,5 @@ public class CacheTests
     {
         var resultBytes = _distributedCache.Get(key ?? UserLastName);
         return resultBytes == null ? null : JsonSerializer.Deserialize<User>(resultBytes);
-    }
-
-    private static IDistributedCache GetDistributedCache()
-    {
-        var configurationOptions = new ConfigurationOptions
-        {
-            EndPoints = {"localhost:6379"},
-            Ssl = false
-        };
-
-        return new ServiceCollection()
-            .AddStackExchangeRedisCache(options => options.ConfigurationOptions = configurationOptions)
-            .BuildServiceProvider()
-            .GetRequiredService<IDistributedCache>();
     }
 }
