@@ -1,4 +1,4 @@
-﻿namespace FluentCaching.Memory.Tests.Integration;
+﻿namespace FluentCaching.DistributedCache.Tests.Integration;
 
 public class User
 {

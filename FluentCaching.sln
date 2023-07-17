@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "thread-safety", "thread-saf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.Tests.ThreadSafety", "tests\thread-safety\FluentCaching.Tests.ThreadSafety\FluentCaching.Tests.ThreadSafety.csproj", "{8B40F3E1-1D5E-4033-B883-A693E1F7C507}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.DistributedCache.Tests.Integration", "tests\integration\FluentCaching.DistributedCache.Tests.Integration\FluentCaching.DistributedCache.Tests.Integration.csproj", "{EB8DF2DF-F974-4083-845B-42BC83AED11E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{8B40F3E1-1D5E-4033-B883-A693E1F7C507}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B40F3E1-1D5E-4033-B883-A693E1F7C507}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B40F3E1-1D5E-4033-B883-A693E1F7C507}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB8DF2DF-F974-4083-845B-42BC83AED11E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB8DF2DF-F974-4083-845B-42BC83AED11E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB8DF2DF-F974-4083-845B-42BC83AED11E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB8DF2DF-F974-4083-845B-42BC83AED11E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -119,6 +125,7 @@ Global
 		{6999BBA4-EEA9-4197-9329-FEE63D630467} = {2C3841DF-CAF4-4EF7-94F4-BE5F6983F14C}
 		{29B723E4-9161-4460-9AE0-14EF03E4611C} = {45E0056D-657A-41E5-9DC6-DF3E6C42EC18}
 		{8B40F3E1-1D5E-4033-B883-A693E1F7C507} = {29B723E4-9161-4460-9AE0-14EF03E4611C}
+		{EB8DF2DF-F974-4083-845B-42BC83AED11E} = {C34CBFE9-A470-4D02-AF5A-24E5BF168444}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55371403-799A-463F-B02A-E98EF1536BF2}
