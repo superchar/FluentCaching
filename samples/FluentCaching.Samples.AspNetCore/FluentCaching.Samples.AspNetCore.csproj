@@ -6,16 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\core\FluentCaching\FluentCaching.csproj" />
-      <ProjectReference Include="..\..\src\integrations\FluentCaching.DependencyInjectionExtensions\FluentCaching.DependencyInjectionExtensions.csproj" />
-      <ProjectReference Include="..\..\src\integrations\FluentCaching.DistributedCache\FluentCaching.DistributedCache.csproj" />
-      <ProjectReference Include="..\..\src\integrations\FluentCaching.Memory\FluentCaching.Memory.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.9" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
+      <PackageReference Include="VLobyntsev.FluentCaching.DependencyInjection" Version="0.0.2" />
+      <PackageReference Include="VLobyntsev.FluentCaching.DistributedCache" Version="0.0.2" />
+      <PackageReference Include="VLobyntsev.FluentCaching.Memory" Version="0.0.2" />
     </ItemGroup>
 
 </Project>
