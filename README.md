@@ -1,10 +1,10 @@
 <img src="https://raw.githubusercontent.com/superchar/FluentCaching/main/logo.png" align='center' alt="Fluent caching"> 
 
 ![CI](https://github.com/superchar/FluentCaching/actions/workflows/CI.yml/badge.svg)
+[![NuGet](https://img.shields.io/nuget/v/VLobyntsev.FluentCaching.svg)](https://www.nuget.org/packages/VLobyntsev.FluentCaching/)
 
-FluentCaching library provides abstraction layer over caching implementation (memory, Redis, etc.) with really small overhead (check benchmarks).
+FluentCaching library provides an abstraction layer over caching implementation (memory, Redis, etc.) with really small overhead (check benchmarks).
 Instead of writing boilerplate code to support caching, just configure caching policy for object using fluent api and use cache object to manipulate caching abstraction. 
-
 <br/><br/>The core library is written in plain C# with no external dependencies. 
 The nearest plan is to prepare the first release version. 
 

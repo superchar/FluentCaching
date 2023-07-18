@@ -3,15 +3,20 @@
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <Title>Dependency injection integration</Title>
+        <PackageId>VLobyntsev.FluentCaching.DependencyInjection</PackageId>
+        <Authors>Vladyslav Lobyntsev</Authors>
+        <Description>Microsoft.Extensions.DependencyInjection integration for fluent caching</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>Caching, Cache, Fluent, Fluent Caching, Fluentcaching, Fluent Api, Fluentapi</PackageTags>
+        <RepositoryUrl>https://github.com/superchar/FluentCaching</RepositoryUrl>
+        <Version>0.0.2</Version>
         <LangVersion>10</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\core\FluentCaching\FluentCaching.csproj" />
+      <PackageReference Include="VLobyntsev.FluentCaching" Version="0.0.2" />
     </ItemGroup>
 
 </Project>
