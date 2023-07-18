@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentCaching.Configuration;
 using FluentCaching.Keys.Builders;
 
 namespace FluentCaching.Cache.Models;
@@ -15,4 +16,6 @@ public class CacheOptions
     internal IKeyBuilder KeyBuilder { get; }
 
     internal ICacheImplementation? CacheImplementation { get; set; }
+
+    internal string PolicyName { get; set; } = CacheConfiguration.DefaultPolicyName;
 }

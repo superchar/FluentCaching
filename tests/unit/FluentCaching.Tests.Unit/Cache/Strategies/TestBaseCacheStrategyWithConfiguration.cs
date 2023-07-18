@@ -11,7 +11,7 @@ internal class TestBaseCacheStrategyWithConfiguration : BaseCacheStrategyWithCon
     }
 
     public new ICacheConfigurationItem GetConfigurationItem<T>() where T : class 
-        => base.GetConfigurationItem<T>();
+        => base.GetConfigurationItem<T>(CacheConfiguration.DefaultPolicyName);
 
     public new ICacheImplementation GetCacheImplementation<T>(ICacheConfigurationItem item) where T : class
         => base.GetCacheImplementation<T>(item);

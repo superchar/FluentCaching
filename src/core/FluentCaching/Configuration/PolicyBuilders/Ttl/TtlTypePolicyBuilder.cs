@@ -8,9 +8,9 @@ public class TtlTypePolicyBuilder
 {
     private readonly CacheOptions _currentOptions;
 
-    internal TtlTypePolicyBuilder(IKeyBuilder keyBuilder)
+    internal TtlTypePolicyBuilder(CacheOptions cacheOptions)
     {
-        _currentOptions = new CacheOptions(keyBuilder);
+        _currentOptions = cacheOptions;
     }
 
     public TimeTtlPolicyBuilder SetExpirationTimeoutTo(ushort value) => new (_currentOptions, value);

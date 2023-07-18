@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using FluentCaching.Cache.Models;
 using FluentCaching.Configuration.PolicyBuilders.Ttl;
 using FluentCaching.Keys.Builders;
 // ReSharper disable UnusedMember.Global
@@ -18,7 +19,9 @@ public class CombinedCachingKeyPolicyBuilder<TEntity>
         _keyBuilder = keyBuilder;
     }
 
-    public TtlTypePolicyBuilder And() => new (_keyBuilder);
+    public TtlTypePolicyBuilder And() => new (new CacheOptions(_keyBuilder));
+
+    public PolicyNamePolicyBuilder And(string name) => new (name, new CacheOptions(_keyBuilder));
 
     public CombinedCachingKeyPolicyBuilder<TEntity> CombinedWith<TValue>(Expression<Func<TEntity, TValue>> valueGetter)
     {
