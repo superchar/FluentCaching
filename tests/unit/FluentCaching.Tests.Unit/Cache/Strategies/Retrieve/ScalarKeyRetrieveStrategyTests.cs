@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Retrieve;
+using FluentCaching.Configuration;
 using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
@@ -22,7 +23,7 @@ public class ScalarKeyRetrieveStrategyTests : BaseCacheStrategyTests
     [Fact]
     public async Task RetrieveAsync_WhenCalled_CallsKeyBuilder()
     {
-        await _sut.RetrieveAsync(ScalarKeySource);
+        await _sut.RetrieveAsync(ScalarKeySource, CacheConfiguration.DefaultPolicyName);
 
         KeyBuilderMock
             .Verify(_ => _.BuildFromScalarKey(ScalarKeySource.Key), Times.Once);
@@ -36,7 +37,7 @@ public class ScalarKeyRetrieveStrategyTests : BaseCacheStrategyTests
             .Setup(_ => _.BuildFromScalarKey(ScalarKeySource.Key))
             .Returns(key);
             
-        await _sut.RetrieveAsync(ScalarKeySource);
+        await _sut.RetrieveAsync(ScalarKeySource, CacheConfiguration.DefaultPolicyName);
 
         TypeCacheImplementationMock
             .Verify(_ => _.RetrieveAsync<User>(key), Times.Once);

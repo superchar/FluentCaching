@@ -64,7 +64,7 @@ public class CacheConfigurationTests
     [Fact]
     public void GetItem_ConfigurationDoesNotExist_ReturnsNull()
     {
-        var result = _sut.GetItem<User>();
+        var result = _sut.GetItem<User>(CacheConfiguration.DefaultPolicyName);
 
         result.Should().BeNull();
     }
@@ -78,7 +78,7 @@ public class CacheConfigurationTests
             .Returns(new AndPolicyBuilder<CacheImplementationPolicyBuilder>(CreateCachePolicyBuilder()));
         _sut.For(factoryMock.Object);
 
-        var result = _sut.GetItem<User>();
+        var result = _sut.GetItem<User>(CacheConfiguration.DefaultPolicyName);
 
         result.Should().NotBeNull();
         factoryMock

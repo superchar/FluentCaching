@@ -4,6 +4,7 @@ using FluentCaching.Cache.Strategies.Factories;
 using FluentCaching.Cache.Strategies.Remove;
 using FluentCaching.Cache.Strategies.Retrieve;
 using FluentCaching.Cache.Strategies.Store;
+using FluentCaching.Configuration;
 using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
@@ -59,7 +60,7 @@ public class CacheTests
         await _sut.CacheAsync(CachedObject);
 
         _storeStrategyMock
-            .Verify(_ => _.StoreAsync(CachedObject), Times.Once);
+            .Verify(_ => _.StoreAsync(CachedObject, CacheConfiguration.DefaultPolicyName), Times.Once);
     }
 
     [Fact]
@@ -80,7 +81,7 @@ public class CacheTests
 
         _retrieveStrategyMock
             .Verify(_ =>
-                    _.RetrieveAsync(It.Is<CacheSource<User>>(s => s.Key == ComplexKey)),
+                    _.RetrieveAsync(It.Is<CacheSource<User>>(s => s.Key == ComplexKey), CacheConfiguration.DefaultPolicyName),
                 Times.Once);
     }
 
@@ -102,7 +103,7 @@ public class CacheTests
 
         _retrieveStrategyMock
             .Verify(_ =>
-                    _.RetrieveAsync(It.Is<CacheSource<User>>(s => ScalarKey.Equals(s.Key))),
+                    _.RetrieveAsync(It.Is<CacheSource<User>>(s => ScalarKey.Equals(s.Key)), CacheConfiguration.DefaultPolicyName),
                 Times.Once);
     }
 
@@ -121,7 +122,9 @@ public class CacheTests
         await _sut.RetrieveAsync<User>();
 
         _retrieveStrategyMock
-            .Verify(_ => _.RetrieveAsync(It.Is<CacheSource<User>>(s => s.CacheSourceType == CacheSourceType.Static)), Times.Once);
+            .Verify(
+                _ => _.RetrieveAsync(It.Is<CacheSource<User>>(s => s.CacheSourceType == CacheSourceType.Static),
+                    CacheConfiguration.DefaultPolicyName), Times.Once);
     }
 
     [Fact]
@@ -142,7 +145,8 @@ public class CacheTests
 
         _removeStrategyMock
             .Verify(_ =>
-                    _.RemoveAsync(It.Is<CacheSource<User>>(s => s.Key == ComplexKey)),
+                    _.RemoveAsync(It.Is<CacheSource<User>>(s => s.Key == ComplexKey),
+                        CacheConfiguration.DefaultPolicyName),
                 Times.Once);
     }
 
@@ -164,7 +168,8 @@ public class CacheTests
 
         _removeStrategyMock
             .Verify(_ =>
-                    _.RemoveAsync(It.Is<CacheSource<User>>(s => ScalarKey.Equals(s.Key))),
+                    _.RemoveAsync(It.Is<CacheSource<User>>(s => ScalarKey.Equals(s.Key)),
+                        CacheConfiguration.DefaultPolicyName),
                 Times.Once);
     }
 
@@ -183,6 +188,8 @@ public class CacheTests
         await _sut.RemoveAsync<User>();
 
         _removeStrategyMock
-            .Verify(_ => _.RemoveAsync(It.Is<CacheSource<User>>(s => s.CacheSourceType == CacheSourceType.Static)), Times.Once);
+            .Verify(
+                _ => _.RemoveAsync(It.Is<CacheSource<User>>(s => s.CacheSourceType == CacheSourceType.Static),
+                    CacheConfiguration.DefaultPolicyName), Times.Once);
     }
 }

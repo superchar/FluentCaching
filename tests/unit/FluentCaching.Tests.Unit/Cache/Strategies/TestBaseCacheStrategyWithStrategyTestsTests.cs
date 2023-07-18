@@ -25,14 +25,14 @@ public class TestBaseCacheStrategyWithStrategyTestsTests : BaseCacheStrategyTest
         _sut.GetConfigurationItem<User>();
             
         CacheConfigurationMock
-            .Verify(_ => _.GetItem<User>(), Times.Once);
+            .Verify(_ => _.GetItem<User>(CacheConfiguration.DefaultPolicyName), Times.Once);
     }
         
     [Fact]
     public void GetConfigurationItem_ConfigurationItemIsNull_ThrowsConfigurationNotFoundException()
     {
         CacheConfigurationMock
-            .Setup(_ => _.GetItem<User>())
+            .Setup(_ => _.GetItem<User>(CacheConfiguration.DefaultPolicyName))
             .Returns((CacheConfigurationItem)null);
 
         _sut.Invoking(_ => _.GetConfigurationItem<User>())

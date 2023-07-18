@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using FluentCaching.Cache.Models;
 using FluentCaching.Configuration.PolicyBuilders.Ttl;
 using FluentCaching.Keys.Builders;
 using Moq;
@@ -15,7 +16,7 @@ public class TtlTypePolicyBuilderTests
     {
         var keyBuilderMock = new Mock<IKeyBuilder>();
 
-        _sut = new TtlTypePolicyBuilder(keyBuilderMock.Object);
+        _sut = new TtlTypePolicyBuilder(new CacheOptions(keyBuilderMock.Object));
     }
 
     [Theory]

@@ -12,8 +12,8 @@ internal abstract class BaseCacheStrategyWithConfiguration
         _configuration = configuration;
     }
 
-    protected ICacheConfigurationItem GetConfigurationItem<TEntity>() where TEntity : class =>
-        _configuration.GetItem<TEntity>() ?? throw new ConfigurationNotFoundException(typeof(TEntity));
+    protected ICacheConfigurationItem GetConfigurationItem<TEntity>(string policyName) where TEntity : class =>
+        _configuration.GetItem<TEntity>(policyName) ?? throw new ConfigurationNotFoundException(typeof(TEntity));
 
     protected ICacheImplementation GetCacheImplementation<TEntity>(ICacheConfigurationItem item) 
         where TEntity : class =>

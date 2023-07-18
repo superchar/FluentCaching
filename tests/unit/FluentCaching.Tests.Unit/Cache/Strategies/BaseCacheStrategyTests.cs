@@ -45,7 +45,7 @@ public abstract class BaseCacheStrategyTests
             .SetupGet(_ => _.Options)
             .Returns(options);
         CacheConfigurationMock
-            .Setup(_ => _.GetItem<User>())
+            .Setup(_ => _.GetItem<User>(CacheConfiguration.DefaultPolicyName))
             .Returns(ConfigurationItemMock.Object);
         CacheConfigurationMock
             .SetupGet(_ => _.Current)
