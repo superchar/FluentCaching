@@ -67,6 +67,41 @@ var cache = new CacheBuilder()
 
 ```
 
+<h1>Getting started</h1>
+
+Use .NET CLI to install the target packages (or search _VLobyntsev.FluentCaching_ in IDE package manager)
+
+```
+dotnet add package VLobyntsev.FluentCaching.DistributedCache
+```
+```
+dotnet add package VLobyntsev.FluentCaching.Memory
+```
+```
+dotnet add package VLobyntsev.FluentCaching.DependencyInjection
+```
+
+Define the caching configuration in the startup file 
+
+```csharp
+builder.Services.AddFluentCaching(cacheBuilder => cacheBuilder
+    .For<Cart>(_ => _.UseAsKey(c => $"card-{c.Id}").And().SetExpirationTimeoutTo(5).Minutes
+        .With().SlidingExpiration().And().StoreInMemory())
+    .For<UserCheckoutStatistics>(_ => _.UseClassNameAsKey().CombinedWith(s => s.UserId)
+        .And().SetInfiniteExpirationTimeout().And().StoreInDistributedCache()));
+
+app.UseFluentCaching(); // Needed for distributed cache only
+
+```
+Inject _ICache_ object and use it 
+```csharp
+app.MapGet("/{cardId:guid}/card-items", (Guid cardId, ICache cache) => cache.RetrieveAsync<Cart>(cardId));
+
+app.MapGet("/{userId:guid}/checkout-statistics",
+    (Guid userId, ICache cache) => cache.RetrieveAsync<UserCheckoutStatistics>(userId));
+```
+For more information check the [samples](https://github.com/superchar/FluentCaching/tree/main/samples). 
+
 <h1>Current benchmarks</h1>
 
 ``` ini
