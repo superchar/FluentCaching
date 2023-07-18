@@ -3,6 +3,14 @@
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <Title>Distributed cache integration</Title>
+        <PackageId>VLobyntsev.FluentCaching.DistributedCache</PackageId>
+        <Authors>Vladyslav Lobyntsev</Authors>
+        <Description>Distributed cache integration for fluent caching</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>Caching, Cache, Fluent, Fluent Caching, Fluentcaching, Fluent Api, Fluentapi</PackageTags>
+        <RepositoryUrl>https://github.com/superchar/FluentCaching</RepositoryUrl>
+        <Version>0.0.2</Version>
         <LangVersion>10</LangVersion>
     </PropertyGroup>
 
@@ -10,10 +18,7 @@
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
       <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\core\FluentCaching\FluentCaching.csproj" />
+      <PackageReference Include="VLobyntsev.FluentCaching" Version="0.0.2" />
     </ItemGroup>
 
 </Project>
