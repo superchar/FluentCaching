@@ -11,9 +11,9 @@ internal class StaticKeyRetrieveStrategy<TEntity> : BaseCacheStrategyWithConfigu
     {
     }
     
-    public ValueTask<TEntity?> RetrieveAsync(CacheSource<TEntity> source)
+    public ValueTask<TEntity?> RetrieveAsync(CacheSource<TEntity> source, string policyName)
     {
-        var item = GetConfigurationItem<TEntity>();
+        var item = GetConfigurationItem<TEntity>(policyName);
         var key = item.Options.KeyBuilder.BuildFromStaticKey<TEntity>();
         return GetCacheImplementation<TEntity>(item)
             .RetrieveAsync<TEntity>(key);    

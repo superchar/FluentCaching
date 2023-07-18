@@ -11,9 +11,9 @@ internal class ComplexKeyRemoveStrategy<TEntity> : BaseCacheStrategyWithConfigur
     {
     }
 
-    public ValueTask RemoveAsync(CacheSource<TEntity> source)
+    public ValueTask RemoveAsync(CacheSource<TEntity> source, string policyName)
     {
-        var item = GetConfigurationItem<TEntity>();
+        var item = GetConfigurationItem<TEntity>(policyName);
         var key = item.Options.KeyBuilder.BuildFromComplexKey(source.Key);
         return GetCacheImplementation<TEntity>(item)
             .RemoveAsync(key);

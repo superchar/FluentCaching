@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Remove;
+using FluentCaching.Configuration;
 using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
@@ -19,7 +20,7 @@ public class StaticKeyRemoveStrategyTests : BaseCacheStrategyTests
     [Fact]
     public async Task RemoveAsync_WhenCalled_CallsKeyBuilder()
     {
-        await _sut.RemoveAsync(CacheSource<User>.Create(null));
+        await _sut.RemoveAsync(CacheSource<User>.Create(null), CacheConfiguration.DefaultPolicyName);
 
         KeyBuilderMock
             .Verify(_ => _.BuildFromStaticKey<User>(), Times.Once);
@@ -33,7 +34,7 @@ public class StaticKeyRemoveStrategyTests : BaseCacheStrategyTests
             .Setup(_ => _.BuildFromStaticKey<User>())
             .Returns(key);
             
-        await _sut.RemoveAsync(CacheSource<User>.Create(null));
+        await _sut.RemoveAsync(CacheSource<User>.Create(null), CacheConfiguration.DefaultPolicyName);
 
         TypeCacheImplementationMock
             .Verify(_ => _.RemoveAsync(key), Times.Once);

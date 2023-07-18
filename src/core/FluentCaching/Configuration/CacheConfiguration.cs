@@ -10,9 +10,11 @@ namespace FluentCaching.Configuration;
 
 internal sealed class CacheConfiguration : ICacheConfiguration
 {
+    public const string DefaultPolicyName = "default";
+    
     private readonly IKeyBuilderFactory _keyBuilderFactory;
 
-    private readonly Dictionary<Type, ICacheConfigurationItem> _predefinedConfigurations = new();
+    private readonly Dictionary<Type, Dictionary<string, ICacheConfigurationItem>> _predefinedConfigurations = new();
 
     public CacheConfiguration(IKeyBuilderFactory keyBuilderFactory)
     {
@@ -43,15 +45,22 @@ internal sealed class CacheConfiguration : ICacheConfiguration
             factoryFunc(new CachingKeyPolicyBuilder<TEntity>(_keyBuilderFactory.CreateKeyBuilder<TEntity>()))
                 .CachingOptions);
 
-    public ICacheConfigurationItem? GetItem<TEntity>() where TEntity : class =>
-        _predefinedConfigurations.TryGetValue(typeof(TEntity), out var configurationItem)
-            ? configurationItem
+    public ICacheConfigurationItem? GetItem<TEntity>(string policyName) where TEntity : class =>
+        _predefinedConfigurations.TryGetValue(typeof(TEntity), out var typeConfiguration)
+            ? typeConfiguration.TryGetValue(policyName, out var configurationItem)
+                ? configurationItem
+                : null
             : null;
 
     private ICacheConfiguration For<TEntity>(CacheOptions options)
         where TEntity : class
     {
-        _predefinedConfigurations[typeof(TEntity)] = new CacheConfigurationItem(options);
+        if (!_predefinedConfigurations.ContainsKey(typeof(TEntity)))
+        {
+            _predefinedConfigurations[typeof(TEntity)] = new Dictionary<string, ICacheConfigurationItem>();
+        }
+
+        _predefinedConfigurations[typeof(TEntity)][options.PolicyName] = new CacheConfigurationItem(options);
         return this;
     }
 }

@@ -29,6 +29,14 @@ public class CombinedCachingKeyPolicyBuilderTests
 
         result.Should().NotBeNull();
     }
+    
+    [Fact]
+    public void AndWithPolicyName_HappyPath_ReturnsNotPolicyNamePolicyBuilder()
+    {
+        var result = _sut.And("PolicyName");
+
+        result.Should().NotBeNull();
+    }
 
     [Fact]
     public void CombinedWith_Expression_CallsTrackExpressionWithProperParameter()

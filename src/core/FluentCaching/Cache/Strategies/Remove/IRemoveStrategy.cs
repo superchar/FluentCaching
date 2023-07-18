@@ -6,5 +6,5 @@ namespace FluentCaching.Cache.Strategies.Remove;
 public interface IRemoveStrategy<TEntity>
     where TEntity : class
 {
-    ValueTask RemoveAsync(CacheSource<TEntity> source);
+    ValueTask RemoveAsync(CacheSource<TEntity> source, string policyName);
 }

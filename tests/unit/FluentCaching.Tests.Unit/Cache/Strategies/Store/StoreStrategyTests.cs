@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using FluentCaching.Cache.Models;
 using FluentCaching.Cache.Strategies.Store;
+using FluentCaching.Configuration;
 using FluentCaching.Tests.Unit.TestModels;
 using Moq;
 using Xunit;
@@ -19,7 +20,7 @@ public class StoreStrategyTests : BaseCacheStrategyTests
     [Fact]
     public async Task CacheAsync_WhenCalled_CallsKeyBuilder()
     {
-        await _sut.StoreAsync(TestUser);
+        await _sut.StoreAsync(TestUser, CacheConfiguration.DefaultPolicyName);
 
         KeyBuilderMock
             .Verify(_ => _.BuildFromCachedObject(TestUser), Times.Once);
@@ -33,7 +34,7 @@ public class StoreStrategyTests : BaseCacheStrategyTests
             .Setup(_ => _.BuildFromCachedObject(TestUser))
             .Returns(key);
             
-        await _sut.StoreAsync(TestUser);
+        await _sut.StoreAsync(TestUser, CacheConfiguration.DefaultPolicyName);
 
         TypeCacheImplementationMock
             .Verify(_ => _.CacheAsync(

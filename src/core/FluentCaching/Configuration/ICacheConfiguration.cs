@@ -10,7 +10,7 @@ internal interface ICacheConfiguration
 {
     ICacheImplementation? Current { get; }
 
-    ICacheConfigurationItem? GetItem<TEntity>()
+    ICacheConfigurationItem? GetItem<TEntity>(string policyName)
         where TEntity : class;
 
     ICacheConfiguration For<TEntity>(Func<CachingKeyPolicyBuilder<TEntity>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
