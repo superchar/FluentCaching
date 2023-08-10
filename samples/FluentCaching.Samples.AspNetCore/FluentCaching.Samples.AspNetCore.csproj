@@ -10,7 +10,6 @@
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
       <PackageReference Include="VLobyntsev.FluentCaching.DependencyInjection" Version="0.0.2" />
-      <PackageReference Include="VLobyntsev.FluentCaching.DistributedCache" Version="0.0.2" />
       <PackageReference Include="VLobyntsev.FluentCaching.Memory" Version="0.0.2" />
     </ItemGroup>
 

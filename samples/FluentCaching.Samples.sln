@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.Samples.Conso
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.Samples.AspNetCore", "FluentCaching.Samples.AspNetCore\FluentCaching.Samples.AspNetCore.csproj", "{71B5529A-C2E2-443C-A66E-DDAEAB9B0A7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.Samples.CachingPolicies", "FluentCaching.Samples.CachingPolicies\FluentCaching.Samples.CachingPolicies.csproj", "{75F80B96-2A5D-4A5E-BC3A-EEEFAD376E9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCaching.Samples.DistributedCache", "FluentCaching.Samples.DistributedCache\FluentCaching.Samples.DistributedCache.csproj", "{2EE13CC8-FD92-48F2-9C95-923885603A5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{71B5529A-C2E2-443C-A66E-DDAEAB9B0A7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71B5529A-C2E2-443C-A66E-DDAEAB9B0A7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71B5529A-C2E2-443C-A66E-DDAEAB9B0A7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75F80B96-2A5D-4A5E-BC3A-EEEFAD376E9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75F80B96-2A5D-4A5E-BC3A-EEEFAD376E9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75F80B96-2A5D-4A5E-BC3A-EEEFAD376E9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75F80B96-2A5D-4A5E-BC3A-EEEFAD376E9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EE13CC8-FD92-48F2-9C95-923885603A5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EE13CC8-FD92-48F2-9C95-923885603A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EE13CC8-FD92-48F2-9C95-923885603A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EE13CC8-FD92-48F2-9C95-923885603A5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
