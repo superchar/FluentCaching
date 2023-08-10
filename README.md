@@ -102,7 +102,7 @@ app.MapGet("/{userId:guid}/checkout-statistics",
 ```
 For more information check the [samples](https://github.com/superchar/FluentCaching/tree/main/samples). 
 
-<h1>Current benchmarks</h1>
+<h1>Current benchmarks (using in-memory cache)</h1>
 
 ``` ini
 
