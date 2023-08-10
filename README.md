@@ -88,7 +88,7 @@ builder.Services.AddFluentCaching(cacheBuilder => cacheBuilder
     .For<Cart>(_ => _.UseAsKey(c => $"card-{c.Id}").And().SetExpirationTimeoutTo(5).Minutes
         .With().SlidingExpiration().And().StoreInMemory())
     .For<UserCheckoutStatistics>(_ => _.UseClassNameAsKey().CombinedWith(s => s.UserId)
-        .And().SetInfiniteExpirationTimeout().And().StoreInDistributedCache()));
+        .And().SetInfiniteExpirationTimeout().And().StoreInDistributedCache())); // Need to configure distributed cache as well
 
 app.UseFluentCaching(); // Needed for distributed cache only
 
