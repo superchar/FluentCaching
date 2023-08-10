@@ -1,5 +1,5 @@
 ﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
-namespace FluentCaching.Samples.AspNetCore.Models;
+namespace FluentCaching.Samples.DistributedCache.Models;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public class CartItemDto
