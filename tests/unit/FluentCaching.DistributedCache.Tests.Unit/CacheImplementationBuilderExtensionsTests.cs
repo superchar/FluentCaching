@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
+using FluentCaching.Cache.Builders;
 using FluentCaching.Cache.Models;
+using FluentCaching.Configuration;
 using FluentCaching.Configuration.PolicyBuilders;
 using FluentCaching.Keys.Builders;
 using Microsoft.Extensions.Caching.Distributed;
@@ -30,6 +32,31 @@ public class CacheImplementationBuilderExtensionsTests
             new Mock<IDistributedCacheSerializer>().Object);
 
         result.Should().NotBeNull();
+    }
+    
+    [Fact]
+    public void StoreInDistributedCache_CacheParameterIsNotProvided_SetsDistributedAsDefault()
+    {
+        var configurationMock = new Mock<ICacheConfiguration>();
+        var builder = new CacheBuilder(configurationMock.Object);
+
+        builder.SetDistributedAsDefaultCache();
+        
+        configurationMock
+            .Verify(c => c.SetGenericCache(It.IsAny<DistributedCacheImplementation>()), Times.Once);
+    }
+    
+    [Fact]
+    public void StoreInDistributedCache_CacheParameterIsProvided_SetsDistributedAsDefault()
+    {
+        var configurationMock = new Mock<ICacheConfiguration>();
+        var builder = new CacheBuilder(configurationMock.Object);
+
+        builder.SetDistributedAsDefaultCache(new Mock<IDistributedCache>().Object,
+            new Mock<IDistributedCacheSerializer>().Object);
+        
+        configurationMock
+            .Verify(c => c.SetGenericCache(It.IsAny<DistributedCacheImplementation>()), Times.Once);
     }
 
     private static CacheImplementationPolicyBuilder CreateCachePolicyBuilder()
