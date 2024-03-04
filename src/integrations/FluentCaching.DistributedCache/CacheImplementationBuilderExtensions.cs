@@ -1,4 +1,5 @@
-﻿using FluentCaching.Configuration.PolicyBuilders;
+﻿using FluentCaching.Cache.Builders;
+using FluentCaching.Configuration.PolicyBuilders;
 using Microsoft.Extensions.Caching.Distributed;
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
@@ -16,4 +17,12 @@ public static class CacheImplementationBuilderExtensions
         IDistributedCache distributedCache, 
         params IDistributedCacheSerializer[] serializers) =>
         cacheImplementationPolicyBuilder.StoreIn(new DistributedCacheImplementation(distributedCache, serializers));
+    
+    public static ICacheBuilder SetDistributedAsDefaultCache(this ICacheBuilder cacheBuilder)
+        => cacheBuilder.SetGenericCache(new DistributedCacheImplementation());
+
+    public static ICacheBuilder SetDistributedAsDefaultCache(this ICacheBuilder cacheBuilder,
+        IDistributedCache distributedCache,
+        params IDistributedCacheSerializer[] serializers)
+        => cacheBuilder.SetGenericCache(new DistributedCacheImplementation(distributedCache, serializers));
 }

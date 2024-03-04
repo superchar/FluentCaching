@@ -11,9 +11,6 @@ public class ReplaceParameterWithDictionaryVisitor : BaseParameterPropertyAccess
 
     private readonly Expression _dictionaryParam;
 
-    protected override Expression VisitParameter(ParameterExpression node)
-        => _dictionaryParam;
-
     protected override Expression VisitParameterPropertyAccess(MemberExpression node)
     {
         var (propertyName, propertyType) = GetPropertyMetadata(node);
