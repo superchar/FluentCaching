@@ -35,7 +35,7 @@ public class CacheImplementationBuilderExtensionsTests
     }
     
     [Fact]
-    public void StoreInDistributedCache_CacheParameterIsNotProvided_SetsDistributedAsDefault()
+    public void SetDistributedAsDefaultCache_CacheParameterIsNotProvided_SetsDistributedAsDefault()
     {
         var configurationMock = new Mock<ICacheConfiguration>();
         var builder = new CacheBuilder(configurationMock.Object);
@@ -47,7 +47,7 @@ public class CacheImplementationBuilderExtensionsTests
     }
     
     [Fact]
-    public void StoreInDistributedCache_CacheParameterIsProvided_SetsDistributedAsDefault()
+    public void SetDistributedAsDefaultCache_CacheParameterIsProvided_SetsDistributedAsDefault()
     {
         var configurationMock = new Mock<ICacheConfiguration>();
         var builder = new CacheBuilder(configurationMock.Object);

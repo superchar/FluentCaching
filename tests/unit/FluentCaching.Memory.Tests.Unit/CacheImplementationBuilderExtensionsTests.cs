@@ -22,7 +22,7 @@ public class CacheImplementationBuilderExtensionsTests
     }
     
     [Fact]
-    public void StoreInMemory_WhenCalled_SetsMemoryCacheAsDefault()
+    public void SetInMemoryAsDefaultCache_WhenCalled_SetsMemoryCacheAsDefault()
     {
         var configurationMock = new Mock<ICacheConfiguration>();
         var builder = new CacheBuilder(configurationMock.Object);
