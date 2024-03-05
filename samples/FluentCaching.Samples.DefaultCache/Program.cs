@@ -1,7 +1,7 @@
-using FluentCaching.Cache;
+﻿using FluentCaching.Cache;
 using FluentCaching.DependencyInjectionExtensions;
 using FluentCaching.Memory;
-using FluentCaching.Samples.AspNetCore.Models;
+using FluentCaching.Samples.DefaultCache.Models;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,14 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("RedisConnectionString");
-});
-
 builder.Services.AddFluentCaching(cacheBuilder => cacheBuilder
-    .For<Cart>(_ => _.UseAsKey(c => $"cart-{c.Id}").And().SetExpirationTimeoutTo(5).Minutes
-        .With().SlidingExpiration().And().StoreInMemory()));
+    .For<Cart>(x => x.UseAsKey(c => $"cart-{c.Id}").And()
+        .SetInfiniteExpirationTimeout())
+    .SetInMemoryAsDefaultCache());
 
 var app = builder.Build();
 

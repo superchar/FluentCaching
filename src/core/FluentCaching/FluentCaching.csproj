@@ -10,7 +10,7 @@
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <PackageTags>Caching, Cache, Fluent, Fluent Caching, Fluentcaching, Fluent Api, Fluentapi</PackageTags>
 	  <RepositoryUrl>https://github.com/superchar/FluentCaching</RepositoryUrl>
-	  <Version>0.0.2</Version>
+	  <Version>0.0.3</Version>
 	  <LangVersion>10</LangVersion>
   </PropertyGroup>
 	

@@ -1,4 +1,4 @@
-﻿namespace FluentCaching.Samples.AspNetCore.Models;
+﻿namespace FluentCaching.Samples.DistributedCache.Models;
 
 public class UserCheckoutStatistics
 {

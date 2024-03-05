@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
+using FluentCaching.Cache.Builders;
 using FluentCaching.Cache.Models;
+using FluentCaching.Configuration;
 using FluentCaching.Configuration.PolicyBuilders;
 using FluentCaching.Keys.Builders;
 using Moq;
@@ -17,5 +19,17 @@ public class CacheImplementationBuilderExtensionsTests
         var result = builder.StoreInMemory();
 
         result.Should().NotBeNull();
+    }
+    
+    [Fact]
+    public void SetInMemoryAsDefaultCache_WhenCalled_SetsMemoryCacheAsDefault()
+    {
+        var configurationMock = new Mock<ICacheConfiguration>();
+        var builder = new CacheBuilder(configurationMock.Object);
+
+        builder.SetInMemoryAsDefaultCache();
+
+        configurationMock
+            .Verify(c => c.SetGenericCache(It.IsAny<MemoryCacheImplementation>()), Times.Once);
     }
 }

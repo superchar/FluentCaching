@@ -40,6 +40,21 @@ public class CacheTests : IClassFixture<DistributedCacheFixture>
     }
     
     [Fact]
+    public async Task CacheWithDefaultCache_CachesObject()
+    {
+        _cache = new CacheBuilder()
+            .SetDistributedAsDefaultCache(_distributedCache)
+            .For<User>(c => c.UseAsKey(u => u.LastName).And()
+                .SetInfiniteExpirationTimeout())
+            .Build();
+        
+        await _cache.CacheAsync(User);
+
+        var userFromCache = GetUserFromCache();
+        userFromCache.Should().NotBeNull();
+    }
+    
+    [Fact]
     public async Task CacheWithAbsoluteExpiration_RemovesItemAfterTtl()
     {
         const int ttlMilliseconds = 1000;
