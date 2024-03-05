@@ -39,20 +39,20 @@ public class CacheSourceTests
 
     public static IEnumerable<object[]> GetScalarKeys()
     {
-        yield return new object[] { "test" };
-        yield return new object[] { Guid.NewGuid() };
-        yield return new object[] { 27.5m };
-        yield return new object[] { true };
-        yield return new object[] { (byte)42 };
-        yield return new object[] { (sbyte)43 };
-        yield return new object[] { (short)44 };
-        yield return new object[] { (ushort)45 };
-        yield return new object[] { 46 };
-        yield return new object[] { 47U };
-        yield return new object[] { 48L };
-        yield return new object[] { 48UL };
-        yield return new object[] { 'a' };
-        yield return new object[] { 42.42d };
-        yield return new object[] { 42.43f };
+        yield return ["test"];
+        yield return [Guid.NewGuid()];
+        yield return [27.5m];
+        yield return [true];
+        yield return [(byte)42];
+        yield return [(sbyte)43];
+        yield return [(short)44];
+        yield return [(ushort)45];
+        yield return [46];
+        yield return [47U];
+        yield return [48L];
+        yield return [48UL];
+        yield return ['a'];
+        yield return [42.42d];
+        yield return [42.43f];
     }
 }

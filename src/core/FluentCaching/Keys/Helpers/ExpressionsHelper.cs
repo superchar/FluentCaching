@@ -45,7 +45,7 @@ internal class ExpressionsHelper : IExpressionsHelper
         
     public PropertyAccessor[] GetProperties(Type type)
         => Cache
-            .GetOrAdd(type, _ => _.GetProperties()
+            .GetOrAdd(type, t => t.GetProperties()
                 .Where(p => p.GetMethod != null)
                 .Select(CreatePropertyAccessor)
                 .ToArray());
@@ -65,7 +65,7 @@ internal class ExpressionsHelper : IExpressionsHelper
         var callInnerGenericMethodWithTypes = CallInnerDelegateMethod
             .MakeGenericMethod(property.DeclaringType!, property.PropertyType);
         var result = (Func<object, object?>)callInnerGenericMethodWithTypes
-            .Invoke(null, new object[] { getMethodDelegate })!;
+            .Invoke(null, [getMethodDelegate])!;
         return new PropertyAccessor(property.Name, result);
     }
         
@@ -73,7 +73,7 @@ internal class ExpressionsHelper : IExpressionsHelper
         Func<TClass, TResult> targetDelegate)
         => instance => targetDelegate((TClass)instance);
 
-    private static Expression GenerateNullCheck(Expression expression, Expression ifNotNull)
+    private static ConditionalExpression GenerateNullCheck(Expression expression, Expression ifNotNull)
         => Expression.Condition(
             test: Expression.Equal(expression, Expression.Constant(null)),
             ifTrue: Expression.Constant(null, typeof(string)),
@@ -83,6 +83,6 @@ internal class ExpressionsHelper : IExpressionsHelper
         => !expression.Type.IsValueType
            || Nullable.GetUnderlyingType(expression.Type) != null;
 
-    private static Expression GenerateToStringCall(Expression expression)
+    private static MethodCallExpression GenerateToStringCall(Expression expression)
         => Expression.Call(expression, nameof(ToString), Type.EmptyTypes);
 }

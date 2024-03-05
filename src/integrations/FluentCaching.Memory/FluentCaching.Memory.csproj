@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFrameworks>net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <Title>Memory cache integration</Title>
     <PackageId>VLobyntsev.FluentCaching.Memory</PackageId>
@@ -10,13 +10,14 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>Caching, Cache, Fluent, Fluent Caching, Fluentcaching, Fluent Api, Fluentapi</PackageTags>
     <RepositoryUrl>https://github.com/superchar/FluentCaching</RepositoryUrl>
-    <Version>0.0.3</Version>
-    <LangVersion>10</LangVersion>
+    <Version>0.0.5</Version>
+    <LangVersion>12</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Runtime.Caching" Version="5.0.0" />
-    <PackageReference Include="VLobyntsev.FluentCaching" Version="0.0.3" />
+    <PackageReference Include="VLobyntsev.FluentCaching" Version="0.0.5" />
   </ItemGroup>
 
 </Project>

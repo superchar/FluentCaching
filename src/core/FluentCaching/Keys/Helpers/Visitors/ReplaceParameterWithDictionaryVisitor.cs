@@ -20,7 +20,7 @@ public class ReplaceParameterWithDictionaryVisitor : BaseParameterPropertyAccess
         return convertedLookupResult;
     }
 
-    private Expression GenerateDictionaryLookup(string propertyName)
+    private IndexExpression GenerateDictionaryLookup(string propertyName)
     {
         var dictionaryIndexer = _dictionaryParam.Type.GetProperty("Item");
         var propertyNameKey = Expression.Constant(propertyName);

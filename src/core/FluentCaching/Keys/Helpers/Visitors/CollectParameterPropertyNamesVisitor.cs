@@ -5,7 +5,7 @@ namespace FluentCaching.Keys.Helpers.Visitors;
 
 public class CollectParameterPropertyNamesVisitor : BaseParameterPropertyAccessVisitor
 {
-    private readonly List<string> _properties = new();
+    private readonly List<string> _properties = [];
 
     public IEnumerable<string> Properties => _properties;
     

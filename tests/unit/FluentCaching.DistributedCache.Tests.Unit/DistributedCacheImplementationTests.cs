@@ -28,15 +28,15 @@ public class DistributedCacheImplementationTests
             .Returns(true);
 
         _cacheImplementation = new DistributedCacheImplementation(_distributedCacheMock.Object,
-            new[] { _distributedCacheSerializerMock.Object });
+            [_distributedCacheSerializerMock.Object]);
     }
 
     public static IEnumerable<object[]> NullOrEmptyBytes
     {
         get
         {
-            yield return new []{ (byte[])null };
-            yield return new []{ Array.Empty<byte>() };
+            yield return [null];
+            yield return [Array.Empty<byte>()];
         }
     }
     
@@ -48,7 +48,7 @@ public class DistributedCacheImplementationTests
             .Setup(c => c.GetAsync("Some key", CancellationToken.None))
             .ReturnsAsync(resultBytes);
 
-        var result = await _cacheImplementation.RetrieveAsync<User>("Some key");
+        await _cacheImplementation.RetrieveAsync<User>("Some key");
 
         _distributedCacheMock.Verify(d => d.GetAsync("Some key", CancellationToken.None), Times.Once);
     }
@@ -61,7 +61,7 @@ public class DistributedCacheImplementationTests
             .Setup(c => c.GetAsync("Some key", CancellationToken.None))
             .ReturnsAsync(resultBytes);
 
-        var result = await _cacheImplementation.RetrieveAsync<User>("Some key");
+        await _cacheImplementation.RetrieveAsync<User>("Some key");
 
         _distributedCacheSerializerMock.Verify(s => s.DeserializeAsync<User>(resultBytes), Times.Once);
     }
@@ -114,7 +114,6 @@ public class DistributedCacheImplementationTests
     [Fact]
     public async Task CacheAsync_WhenCalled_InvokesDistributedCacheSerializer()
     {
-        var resultBytes = JsonSerializer.SerializeToUtf8Bytes(User);
         var options = CreateCacheOptions(TimeSpan.FromSeconds(1));
 
         await _cacheImplementation.CacheAsync("Some key", User, options);

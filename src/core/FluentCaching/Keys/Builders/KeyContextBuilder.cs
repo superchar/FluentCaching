@@ -7,32 +7,23 @@ using FluentCaching.Keys.Models;
 
 namespace FluentCaching.Keys.Builders;
 
-internal class KeyContextBuilder<TEntity> : IKeyContextBuilder
+internal class KeyContextBuilder<TEntity>(IExpressionsHelper expressionsHelper) : IKeyContextBuilder
 {
     private static readonly Type EntityType = typeof(TEntity);
         
     private readonly Dictionary<string, bool> _keys = new (); // Guaranteed to be thread safe when readonly (unlike hashset)
 
-    private readonly IExpressionsHelper _expressionsHelper;
-        
-    public KeyContextBuilder(IExpressionsHelper expressionsHelper)
-    {
-        _expressionsHelper = expressionsHelper;
-    }
-
     public void AddKey(string key)
     {
-        if (_keys.ContainsKey(key))
+        if (!_keys.TryAdd(key, true))
         {
             throw new KeyPropertyDuplicateException(key, EntityType);
         }
-            
-        _keys[key] = true;
     }
 
     public KeyContext BuildRetrieveContextFromComplexKey(object complexKey)
     {
-        var properties = _expressionsHelper.GetProperties(complexKey.GetType());
+        var properties = expressionsHelper.GetProperties(complexKey.GetType());
         var contextDictionary = new Dictionary<string, object?>(properties.Length);
         foreach (var property in properties)
         {

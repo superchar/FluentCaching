@@ -8,18 +8,11 @@ using FluentCaching.Keys.Builders.Factories;
 
 namespace FluentCaching.Configuration;
 
-internal sealed class CacheConfiguration : ICacheConfiguration
+internal sealed class CacheConfiguration(IKeyBuilderFactory keyBuilderFactory) : ICacheConfiguration
 {
     public const string DefaultPolicyName = "default";
-    
-    private readonly IKeyBuilderFactory _keyBuilderFactory;
 
     private readonly Dictionary<Type, Dictionary<string, ICacheConfigurationItem>> _predefinedConfigurations = new();
-
-    public CacheConfiguration(IKeyBuilderFactory keyBuilderFactory)
-    {
-        _keyBuilderFactory = keyBuilderFactory;
-    }
 
     public ICacheImplementation? Current { get; private set; }
 
@@ -35,24 +28,22 @@ internal sealed class CacheConfiguration : ICacheConfiguration
         Func<CachingKeyPolicyBuilder<TEntity>, AndPolicyBuilder<CacheImplementationPolicyBuilder>> factoryFunc)
         where TEntity : class
         => For<TEntity>(
-            factoryFunc(new CachingKeyPolicyBuilder<TEntity>(_keyBuilderFactory.CreateKeyBuilder<TEntity>())).And()
+            factoryFunc(new CachingKeyPolicyBuilder<TEntity>(keyBuilderFactory.CreateKeyBuilder<TEntity>())).And()
                 .CachingOptions);
 
     public ICacheConfiguration For<TEntity>(
         Func<CachingKeyPolicyBuilder<TEntity>, CacheImplementationPolicyBuilder> factoryFunc)
         where TEntity : class
         => For<TEntity>(
-            factoryFunc(new CachingKeyPolicyBuilder<TEntity>(_keyBuilderFactory.CreateKeyBuilder<TEntity>()))
+            factoryFunc(new CachingKeyPolicyBuilder<TEntity>(keyBuilderFactory.CreateKeyBuilder<TEntity>()))
                 .CachingOptions);
 
     public ICacheConfigurationItem? GetItem<TEntity>(string policyName) where TEntity : class =>
         _predefinedConfigurations.TryGetValue(typeof(TEntity), out var typeConfiguration)
-            ? typeConfiguration.TryGetValue(policyName, out var configurationItem)
-                ? configurationItem
-                : null
+            ? typeConfiguration.GetValueOrDefault(policyName)
             : null;
 
-    private ICacheConfiguration For<TEntity>(CacheOptions options)
+    private CacheConfiguration For<TEntity>(CacheOptions options)
         where TEntity : class
     {
         if (!_predefinedConfigurations.ContainsKey(typeof(TEntity)))

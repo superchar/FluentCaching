@@ -14,7 +14,7 @@ internal class KeyBuilder : IKeyBuilder
 {
     private const string KeyPartSeparator = ":";
 
-    private readonly List<IKeyPartBuilder> _keyPartBuilders = new();
+    private readonly List<IKeyPartBuilder> _keyPartBuilders = [];
 
     private readonly IExpressionsHelper _expressionHelper;
     private readonly IKeyContextBuilder _keyContextBuilder;
@@ -29,7 +29,7 @@ internal class KeyBuilder : IKeyBuilder
         _keyPartBuilderFactory = keyPartBuilderFactory;
     }
 
-    private bool HasDynamicParts => _keyPartBuilders.Any(_ => _.IsDynamic);
+    private bool HasDynamicParts => _keyPartBuilders.Any(b => b.IsDynamic);
 
     public void AppendStatic<TEntity, TValue>(TValue value)
         => _keyPartBuilders.Add(_keyPartBuilderFactory.Create<TEntity, TValue>(value));

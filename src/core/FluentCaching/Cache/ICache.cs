@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using FluentCaching.Cache.Models;
-using FluentCaching.Configuration;
 
 // ReSharper disable UnusedMember.Global
 

@@ -1,5 +1,3 @@
 ﻿namespace FluentCaching.Tests.Unit.TestModels;
 
-internal class TypeWithoutProperties
-{
-}
+internal record TypeWithoutProperties;
