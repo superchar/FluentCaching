@@ -1,12 +1,8 @@
 ﻿namespace FluentCaching.Samples.DefaultCache.Models;
 
-public class Cart
+public class Cart(Guid id)
 {
-    public Cart(Guid id)
-    {
-        Id = id;
-    }
-    public Guid Id { get; }
+    public Guid Id { get; } = id;
 
-    public List<CartItem> Items { get; } = new ();
+    public List<CartItem> Items { get; } = [];
 }

@@ -8,14 +8,8 @@ namespace FluentCaching.DependencyInjectionExtensions.Tests.Unit;
 
 public class ServiceCollectionExtensionsTests
 {
-    private readonly Mock<IServiceCollection> _serviceCollectionMock;
-    private readonly Mock<Action<CacheBuilder>> _builderActionMock;
-
-    public ServiceCollectionExtensionsTests()
-    {
-        _serviceCollectionMock = new Mock<IServiceCollection>();
-        _builderActionMock = new Mock<Action<CacheBuilder>>();
-    }
+    private readonly Mock<IServiceCollection> _serviceCollectionMock = new();
+    private readonly Mock<Action<CacheBuilder>> _builderActionMock = new();
 
     [Fact]
     public void AddFluentCaching_WhenCalled_InvokesBuilderAction()

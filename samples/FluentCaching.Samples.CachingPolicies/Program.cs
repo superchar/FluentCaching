@@ -61,13 +61,8 @@ app.MapGet("/users/{userId:guid}/latest-order", async ([FromRoute] Guid userId, 
     return order == null ? NotFound() : Ok(order);
 });
 
-static Order MapToOrder(OrderDto orderDto)
-    => new(Guid.NewGuid(),
-        orderDto.UserId,
-        orderDto.CreatedAt,
-        orderDto.OrderLines
-            .Select(l => new OrderLine(l.ProductId, l.Quantity))
-            .ToList());
+app.Run();
+return;
 
 static OrderDto MapToOrderDto(Order order)
     => new(Guid.NewGuid(),
@@ -77,4 +72,10 @@ static OrderDto MapToOrderDto(Order order)
             .Select(l => new OrderLineDto(l.ProductId, l.Quantity))
             .ToList());
 
-app.Run();
+static Order MapToOrder(OrderDto orderDto)
+    => new(Guid.NewGuid(),
+        orderDto.UserId,
+        orderDto.CreatedAt,
+        orderDto.OrderLines
+            .Select(l => new OrderLine(l.ProductId, l.Quantity))
+            .ToList());

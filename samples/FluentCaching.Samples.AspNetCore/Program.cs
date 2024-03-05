@@ -27,7 +27,7 @@ app.MapPost("/cart-items", async ([FromBody] CartItemDto dto, ICache cache) =>
 {
     var cart = await cache.RetrieveAsync<Cart>(dto.CartId) ?? new Cart(dto.CartId);
     var existingItem = cart.Items.FirstOrDefault(i =>
-        i.ProductName.Equals(dto.ProductName, StringComparison.InvariantCultureIgnoreCase));
+        i.ProductName?.Equals(dto.ProductName, StringComparison.InvariantCultureIgnoreCase) == true);
     if (existingItem != null)
     {
         existingItem.Quantity += dto.Quantity;

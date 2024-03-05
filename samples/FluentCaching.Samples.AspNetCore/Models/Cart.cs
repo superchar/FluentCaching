@@ -8,5 +8,5 @@ public class Cart
     }
     public Guid Id { get; }
 
-    public List<CartItem> Items { get; } = new ();
+    public List<CartItem> Items { get; } = [];
 }
