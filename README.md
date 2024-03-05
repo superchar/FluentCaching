@@ -6,7 +6,7 @@
 FluentCaching library provides an abstraction layer over caching implementation (memory, Redis, etc.) with really small overhead (check benchmarks).
 Instead of writing boilerplate code to support caching, just configure caching policy for object using fluent api and use cache object to manipulate caching abstraction. 
 <br/><br/>The core library is written in plain C# with no external dependencies. 
-The nearest plan is to prepare the first release version. 
+The nearest plan is to prepare the first release version. More detailed information can be found on the [project Wiki](https://github.com/superchar/FluentCaching/wiki).
 
 <h1>Code samples</h1>
 
